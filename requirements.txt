@@ -4,3 +4,4 @@ pip      ==  22.3
 setuptools == 65.5.0
 sqlparse ==  0.5.3
 tzdata   ==  2024.2
+whitenoise == 6.8.2
