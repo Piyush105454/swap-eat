@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from swapfood import views
+from django.conf.urls.static import static
+from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.SignupPage,name='signup'),
@@ -24,5 +26,6 @@ urlpatterns = [
     path('login/',views.LoginPage,name='login'),
     path('home',views.HomePage,name='home'),
     path('logout/',views.LogoutPage,name='logout'),
+    path('home2/upload', views.HomePage2, name='upload'),  
 
 ]
