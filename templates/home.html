@@ -12,170 +12,331 @@
     <title>Home Page</title>
   </head>
   <style>
-   body {
+   
+/* Global Reset */
+* {
   margin: 0;
   padding: 0;
-  background-color: rgb(243, 229, 30);
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  box-sizing: border-box;
 }
 
-/* Centering button and free text */
-#btn {
-  margin-top: 50px;
-  display: inline-block;
-  padding: 10px 20px;
-  background: rgb(240, 111, 6);
-  color: rgb(26, 18, 18);
-  font-weight: bolder;
-  font-size: xx-large;
+body {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  color: #333;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: yellow;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  height: 50px;
+  margin-right: 10px;
+}
+
+.nav a {
+  margin-left: 15px;
   text-decoration: none;
-  border-radius: 5px;
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
+  color: #000;
+  font-weight: bold;
+  font-size: 1rem;
 }
 
-/* Free text below the button */
-#free {
-  margin-top: 50px;
-  text-align: center;
-  font-weight: bolder;
-  font-size: xx-large;
-  color: rgb(199, 71, 12);
-}
-
-/* Input field styling */
-.input-with-icon {
+/* Hero Section */
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  background: #f9ff00;
   position: relative;
-  max-width: 400px;
-  margin: 20px auto;
 }
 
-.input-with-icon input {
-  width: 100%;
-  padding: 10px 40px 10px 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
+.hero-content {
+  text-align: center;
+  flex: 1;
+  padding: 1rem;
+}
+
+.cta-button {
+  background: orange;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 1rem 0;
+  font-size: 1.2rem;
+  cursor: pointer;
   border-radius: 5px;
 }
 
-.input-with-icon img {
-  position: absolute;
-  top: 50%;
-  left: 10px;
-  transform: translateY(-50%);
-  height: 20px;
-  width: 20px;
-}
-
-/* Styling for the image */
-img {
-  height: 300px;
-  width: 300px;
-  margin-top: 20px;
-  margin-left: auto;
-  margin-right: auto;
+.cta-button span {
   display: block;
+  font-size: 0.8rem;
 }
 
-/* Media Query for Small Screens */
-@media (max-width: 768px) {
-  #btn {
-      font-size: large;
-      padding: 10px 15px;
-      width: 80%;
-  }
-
-  #free {
-      font-size: large;
-  }
-}
-
-  .input-with-icon {
-    display: flex;
-    justify-content: center;  /* Use justify-content to center flex items */
-    align-items: center;
-    width: 100%;  /* Ensure the container takes up full width */
-    max-width: 100%;  /* Prevent overflow */
-    padding: 10px;
-    box-sizing: border-box;  /* Ensure padding doesn't affect the width */
-}
-
-.input-with-icon input {
-    width: 100%;  /* Make input take full available width */
-    font-size: 14px;  /* Set font size */
-    padding: 10px;  /* Adjust padding for better input appearance */
-    border: 1px solid #ccc;  /* Set border */
-    border-radius: 5px;  /* Optional, for rounded corners */
+.location-input input {
+  padding: 10px;
+  width: 80%;
+  margin-top: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
 }
 
 
+/* Testimonials Section */
+.testimonials {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  background: #222;
+  color: white;
+  padding: 2rem;
+}
 
+.testimonial {
+  background: #333;
+  padding: 1rem;
+  border-radius: 5px;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+/* End Content Section */
+.end-content {
+  text-align: center;
+  padding: 2rem;
+  background: #f9ff00;
+}
+
+.end-content .highlight {
+  color: red;
+  font-weight: bold;
+}
+
+.swipe-card {
+  margin: 1rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swipe-card .card {
+  background: white;
+  border-radius: 5px;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.swipe-card .card img {
+  width: 150px;
+  height: auto;
+  margin-bottom: 1rem;
+}
+
+.swipe-instructions p {
+  font-size: 1rem;
+  color: #333;
+}
+
+.bottom-navigation {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1rem;
+}
+
+.nav-icon img {
+  width: 30px;
+  height: auto;
+}
+
+/* Footer */
+.footer {
+  background: #000;
+  color: white;
+  padding: 2rem;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.footer .links h4 {
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+.footer .links a {
+  display: block;
+  margin-bottom: 5px;
+  text-decoration: none;
+  color: #fff;
+}
 /* Responsive Design */
 @media (max-width: 768px) {
-    .input-with-icon input {
-        font-size: 16px;  /* Increase font size for smaller devices */
-        padding: 12px;
-    }
-}
+  .hero {
+    flex-direction: column;
+    padding: 1rem;
+  }
+  .hero-content {
+    padding: 0.5rem;
+  }
+
+  .cta-button {
+    font-size: 1rem;
+    padding: 8px 16px;
+  }
+
+  .location-input input {
+    width: 90%;
+  }
+
+  .testimonials {
+    grid-template-columns: 1fr;
+  }
+
+  .testimonial {
+    font-size: 0.9rem;
+  }
+
+  .swipe-card .card img {
+    width: 120px;
+  }
+
+  .bottom-navigation img {
+    width: 25px;
+  }
+
+  .footer {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
 
   
+}
 
-
-/* Media Query for Extra Small Screens */
 @media (max-width: 480px) {
-  #btn {
-      font-size: medium;
-      padding: 8px 12px;
-      width: 90%;
+  .nav a {
+    font-size: 0.9rem;
   }
 
-  #free {
-      font-size: medium;
+  .hero-content h2 {
+    font-size: 1.5rem;
   }
 
-  .input-with-icon input {
-      font-size: 12px;
+  .cta-button {
+    font-size: 0.9rem;
+    padding: 6px 12px;
   }
-}
-.h2{
-  margin: auto;
-  height: 20vh;
-  width: 20vw;
-}
+
+  .swipe-card .card {
+    padding: 0.5rem;
+  }
+
+  .swipe-instructions p {
+    font-size: 0.9rem;
+    
   </style>
   <body>
-    <div class="main">
-       <div class="head" style=" display: flex; margin: 0; padding: 0; align-items: end; justify-content: end;">
-             <h1 style="font-size: xx-large; font-weight: bolder; margin-right: 1400px; font-family: Verdana, Geneva, Tahoma, sans-serif; display: flex; margin-top: 10px;">swap Eat</h1>
-             <a href="{% url 'signup' %}" class="btn btn-primary" style="margin-right: 50px;"  >signup</a>
+     <header class="header">
+    <div class="logo">
+      <img src="burgur.jpg" alt="Swap Eat Logo">
+      <h1>SWAP EAT</h1>
+    </div>
+    <nav class="nav">
+      <a href="{% url 'signup' %}" class="btn btn-primary" style="margin-right: 50px;"  >signup</a>
              <a href="{% url 'login' %}" class="btn btn-primary" style="margin-right: 40px;"  >login</a>
     
              <a href="{% url 'logout' %}" class="btn btn-primary" style="margin-right: 20px;" >Logout</a>
-       </div>
-       <div class="content">
-             <div class="hd" style="display: flex; margin-top: 50px; justify-content: center; ">
-                 <h1 style=" font-weight: bolder; ">post</h1>
-                 <h1 style="margin-left: 20px;">.</h1>
-                
-                 <h1 style="margin-left: 20px; font-weight: bolder; color: rgb(199, 71, 12);">swap</h1>
-                 <h1 style="margin-left: 20px;">.</h1>
-                 
-                 <h1 style="margin-left: 20px; font-weight: bolder;">Eat</h1>
-                 
-                 </div>
-                 <a href="{% url 'home2' %}" class="btn btn-primary" id="btn" style="margin-right: 20px;" >get started</a>
-                 <h1 id="free">for free</h1>
-                 <div class="input-with-icon">
-                  
-                  <input type="text" placeholder="location...">    
-                  
-                  
-                  
-              </div>
-                 
-       </div>
+   
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    
+
+    <div class="hero-content">
+      <h2>POST • SWAP • EAT</h2>
+      <button class="cta-button">Get Started <span>For Free</span></button>
+      <div class="location-input">
+        <input type="text" placeholder="Enter your location">
+      </div>
     </div>
+ 
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="testimonials">
+    <div class="testimonial">
+      <p>As a homemaker in Hyderabad, SwapEat has helped me connect with my neighbors...</p>
+      <span>- Pushpendra and Divyanshi</span>
+    </div>
+    <div class="testimonial">
+      <p>In Delhi, food waste is a huge issue, and SwapEat is a fantastic way to tackle it...</p>
+      <span>- Aryan and Abhi</span>
+    </div>
+    <div class="testimonial">
+      <p>Living in Mumbai, eating out is expensive, and SwapEat gives me affordable options...</p>
+      <span>- Aryan and Pushpendra</span>
+    </div>
+    <div class="testimonial">
+      <p>As a college student in Bangalore, SwapEat is a lifesaver...</p>
+      <span>- Divyanshi and Prithviraj</span>
+    </div>
+  </section>
+
+  <!-- End Content Section -->
+  <section class="end-content">
+    <h2>Aryan Feeling <span class="highlight">Hungry?</span></h2>
+    <div class="swipe-card">
+      <div class="card">
+        <img src="left.png" alt="Veg Burger">
+        <p>Veg Burger<br><span>Katrahills</span></p>
+      </div>
+      <div class="swipe-instructions">
+        <p>Use ( <span>&#8250;</span> ) to swipe right</p>
+      </div>
+    </div>
+
+    <div class="bottom-navigation">
+      <div class="nav-icon"><i class="fas fa-home"></i></div>
+      <div class="nav-icon"><i class="fas fa-plus"></i></div>
+      <div class="nav-icon"><i class="fas fa-comments"></i></div>
+    </div>
+  </section>
+
+  <!-- Footer Section -->
+  <footer class="footer">
+    <div class="links">
+      <div>
+        <h4>Legal</h4>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+      </div>
+      <div>
+        <h4>Careers</h4>
+        <a href="#">Careers Portal</a>
+        <a href="#">Tech Blog</a>
+      </div>
+      <div>
+        <h4>Socials</h4>
+        <a href="#">Instagram</a>
+        <a href="#">Twitter</a>
+      </div>
+    </div>
+    
+  </footer>
     
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
