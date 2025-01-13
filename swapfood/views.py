@@ -2,6 +2,10 @@ from django.shortcuts import render,HttpResponse,redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
+from django.core.files.storage import default_storage
+# Create your views here.
+from django.conf import settings
+from .models import user
 # Create your views here.
 @login_required(login_url='login')
 def HomePage(request):
