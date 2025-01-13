@@ -1,0 +1,131 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: rgb(243, 229, 30);
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+/* Centering button and free text */
+#btn {
+  margin-top: 50px;
+  display: inline-block;
+  padding: 10px 20px;
+  background: rgb(240, 111, 6);
+  color: rgb(26, 18, 18);
+  font-weight: bolder;
+  font-size: xx-large;
+  text-decoration: none;
+  border-radius: 5px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+/* Free text below the button */
+#free {
+  margin-top: 50px;
+  text-align: center;
+  font-weight: bolder;
+  font-size: xx-large;
+  color: rgb(199, 71, 12);
+}
+
+/* Input field styling */
+.input-with-icon {
+  position: relative;
+  max-width: 400px;
+  margin: 20px auto;
+}
+
+.input-with-icon input {
+  width: 100%;
+  padding: 10px 40px 10px 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.input-with-icon img {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  height: 20px;
+  width: 20px;
+}
+
+/* Styling for the image */
+img {
+  height: 300px;
+  width: 300px;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+/* Media Query for Small Screens */
+@media (max-width: 768px) {
+  #btn {
+      font-size: large;
+      padding: 10px 15px;
+      width: 80%;
+  }
+
+  #free {
+      font-size: large;
+  }
+}
+
+  .input-with-icon {
+    display: flex;
+    justify-content: center;  /* Use justify-content to center flex items */
+    align-items: center;
+    width: 100%;  /* Ensure the container takes up full width */
+    max-width: 100%;  /* Prevent overflow */
+    padding: 10px;
+    box-sizing: border-box;  /* Ensure padding doesn't affect the width */
+}
+
+.input-with-icon input {
+    width: 100%;  /* Make input take full available width */
+    font-size: 14px;  /* Set font size */
+    padding: 10px;  /* Adjust padding for better input appearance */
+    border: 1px solid #ccc;  /* Set border */
+    border-radius: 5px;  /* Optional, for rounded corners */
+}
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .input-with-icon input {
+        font-size: 16px;  /* Increase font size for smaller devices */
+        padding: 12px;
+    }
+}
+
+  
+
+
+/* Media Query for Extra Small Screens */
+@media (max-width: 480px) {
+  #btn {
+      font-size: medium;
+      padding: 8px 12px;
+      width: 90%;
+  }
+
+  #free {
+      font-size: medium;
+  }
+
+  .input-with-icon input {
+      font-size: 12px;
+  }
+}
+.h2{
+  margin: auto;
+  height: 20vh;
+  width: 20vw;
+}
