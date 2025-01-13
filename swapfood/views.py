@@ -7,8 +7,18 @@ from django.contrib.auth.decorators import login_required
 def HomePage(request):
     return render (request,'home.html')
 def HomePage2(request):
-    return render (request,'home2.html')
-
+    if request.method == 'POST' and request.FILES.get('image'):
+        pic = request.FILES['image']
+        file_path = default_storage.save(f'uploads/{pic.name}', pic)
+        # Do something with the file path (e.g., link it to a different model)
+        file_url = settings.MEDIA_URL + file_path
+        # Extract the file name from the uploaded file
+        file_name = pic.name
+        
+        # Pass both the file URL and file name to the template
+        return render(request, 'home2.html', {'file_url': file_url, 'file_name': file_name})
+       
+    return render(request, 'home2.html')
 
 def SignupPage(request):
     if request.method=='POST':
