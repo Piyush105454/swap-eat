@@ -253,7 +253,7 @@ body {
   <body>
      <header class="header">
     <div class="logo">
-      <img src="{% static 'burgur.jpg' %}" alt="Swap Eat Logo">
+      <img src="{% static 'images/burgur.jpg' %}" alt="Swap Eat Logo">
       <h1>SWAP EAT</h1>
     </div>
     <nav class="nav">
@@ -270,7 +270,8 @@ body {
 
     <div class="hero-content">
       <h2>POST • SWAP • EAT</h2>
-      <button class="cta-button">Get Started <span>For Free</span></button>
+      <button class="cta-button"><a href="{% url 'home2' %}>get started</a></button>
+                                   <span>For Free</span>
       <div class="location-input">
         <input type="text" placeholder="Enter your location">
       </div>
@@ -303,7 +304,7 @@ body {
     <h2>Aryan Feeling <span class="highlight">Hungry?</span></h2>
     <div class="swipe-card">
       <div class="card">
-        <img src="{% static 'left.png' %}" alt="Veg Burger">
+        <img src="{% static 'images/left.png' %}" alt="Veg Burger">
         <p>Veg Burger<br><span>Katrahills</span></p>
       </div>
       <div class="swipe-instructions">
