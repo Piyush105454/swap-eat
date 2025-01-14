@@ -121,11 +121,226 @@
         width: 95%;
       }
     }
+    /* General Styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  background: #ffeb3b;
+  color: #444;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
+/* Section Styles */
+section {
+  margin-bottom: 40px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+/* Header Styles */
+h2 {
+  font-size: 24px;
+  text-align: center;
+  background: linear-gradient(to right, #ff9800, #ff5722);
+  color: white;
+  padding: 10px 0;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+/* Explore Section */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+.card {
+  text-align: center;
+  padding: 10px;
+  background: #ffeb3b;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s;
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+/* Navigation */
+nav {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+nav a {
+  text-decoration: none;
+  padding: 10px 15px;
+  background: linear-gradient(to bottom, #ff5722, #d84315);
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: background 0.3s, transform 0.2s;
+}
+
+nav a:hover {
+  background: #ff9800;
+  transform: scale(1.1);
+}
+
+/* Post Meal Section */
+.post-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.post-form div {
+  padding: 10px;
+  background: #fff3e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #444;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 2px solid #ff9800;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+button {
+  padding: 10px 20px;
+  background: linear-gradient(to right, #ff9800, #f57c00);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: linear-gradient(to right, #f57c00, #e65100);
+}
+
+/* Floating Meals */
+.map {
+  height: 150px;
+  background: #ffccbc;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .cards {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+
+  .post-form {
+    grid-template-columns: 1fr;
+  }
+
+  nav a {
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+        }
   </style>
 
   <body>
-    <div class="container">
-      <div class="ds">
+     <div class="container">
+      
+        <section class="explore">
+            <h2>Let's Party</h2>
+            <div class="cards">
+                <div class="card">
+                    <img src="veggie_bros.png" alt="Veggie Bros">
+                    <p>Veggie Bros, Bhopal, India</p>
+                </div>
+                <div class="card">
+                    <img src="foodie_daddy.png" alt="Foodie Daddy">
+                    <p>Foodie Daddy, Bhopal, India</p>
+                </div>
+                <div class="card">
+                    <img src="brunchers.png" alt="Brunchers">
+                    <p>Brunchers, Bhopal, India</p>
+                </div>
+                <div class="card">
+                    <img src="healthy_hood.png" alt="Healthy Hood">
+                    <p>Healthy Hood, Bhopal, India</p>
+                </div>
+            </div>
+            <nav>
+                <a href="#" class="home">Home</a>
+                <a href="#" class="explore">Explore</a>
+                <a href="#" class="post">Post</a>
+                <a href="#" class="notifications">Notifications</a>
+                <a href="#" class="chat">Chat</a>
+            </nav>
+        </section>
+        <section class="post-meal">
+            <h2>Post a Meal</h2>
+            <div class="post-form">
+                <div class="taste">
+                    <label for="taste">Taste*</label>
+                    <input type="text" id="taste" name="taste" placeholder="name your cuisine...">
+                </div>
+                <div class="tags">
+                    <label for="tags">Tags*</label>
+                    <input type="text" id="tags" name="tags" placeholder="Tag keywords...">
+                </div>
+                <div class="rating">
+                    <label for="rating">Rating</label>
+                    <input type="text" id="rating" name="rating" placeholder="choose stars">
+                </div>
+                <div class="radius">
+                    <label for="radius">Radius</label>
+                    <input type="text" id="radius" name="radius" placeholder="Select the range of radius">
+                </div>
+                <div class="post-your-meal">
+                    <h3>Post your Meal</h3>
+                    <p>Aryan Patil</p>
+                    <p>Paneer Butter Masala</p>
+                    <p>Mims cafe, Rgpv Bhopal</p>
+                    <p>Radius: 3.5</p>
+                    <button>Spread Taste</button>
+                </div>
+                <div class="floating-meals">
+                    <h3>Floating Meals</h3>
+                    <div class="map">
+                        <div class="ds">
         <form action="upload" method="post" enctype="multipart/form-data" class="fm">
           {% csrf_token %}
           <input type="file" name="image" class="i1"><br>
@@ -133,28 +348,24 @@
           <br>
           <input type="submit" value="Upload File" class="i2">
         </form>
-      </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <nav>
+                <a href="#" class="home">Home</a>
+                <a href="#" class="explore">Explore</a>
+                <a href="#" class="post">Post</a>
+                <a href="#" class="notifications">Notifications</a>
+                <a href="#" class="chat">Chat</a>
+            </nav>
+        </section>
+      
       <!-- Profile Section -->
-      <div class="profile-section">
-        
-       
-      </div>
+      
+     </div>
 
-      <!-- Post Image -->
-      <img src="{{ file_url }}" alt="Post Image" class="post-image">
-
-      <!-- Post Interactions -->
-      <div class="actions">
-        <button class="action-button">❤️</button> <!-- Like button -->
-        <button class="action-button">💬</button> <!-- Comment button -->
-        <button class="action-button">🔗</button> <!-- Share button -->
-      </div>
-
-      <!-- Caption Section -->
-      <div class="caption">
-       
-      </div>
-    </div>
+  
 
     <!-- Optional JavaScript -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
