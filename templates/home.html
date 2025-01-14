@@ -248,7 +248,32 @@ body {
 
   .swipe-instructions p {
     font-size: 0.9rem;
-    
+  }
+  /* Centering button and free text */
+#btn {
+  margin-top: 50px;
+  display: inline-block;
+  padding: 10px 20px;
+  background: rgb(240, 111, 6);
+  color: rgb(26, 18, 18);
+  font-weight: bolder;
+  font-size: xx-large;
+  text-decoration: none;
+  border-radius: 5px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+/* Free text below the button */
+#free {
+  margin-top: 50px;
+  text-align: center;
+  font-weight: bolder;
+  font-size: xx-large;
+  color: rgb(199, 71, 12);
+  }
+  
   </style>
   <body>
      <header class="header">
@@ -270,9 +295,8 @@ body {
 
     <div class="hero-content">
       <h2>POST • SWAP • EAT</h2>
-      <button class="cta-button"><a href="{% url 'home2' %}>get started</a></button>
-                                   <span>For Free</span>
-      
+        <a href="{% url 'home2' %}" class="btn btn-primary" id="btn" style="margin-right: 20px;" >get started</a>
+                 <h1 id="free">for free</h1>
     </div>
      <div class="location-input">
         <input type="text" placeholder="Enter your location">
