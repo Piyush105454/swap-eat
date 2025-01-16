@@ -24,7 +24,7 @@ urlpatterns = [
     path('home2/explore/', views.explore, name='explore'),
     path('home2/postmeal/', views.postmeal, name='postmeal'),
     path('admin/', admin.site.urls),
-    path('home2/chat/', views.index, name='index'),  # Ensure commas are present
+   
     path('', views.SignupPage, name='signup'),
     path('home2/', views.HomePage2, name='home2'),
     path('login/', views.LoginPage, name='login'),
