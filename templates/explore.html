@@ -1,0 +1,154 @@
+
+<!doctype html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css">
+    <title>Instagram-Like Post</title>
+  </head>
+  <style>
+    /* Add your CSS here */
+   /* Add your CSS here */
+/* Reset body and html for full height */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  background: yellow;
+  color: #444;
+  min-height: 100vh; /* Ensure full height */
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+  flex-grow: 1; /* Ensure it grows to fill extra space */
+  display: flex;
+  flex-direction: column; /* Stack sections */
+}
+
+/* Section Styles */
+section {
+  margin-bottom: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  flex-grow: 1;
+}
+
+/* Header Styles */
+h2 {
+  font-size: 24px;
+  text-align: center;
+  background: linear-gradient(to right, #ff9800, #ff5722);
+  color: white;
+  padding: 10px 0;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+/* Cards always 2 per row */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Two columns */
+  gap: 15px;
+  justify-items: center;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.card {
+  text-align: center;
+  padding: 10px;
+  background: #ffeb3b;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s;
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+/* Navigation */
+nav {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 150px;
+}
+
+nav a {
+  text-decoration: none;
+  padding: 10px 15px;
+  background: linear-gradient(to bottom, #ff5722, #d84315);
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: background 0.3s, transform 0.2s;
+}
+
+nav a:hover {
+  background: #ff9800;
+  transform: scale(1.1);
+}
+
+/* Flexbox for full-body coverage */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.container {
+  flex-grow: 1;
+}
+
+
+
+  </style>
+  <body>
+    <div class="container">
+      <section class="explore">
+        <h2>explore Party</h2>
+        <div class="cards">
+          <div class="card">
+            <img src="https://i.postimg.cc/xTWpQ26n/download.jpg" alt="Veggie Bros">
+            <p>Veggie Bros, Bhopal, India</p>
+          </div>
+          <div class="card">
+            <img src="https://i.postimg.cc/5ypH3bjv/images.jpg" alt="Foodie Daddy">
+            <p>Foodie Daddy, Bhopal, India</p>
+          </div>
+          <div class="card">
+            <img src="https://i.postimg.cc/G3Nn46XS/images-1.jpg" alt="Brunchers">
+            <p>Brunchers, Bhopal, India</p>
+          </div>
+          <div class="card">
+            <img src="https://i.postimg.cc/G3Nn46XS/images-1.jpg" alt="Healthy Hood">
+            <p>Healthy Hood, Bhopal, India</p>
+          </div>
+        </div>
+        <nav>
+          <a href="explore.html" class="explore">Explore</a>
+          <a href="postmeal.html" class="post">Post</a>
+          <a href="#" class="notifications">Notifications</a>
+          <a href="#" class="chat">Chat</a>
+        </nav>
+      </section>
+    </div>
+  </body>
+</html>
