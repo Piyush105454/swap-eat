@@ -71,3 +71,8 @@ def LoginPage(request):
 def LogoutPage(request):
     logout(request)
     return redirect('login')
+def explore(request):
+    return render(request, 'home2/explore.html')
+def postmeal(request):
+    return render(request, 'home2/postmeal.html')
+    
