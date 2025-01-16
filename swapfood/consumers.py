@@ -1,7 +1,7 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer 
 from asgiref.sync import async_to_sync
-from app.models import Mychats
+from swapfood.models import Mychats
 from django.contrib.auth.models import User
 from time import sleep
 import datetime
