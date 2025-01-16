@@ -22,7 +22,7 @@ from django.conf import settings
 from swapfood.views import index
 urlpatterns = [
     path('admin/', admin.site.urls),
-     path('chat/',index,name='index')
+     path('chat/',views.index,name='index')
     path('',views.SignupPage,name='signup'),
     path('home2/',views.HomePage2,name='home2'),
     path('login/',views.LoginPage,name='login'),
