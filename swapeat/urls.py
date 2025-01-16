@@ -1,7 +1,7 @@
 """
 URL configuration for swapeat project.
 
-The `urlpatterns` list routes URLs to views. For more information please see:
+The `urlpatterns` list routes URLs to views. For more information, please see:
     https://docs.djangoproject.com/en/5.1/topics/http/urls/
 Examples:
 Function views
@@ -22,12 +22,11 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-     path('chat/',views.index,name='index'),
-    path('',views.SignupPage,name='signup'),
-    path('home2/',views.HomePage2,name='home2'),
-    path('login/',views.LoginPage,name='login'),
-    path('home',views.HomePage,name='home'),
-    path('logout/',views.LogoutPage,name='logout'),
-    path('home2/upload', views.HomePage2, name='upload'),  
-
-]
+    path('chat/', views.index, name='index'),  # Ensure commas are present
+    path('', views.SignupPage, name='signup'),
+    path('home2/', views.HomePage2, name='home2'),
+    path('login/', views.LoginPage, name='login'),
+    path('home/', views.HomePage, name='home'),  # Add a trailing slash for consistency
+    path('logout/', views.LogoutPage, name='logout'),
+    path('home2/upload/', views.HomePage2, name='upload'),  # Add a trailing slash
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
