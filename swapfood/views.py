@@ -8,7 +8,7 @@ from django.conf import settings
 from .models import user
 from swapfood.models import Mychats
 # Create your views here.
-@login_required
+@login_required(login_url='login')
 def index(request):
     frnd_name = request.GET.get('user',None)
     mychats_data = None
@@ -18,7 +18,7 @@ def index(request):
             mychats_data = Mychats.objects.get(me=request.user,frnd=frnd_).chats
     frnds = User.objects.exclude(pk=request.user.id)
     return render(request,'index.html',{'my':mychats_data,'chats': mychats_data,'frnds':frnds})
-@login_required(login_url='login')
+
 def HomePage(request):
     return render (request,'home.html')
 def HomePage2(request):
@@ -72,7 +72,7 @@ def LogoutPage(request):
     logout(request)
     return redirect('login')
 def explore(request):
-    return render(request, 'home2/explore.html')
+    return render(request, 'explore.html')
 def postmeal(request):
-    return render(request, 'home2/postmeal.html')
+    return render(request, 'postmeal.html')
     
