@@ -24,7 +24,7 @@ urlpatterns = [
     path('home2/explore/', views.explore, name='explore'),
     path('home2/postmeal/', views.postmeal, name='postmeal'),
     path('admin/', admin.site.urls),
-    path('', include('swapfood.urls'))
+    path('', include('swapfood.urls'),
 
    
     path('S', views.SignupPage, name='signup'),
