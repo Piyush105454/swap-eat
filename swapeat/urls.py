@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path , include
 from swapfood import views
 from django.conf.urls.static import static
 from django.conf import settings
@@ -24,8 +24,10 @@ urlpatterns = [
     path('home2/explore/', views.explore, name='explore'),
     path('home2/postmeal/', views.postmeal, name='postmeal'),
     path('admin/', admin.site.urls),
+    path('', include('ChatApp.urls'))
+
    
-    path('', views.SignupPage, name='signup'),
+    path('S', views.SignupPage, name='signup'),
     path('home2/', views.HomePage2, name='home2'),
     path('login/', views.LoginPage, name='login'),
     path('home/', views.HomePage, name='home'),  # Add a trailing slash for consistency
