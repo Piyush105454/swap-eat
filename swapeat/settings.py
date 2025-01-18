@@ -32,14 +32,15 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-   
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'swapfood'
+    'swapfood',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -71,6 +72,13 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'swapeat.wsgi.application'
+ASGI_APPLICATION = "swapeat.asgi.application"
+CHANNEL_LAYERS = {
+   
+    "default": {"BACKEND": "channels.layers.InMemoryChannelLayer"},
+}
+
+
 
 
 # Database
