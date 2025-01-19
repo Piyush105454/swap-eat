@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('sender', models.CharField(max_length=255)),
                 ('message', models.TextField()),
-                ('room', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ChatApp.room')),
+                ('room', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='swapfood.room')),
             ],
         ),
     ]
