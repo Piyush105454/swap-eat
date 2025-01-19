@@ -16,7 +16,7 @@
                 <input type="text" placeholder="Username" name="username" required><br>
                 <label for="">Room name</label><br>
                 <input type="text" placeholder="room name" name="room" required><br>
-                <center><button type="submit">Submit</button></center><br>
+                <center><button onclick="location.href='{% url 'room' room_name='room1' username='user123' %}'" type="submit">Submit</button></center><br>
             </form>
         </div>
     </div>
