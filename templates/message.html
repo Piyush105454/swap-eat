@@ -228,11 +228,11 @@
                         {% for i in messages %}
                             {% if i.sender != user %}
                                 <div class="receive">
-                                    <p style="color: #000;">{{ i.message }} <strong>-{{ i.sender }}</strong></p>
+                                    <p style="color: #FFFFFF;">{{ i.message }} <strong>-{{ i.sender }}</strong></p>
                                 </div>
                             {% else %}
                                 <div class="send">
-                                    <p style="color: #000;">{{ i.message }}</p>
+                                    <p style="color: #FFFFFF;">{{ i.message }}</p>
                                 </div>
                             {% endif %}
                         {% endfor %}
