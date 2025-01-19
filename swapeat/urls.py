@@ -8,8 +8,10 @@ urlpatterns = [
     path('home2/explore/', views.explore, name='explore'),
     path('home2/postmeal/', views.postmeal, name='postmeal'),
     path('home2/chat/', views.chat, name='chat'),
+    
     path('home2/Home/', views.Home, name='Home'),
     path('admin/', admin.site.urls),
+    
       # Fixed missing parenthesis
 
     path('', views.SignupPage, name='signup'),  # Renamed for clarity
