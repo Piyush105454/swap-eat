@@ -11,7 +11,7 @@ urlpatterns = [
     
     path('home2/Home/', views.Home, name='Home'),
     path('admin/', admin.site.urls),
-    
+    path('', include('swapfood.urls')), 
       # Fixed missing parenthesis
 
     path('', views.SignupPage, name='signup'),  # Renamed for clarity
