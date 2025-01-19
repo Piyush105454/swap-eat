@@ -10,9 +10,9 @@ urlpatterns = [
     path('home2/chat/', views.chat, name='chat'),
     path('home2/Home/', views.Home, name='Home'),
     path('admin/', admin.site.urls),
-    path('', include('swapfood.urls')),  # Fixed missing parenthesis
+      # Fixed missing parenthesis
 
-    path('signup/', views.SignupPage, name='signup'),  # Renamed for clarity
+    path('', views.SignupPage, name='signup'),  # Renamed for clarity
     path('home2/', views.HomePage2, name='home2'),
     path('login/', views.LoginPage, name='login'),
     path('home/', views.HomePage, name='home/'),  # Fixed trailing slash consistency
