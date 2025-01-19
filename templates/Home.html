@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Layout</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: yellow;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      justify-content: space-between;
+    }
+
+    .top-section {
+      display: flex;
+      flex: 1;
+    }
+
+    .left-box,
+    .right-box {
+      flex: 1;
+      margin: 10px;
+      padding: 20px;
+      background-color: #ff6600;
+      border-radius: 8px;
+    }
+
+    .left-box button {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      font-size: 16px;
+      font-weight: bold;
+      color: white;
+      background-color: #ff6600;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .right-box {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .gallery-tabs {
+      flex: 1;
+      margin-bottom: 10px;
+    }
+
+    .right-box button {
+      width: 100%;
+      padding: 15px;
+      font-size: 16px;
+      font-weight: bold;
+      color: white;
+      background-color:#ff6600 ;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .bottom-nav {
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      background-color:#ff6600;
+      position: sticky;
+      bottom: 0;
+      border-top: 2px solid #ff6600;
+    }
+    .header {
+            background-color: #fef500;
+            text-align: center;
+            padding: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: black;
+        }
+    .bottom-nav button {
+      flex: 1;
+      padding: 15px;
+      font-size: 14px;
+      font-weight: bold;
+      color: white;
+      background-color: #ff6600;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .bottom-nav button:not(:last-child) {
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+      <div class="header">Eat Quietly!</div>
+
+    <div class="top-section">
+      <div class="left-box">
+        <button>Notifications</button>
+        <button>Invitees</button>
+      </div>
+      <div class="right-box">
+        <div class="gallery-tabs">Swap It Gallery Tab</div>
+        <button>Start Searching</button>
+      </div>
+    </div>
+     <div class="bottom-nav">
+        <div class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-search"></i>
+            <span>Explore</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-plus-circle"></i>
+            <span>Post</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-bell"></i>
+            <span>Notifications</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-comment"></i>
+            <span>Chat</span>
+        </div>
+    </div>
+
+  </div>
+</body>
+</html>
