@@ -8,192 +8,251 @@
     {% load static %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
+<style>
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    
+    font-family: Arial, sans-serif;
+}
+
+.parent {
+    background-color: yellow;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.child {
+    display: flex;
+    width: 80%;
+    max-width: 1200px;
+}
+
+.left-panel {
+    width: 30%;
+    background-color: #FBEEC1;
+    padding: 20px;
+    border-radius: 10px;
+    margin-right: 20px;
+}
+
+.left-panel h2 {
+    text-align: center;
+    color: #333;
+}
+
+#active-users-list {
+    margin-top: 20px;
+}
+
+.user {
+    padding: 10px;
+    background-color: #B1A296;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    color: #333;
+}
+
+.chat-container {
+    width: 70%;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chat-body-parent {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.chat-body {
+    width: 100%;
+    background-color: #557A95;
+    border-radius: 10px;
+    padding: 10px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.message {
+    width: 100%;
+}
+
+.receive, .send {
+    background-color: #B1A296;
+    max-width: 60%;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    word-wrap: break-word;
+}
+
+.receive {
+    align-self: flex-start;
+}
+
+.send {
+    align-self: flex-end;
+}
+
+form {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+form textarea {
+    width: 80%;
+    height: 40px;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 14px;
+    resize: none;
+}
+
+form button {
+    width: 15%;
+    padding: 10px;
+    background-color: #FFA500; /* Orange */
+    border-radius: 5px;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #FF7F00; /* Darker Orange */
+}
+
+@media only screen and (max-width: 768px) {
+    .child {
+        flex-direction: column;
+    }
+
+    .left-panel {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .chat-container {
+        width: 100%;
+    }
+
+    form textarea {
+        width: 70%;
+    }
+
+    form button {
+        width: 20%;
+    }
+}
+</style>
 <body>
     <div class="parent">
-        <div class="child-2">
-            <center><h2>Chats</h2></center><hr>
-            <div class="chat-body-parent">
-                <div class="chat-body" id="tasks">
-                    <div class="message" id="chatContainer">
-                        <!-- Received messages displayed here -->
-                        {% for i in messages %}
-                            {% if i.sender != user %}
-                                <div class="receive">
-                                    <p style="color: #000;">{{ i.message }} <strong>-{{ i.sender }}</strong></p>
-                                </div>
-                            {% else %}
-                                <div class="send">
-                                    <p style="color: #000;">{{ i.message }}</p>
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                    <!-- Input Form -->
-                    <div class="form">
-                        <form action="" id="message-form" method="POST">
-                            {% csrf_token %}
-                            <textarea id="msg" cols="30" name="message" rows="10" placeholder="Enter your message" required></textarea>
-                            <button class="submit" type="submit">Send</button>
-                        </form>    
+        <div class="child">
+            <div class="left-panel">
+                <h2>Active Users</h2>
+                <div id="active-users-list">
+                    <!-- Active users will be dynamically added here -->
+                </div>
+            </div>
+
+            <div class="chat-container">
+                <center><h2>Chats</h2></center><hr>
+                <div class="chat-body-parent">
+                    <div class="chat-body" id="tasks">
+                        <div class="message" id="chatContainer">
+                            <!-- Received messages displayed here -->
+                            {% for i in messages %}
+                                {% if i.sender != user %}
+                                    <div class="receive">
+                                        <p>{{ i.message }} <strong>-{{ i.sender }}</strong></p>
+                                    </div>
+                                {% else %}
+                                    <div class="send">
+                                        <p>{{ i.message }}</p>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <!-- Input Form -->
+                        <div class="form">
+                            <form action="" id="message-form" method="POST">
+                                {% csrf_token %}
+                                <textarea id="msg" cols="30" name="message" rows="10" placeholder="Enter your message" required></textarea>
+                                <button class="submit" type="submit">Send</button>
+                            </form>    
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Optional Loading Indicator -->
-    <div id="loading" style="display: none; text-align: center;">Loading...</div>
-</body>
-<script>
-    function scrollToBottom() {
-        const chatContainer = document.getElementById("chatContainer");
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
 
-    const websocketProtocol = window.location.protocol === "https:" ? "wss" : "ws";
-    const wsEndpoint = `${websocketProtocol}://${window.location.host}/ws/notification/{{ room_name }}/`;
-    const socket = new WebSocket(wsEndpoint);
+    <script>
+        const websocketProtocol = window.location.protocol === "https:" ? "wss" : "ws";
+        const wsEndpoint = `${websocketProtocol}://${window.location.host}/ws/notification/{{ room_name }}/`;
+        const socket = new WebSocket(wsEndpoint);
 
-    document.getElementById('message-form').addEventListener('submit', function (event) {
-        event.preventDefault();
-        const message = document.getElementById('msg').value;
-        socket.send(
-            JSON.stringify({
-                'message': message,
-                'room_name': "{{ room_name }}",
-                'sender': "{{ user }}",
-            })
-        );
-    });
-
-    socket.addEventListener("message", (event) => {
-        const messageData = JSON.parse(event.data).message;
-
-        const sender = messageData.sender;
-        const message = messageData.message;
-
-        // Prevent duplicate messages
-        const existingMessages = document.querySelectorAll('.message div');
-        const isDuplicate = Array.from(existingMessages).some(div => div.textContent.includes(message));
-
-        if (!isDuplicate) {
-            const messageDiv = document.querySelector('.message');
-            if (sender !== "{{ user }}") {
-                messageDiv.innerHTML += '<div class="receive"><p style="color: #000;">' + message + '<strong>-' + sender + '</strong></p></div>';
-            } else {
-                messageDiv.innerHTML += '<div class="send"><p style="color: #000;">' + message + '</p></div>';
+        socket.addEventListener("message", (event) => {
+            const data = JSON.parse(event.data);
+            
+            // Update active users list
+            if (data.active_users) {
+                const activeUsersList = document.getElementById('active-users-list');
+                activeUsersList.innerHTML = ''; // Clear the existing list
+                
+                data.active_users.forEach(user => {
+                    const userDiv = document.createElement('div');
+                    userDiv.classList.add('user');
+                    userDiv.textContent = user;
+                    activeUsersList.appendChild(userDiv);
+                });
             }
-            scrollToBottom();
+
+            // Handle message display
+            if (data.message) {
+                const messageDiv = document.querySelector('.message');
+                if (data.sender !== "{{ user }}") {
+                    messageDiv.innerHTML += `<div class="receive"><p>${data.message} <strong>-${data.sender}</strong></p></div>`;
+                } else {
+                    messageDiv.innerHTML += `<div class="send"><p>${data.message}</p></div>`;
+                }
+                scrollToBottom();
+            }
+        });
+
+        document.getElementById('message-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const message = document.getElementById('msg').value;
+            socket.send(
+                JSON.stringify({
+                    'message': message,
+                    'room_name': "{{ room_name }}",
+                    'sender': "{{ user }}",
+                })
+            );
+        });
+
+        function scrollToBottom() {
+            const chatContainer = document.getElementById("chatContainer");
+            chatContainer.scrollTop = chatContainer.scrollHeight;
         }
-    });
+    </script>
+</body>
 
-    socket.onopen = () => {
-        document.getElementById('loading').style.display = 'none';
-        console.log("WebSocket connection opened!");
-    };
-
-    socket.onclose = () => {
-        console.log("WebSocket connection closed!");
-    };
-
-    socket.onerror = (error) => {
-        console.error("WebSocket error:", error);
-        alert("Connection error. Please try again later.");
-    };
-</script>
 <style>
-    * {
-        padding: 0;
-        margin: 0;
-        box-sizing: border-box;
-    }
-
-    .parent {
-        background-color: #B1A296;
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-    }
-
-    .child-2 {
-        width: 50%;
-        margin: 10px;
-        border-radius: 10px;
-        padding: 10px;
-        background-color: #FBEEC1;
-    }
-
-    .chat-body-parent {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .chat-body, .message {
-        width: 100%;
-        background-color: #557A95;
-        border-radius: 10px;
-        padding: 10px;
-        flex-direction: column;
-    }
-
-    .message {
-        max-height: 400px;
-        overflow-y: auto;
-    }
-
-    .chat-body .message .receive, .send {
-        background-color: #B1A296;
-        max-width: 400px;
-        border-radius: 10px;
-        padding: 10px;
-        margin-bottom: 10px;
-    }
-
-    .chat-body .message .send {
-        align-self: flex-end;
-    }
-
-    .chat-body .message .receive {
-        align-self: flex-start;
-    }
-
-    form {
-        display: flex;
-        align-items: center;
-        justify-content: space-around;
-    }
-
-    form textarea {
-        width: 70%;
-        height: 40px;
-        border-radius: 10px;
-        padding: 10px;
-    }
-
-    form button {
-        width: 25%;
-        padding: 10px;
-        background-color: #FBEEC1;
-        border-radius: 5px;
-        border: none;
-        color: #000;
-    }
-
-    @media only screen and (max-width: 600px) {
-        .child-2 {
-            width: 100%;
-        }
-
-        form textarea {
-            width: 80%;
-            height: 50px;
-        }
-
-        form button {
-            width: 15%;
-        }
-    }
+    /* Your existing CSS code here */
 </style>
 </html>
