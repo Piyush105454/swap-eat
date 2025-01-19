@@ -148,7 +148,7 @@ body {
           <a href="{% url 'explore' %}" class="explore">Explore</a>
           <a href="{% url 'postmeal' %}" class="post">Post</a>
           <a href="{% url 'Home'%}" class="notifications">Notifications</a>
-          <a href="{% url 'chat' %}" class="chat">Chat</a>
+          <button class= "chat" onclick="location.href='{% url 'create-room' %}'">Create Room</button>
         </nav>
       </section>
     </div>
