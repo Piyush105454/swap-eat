@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Interface</title>
+      <title>Messages</title>
+    {% load static %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -26,10 +29,16 @@
             color: black;
         }
 
-        /* Chat layout */
-        .chat-layout {
+        /* Chat box container */
+        .chat-container {
+            width: 90%;
+            margin: 0 auto;
+            background-color: #111;
+            border-radius: 15px;
+            overflow: hidden;
             display: flex;
-            flex: 1;
+            height: 70vh;
+            margin-bottom: 15px;
         }
 
         /* Left panel: User list */
@@ -114,37 +123,39 @@
         .message.send p {
             background-color: #0078ff;
         }
+        form {
+        display: flex;
+        
+        align-items: center;
+        
+        justify-content: space-around;
+    }
 
-        /* Message input */
-        .input-area {
-            display: flex;
-            padding: 15px;
-            background-color: #333;
-        }
+    form textarea {
+         width: 70%;
+        height: 40px;
+        border-radius: 10px;
+        padding: 10px;
+    }
 
-        .input-area textarea {
-            flex: 1;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-        }
+    form button {
+        width: 25%;
+        padding: 10px;
+        background-color: #FBEEC1;
+        border-radius: 5px;
+        border: none;
+        color: #000;
+    }
 
-        .input-area button {
-            border: none;
-            background-color: #0078ff;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            margin-left: 10px;
-            cursor: pointer;
-        }
+        
+        
 
         /* Bottom navigation bar */
         .bottom-nav {
             display: flex;
             justify-content: space-around;
             align-items: center;
-            background-color: #222;
+            background-color: #ff6600; /* Orange color */
             padding: 10px 0;
         }
 
@@ -157,46 +168,85 @@
         }
 
         .nav-item:hover {
-            color: #0078ff;
+            color: #ffcc00;
         }
 
         .nav-item i {
             font-size: 20px;
             margin-bottom: 5px;
         }
+    @media only screen and (max-width: 600px) {
+        .child-2 {
+            width: 100%;
+        }
+
+        form textarea {
+            width: 80%;
+            height: 50px;
+        }
+
+        form button {
+            width: 15%;
+        }
+    }
     </style>
 </head>
 <body>
     <div class="header">Eat Quietly!</div>
 
-    <div class="chat-layout">
+    <div class="chat-container">
         <!-- Left Panel: User List -->
         <div class="user-list">
-            <h3>{{ user.username }}</h3>
-            {% for participant in participants %}
-            <div class="user" data-room="{{ participant.room_name }}">
-                <h4>{{ participant.name }}</h4>
-                <p>{{ participant.latest_message|truncatechars:30 }}</p>
+            <h3>Aryan Patil</h3>
+            <div class="user">
+                <h4>Divyanshi Gupta</h4>
+                <p>Let's meet at Amul - 3h ago</p>
             </div>
-            {% endfor %}
+            <div class="user">
+                <h4>Elon Musk</h4>
+                <p>All the way up! - 7h ago</p>
+            </div>
+            <div class="user">
+                <h4>Prithviraj Raghuvanshi</h4>
+                <p>On my way - 10h ago</p>
+            </div>
+            <div class="user">
+                <h4>Raj Shamani</h4>
+                <p>Props to ya for the party! - 11h ago</p>
+            </div>
+            <div class="user">
+                <h4>Jay Shetty</h4>
+                <p>Paneer was amazing - 12h ago</p>
+            </div>
         </div>
 
         <!-- Right Panel: Chat Window -->
         <div class="chat-window">
-            <div class="chat-header">Chat with {{ current_user }}</div>
-            <div class="messages" id="chatContainer">
-                {% for message in messages %}
-                <div class="message {% if message.sender == user %}send{% else %}receive{% endif %}">
-                    <p>{{ message.message }}</p>
-                </div>
-                {% endfor %}
-            </div>
-
-            <div class="input-area">
-                <textarea id="msg" placeholder="Type your message..." rows="1"></textarea>
-                <button id="sendBtn">Send</button>
-            </div>
+            <div class="chat-header">Elon Musk</div>
+          <div class="message" id="chatContainer">
+                        <!-- Received messages displayed here -->
+                        {% for i in messages %}
+                            {% if i.sender != user %}
+                                <div class="receive">
+                                    <p style="color: #000;">{{ i.message }} <strong>-{{ i.sender }}</strong></p>
+                                </div>
+                            {% else %}
+                                <div class="send">
+                                    <p style="color: #000;">{{ i.message }}</p>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+          </div>
+            <div class="form">
+                        <form action="" id="message-form" method="POST">
+                            {% csrf_token %}
+                            <textarea id="msg" cols="30" name="message" rows="10" placeholder="Enter your message" required></textarea>
+                            <button class="submit" type="submit">Send</button>
+                        </form>    
+                    </div>
         </div>
+                    <!-- Input Form -->
+                 
     </div>
 
     <!-- Bottom Navigation Bar -->
@@ -223,32 +273,62 @@
         </div>
     </div>
 
-    <script>
-        const chatContainer = document.getElementById('chatContainer');
-        const sendBtn = document.getElementById('sendBtn');
-        const msgInput = document.getElementById('msg');
-
-        // Scroll to the bottom on page load
+   <script>
+    function scrollToBottom() {
+        const chatContainer = document.getElementById("chatContainer");
         chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
 
-        // Handle Send Button Click
-        sendBtn.addEventListener('click', () => {
-            const message = msgInput.value;
-            if (message.trim() !== '') {
-                // Add message to the chat window (simulate)
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'message send';
-                messageDiv.innerHTML = `<p>${message}</p>`;
-                chatContainer.appendChild(messageDiv);
+    const websocketProtocol = window.location.protocol === "https:" ? "wss" : "ws";
+    const wsEndpoint = `${websocketProtocol}://${window.location.host}/ws/notification/{{ room_name }}/`;
+    const socket = new WebSocket(wsEndpoint);
 
-                // Clear input field and scroll
-                msgInput.value = '';
-                chatContainer.scrollTop = chatContainer.scrollHeight;
+    document.getElementById('message-form').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const message = document.getElementById('msg').value;
+        socket.send(
+            JSON.stringify({
+                'message': message,
+                'room_name': "{{ room_name }}",
+                'sender': "{{ user }}",
+            })
+        );
+    });
 
-                // Send message to the server (WebSocket or form submission)
-                // Implement WebSocket send or form POST logic here
+    socket.addEventListener("message", (event) => {
+        const messageData = JSON.parse(event.data).message;
+
+        const sender = messageData.sender;
+        const message = messageData.message;
+
+        // Prevent duplicate messages
+        const existingMessages = document.querySelectorAll('.message div');
+        const isDuplicate = Array.from(existingMessages).some(div => div.textContent.includes(message));
+
+        if (!isDuplicate) {
+            const messageDiv = document.querySelector('.message');
+            if (sender !== "{{ user }}") {
+                messageDiv.innerHTML += '<div class="receive"><p style="color: #000;">' + message + '<strong>-' + sender + '</strong></p></div>';
+            } else {
+                messageDiv.innerHTML += '<div class="send"><p style="color: #000;">' + message + '</p></div>';
             }
-        });
-    </script>
+            scrollToBottom();
+        }
+    });
+
+    socket.onopen = () => {
+        document.getElementById('loading').style.display = 'none';
+        console.log("WebSocket connection opened!");
+    };
+
+    socket.onclose = () => {
+        console.log("WebSocket connection closed!");
+    };
+
+    socket.onerror = (error) => {
+        console.error("WebSocket error:", error);
+        alert("Connection error. Please try again later.");
+    };
+</script>
 </body>
 </html>
