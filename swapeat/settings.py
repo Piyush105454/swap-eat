@@ -144,3 +144,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ALLOWED_HOSTS = ['static-bessy-piyush105454-65e6965b.koyeb.app', 'localhost', '127.0.0.1']
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://static-bessy-piyush105454-65e6965b.koyeb.app'
+]
