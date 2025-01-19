@@ -49,18 +49,19 @@
 
         .message {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
             margin-bottom: 10px;
         }
+
         .message .send {
-        align-self: flex-end;
-    }
+            align-self: flex-end;
+        }
+
         .message .receive {
-        align-self: flex-start;
-    }
+            align-self: flex-start;
+        }
+
         .message p {
-            max-width: 45%;
+            max-width: 70%;
             padding: 10px;
             border-radius: 10px;
             margin: 0;
@@ -72,11 +73,12 @@
         }
 
         .message.send p {
-            background-color:#B1A296;
+            background-color: #B1A296;
         }
 
         .form {
             display: flex;
+            align-items: center;
             padding: 10px;
             background-color: #222;
         }
@@ -90,39 +92,41 @@
             margin-right: 10px;
         }
 
-       
-    form button {
-        width: 25%;
-        padding: 10px;
-        background-color: #FBEEC1;
-        border-radius: 5px;
-        border: none;  
-        color: #000;
-    }
-    .bottom-nav {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    background-color: #ff6600; /* Orange color */
-    padding: 10px 0;
-}
+        .form button {
+            width: auto;
+            padding: 10px 20px;
+            background-color: #FBEEC1;
+            border-radius: 5px;
+            border: none;
+            color: #000;
+            cursor: pointer;
+        }
 
-.nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: white;
-    cursor: pointer;
-}
+        /* Bottom navigation bar */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: #ff6600; /* Orange color */
+            padding: 10px 0;
+        }
 
-.nav-item:hover {
-    color: #ffcc00;
-}
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            cursor: pointer;
+        }
 
-.nav-item i {
-    font-size: 20px;
-    margin-bottom: 5px;
-}
+        .nav-item:hover {
+            color: #ffcc00;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
@@ -142,13 +146,14 @@
         </div>
 
         <div class="form">
-            <form action="" id="message-form" method="POST">
+            <form id="message-form">
                 {% csrf_token %}
                 <textarea id="msg" name="message" placeholder="Enter your message" required></textarea>
                 <button type="submit">Send</button>
             </form>
         </div>
     </div>
+
     <div class="bottom-nav">
         <div class="nav-item">
             <i class="fas fa-home"></i>
@@ -184,7 +189,10 @@
 
         document.getElementById('message-form').addEventListener('submit', function (event) {
             event.preventDefault();
-            const message = document.getElementById('msg').value;
+            const messageInput = document.getElementById('msg');
+            const message = messageInput.value;
+
+            // Send the message via WebSocket
             socket.send(
                 JSON.stringify({
                     'message': message,
@@ -192,11 +200,13 @@
                     'sender': "{{ user }}",
                 })
             );
+
+            // Clear the input field
+            messageInput.value = '';
         });
 
         socket.addEventListener("message", (event) => {
             const messageData = JSON.parse(event.data).message;
-
             const sender = messageData.sender;
             const message = messageData.message;
 
