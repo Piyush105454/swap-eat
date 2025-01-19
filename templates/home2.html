@@ -144,10 +144,11 @@ body {
           </div>
         </div>
         <nav>
+          <a href="{% url 'Home' %}" class="chat">Home</a>
           <a href="{% url 'explore' %}" class="explore">Explore</a>
           <a href="{% url 'postmeal' %}" class="post">Post</a>
-          <a href="#" class="notifications">Notifications</a>
-          <a href="#" class="chat">Chat</a>
+          <a href="{% url 'Home'%}" class="notifications">Notifications</a>
+          <a href="{% url 'chat' %}" class="chat">Chat</a>
         </nav>
       </section>
     </div>
