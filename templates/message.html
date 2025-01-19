@@ -53,7 +53,12 @@
             align-items: center;
             margin-bottom: 10px;
         }
-
+        .message .send {
+        align-self: flex-end;
+    }
+        .message .receive {
+        align-self: flex-start;
+    }
         .message p {
             max-width: 45%;
             padding: 10px;
@@ -63,11 +68,11 @@
         }
 
         .message.receive p {
-            background-color: #444;
+            background-color: #B1A296;
         }
 
         .message.send p {
-            background-color: #0078ff;
+            background-color:#B1A296;
         }
 
         .form {
@@ -85,15 +90,39 @@
             margin-right: 10px;
         }
 
-        .form button {
-            width: 20%;
-            padding: 10px;
-            background-color: #fbeec1;
-            border-radius: 5px;
-            border: none;
-            color: #000;
-            cursor: pointer;
-        }
+       
+    form button {
+        width: 25%;
+        padding: 10px;
+        background-color: #FBEEC1;
+        border-radius: 5px;
+        border: none;  
+        color: #000;
+    }
+    .bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #ff6600; /* Orange color */
+    padding: 10px 0;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    cursor: pointer;
+}
+
+.nav-item:hover {
+    color: #ffcc00;
+}
+
+.nav-item i {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
     </style>
 </head>
 <body>
@@ -120,6 +149,28 @@
             </form>
         </div>
     </div>
+    <div class="bottom-nav">
+        <div class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-search"></i>
+            <span>Explore</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-plus-circle"></i>
+            <span>Post</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-bell"></i>
+            <span>Notifications</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-comment"></i>
+            <span>Chat</span>
+        </div>
+    </div>
 
     <script>
         function scrollToBottom() {
@@ -134,8 +185,6 @@
         document.getElementById('message-form').addEventListener('submit', function (event) {
             event.preventDefault();
             const message = document.getElementById('msg').value;
-
-            // Send the message via WebSocket
             socket.send(
                 JSON.stringify({
                     'message': message,
@@ -143,9 +192,6 @@
                     'sender': "{{ user }}",
                 })
             );
-
-            // Clear the input field
-            document.getElementById('msg').value = '';
         });
 
         socket.addEventListener("message", (event) => {
