@@ -15,5 +15,5 @@ urlpatterns = [
     path('login/', views.LoginPage, name='login'),
     path('home/', views.HomePage, name='home/'),  # Fixed trailing slash consistency
     path('logout/', views.LogoutPage, name='logout'),
-    path('home2/upload/', views.upload, name='upload'),  # Changed to use a different view for clarity
+    # Changed to use a different view for clarity
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
