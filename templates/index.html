@@ -64,7 +64,7 @@
     <div class="parent">
         <div class="child">
             <h1>Enter Room</h1>
-            <form action="{% url 'create_room' %}" method="POST">
+            <form action="{% url 'create-room' %}" method="POST">
                 {% csrf_token %}
                 <label for="">Username</label><br>
                 <input type="text" placeholder="Username" name="username" required><br>
