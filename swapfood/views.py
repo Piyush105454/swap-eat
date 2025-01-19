@@ -1,4 +1,4 @@
-from django.shortcuts import render,HttpResponse,redirect
+intfrom django.shortcuts import render,HttpResponse,redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
@@ -64,6 +64,10 @@ def explore(request):
     return render(request, 'explore.html')
 def postmeal(request):
     return render(request, 'postmeal.html')
+def Home(request):
+    return render(request, 'Home.html')
+def chat(request):
+    return render(request, 'chat.html')
     
 from django.shortcuts import render, redirect
 from .models import *
