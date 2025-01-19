@@ -67,7 +67,7 @@ def postmeal(request):
 def Home(request):
     return render(request, 'Home.html')
 def chat(request):
-    return render(request, 'chat.html')
+    return render(request, 'index.html')
     
 from django.shortcuts import render, redirect
 from .models import *
