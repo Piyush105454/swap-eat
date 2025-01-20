@@ -20,6 +20,7 @@ urlpatterns = [
     path('home/', views.HomePage, name='home'),  # Fixed trailing slash consistency
     path('logout/', views.LogoutPage, name='logout'),
     # Changed to use a different view for clarity
+] 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
