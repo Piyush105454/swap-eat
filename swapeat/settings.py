@@ -136,7 +136,10 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
+# Redirect after login
+LOGIN_URL = '/login/'  # Where users are redirected if not logged in
+LOGIN_REDIRECT_URL = '/home/'  # Default page after login
+LOGOUT_REDIRECT_URL = '/login/'  # Redirect after logout
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
