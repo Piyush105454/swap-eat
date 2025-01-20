@@ -84,27 +84,30 @@ h2 {
 }
 
 /* Navigation */
-nav {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 150px;
-}
+.bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: #ff6600; /* Orange color */
+            padding: 10px 0;
+        }
 
-nav a {
-  text-decoration: none;
-  padding: 10px 15px;
-  background: linear-gradient(to bottom, #ff5722, #d84315);
-  color: white;
-  font-size: 14px;
-  font-weight: bold;
-  border-radius: 8px;
-  transition: background 0.3s, transform 0.2s;
-}
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            cursor: pointer;
+        }
 
-nav a:hover {
-  background: #ff9800;
-  transform: scale(1.1);
-}
+        .nav-item:hover {
+            color: #ffcc00;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
 
 /* Flexbox for full-body coverage */
 body {
@@ -142,12 +145,28 @@ body {
             <p>Healthy Hood, Bhopal, India</p>
           </div>
         </div>
-        <nav>
-          <a href="explore.html" class="explore">Explore</a>
-          <a href="postmeal.html" class="post">Post</a>
-          <a href="#" class="notifications">Notifications</a>
-          <a href="#" class="chat">Chat</a>
-        </nav>
+        <div class="bottom-nav">
+        <div class="nav-item">
+            <i class="fas fa-home"></i>
+            <a href="{% url 'Home' %}" class="chat">Home</a>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-search"></i>
+            <a href="{% url 'explore' %}" class="chat">explore</a>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-plus-circle"></i>
+            <a href="{% url 'postmeal' %}" class="chat">postmeal</a>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-bell"></i>
+            <a href="{% url 'Home' %}" class="chat">notifications</a>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-comment"></i>
+            <a href="{% url 'Home' %}" class="chat">Home</a>
+        </div>
+        </div>
       </section>
     </div>
   </body>
