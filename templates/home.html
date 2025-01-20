@@ -1,4 +1,3 @@
-
 <!doctype html>
 {% load static %}
 <html lang="en">
@@ -9,366 +8,282 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <title>Home Page</title>
-  </head>
-  <style>
-   
-/* Global Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+    <style>
+      /* Global Reset */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-body {
-  font-family: 'Arial', sans-serif;
-  line-height: 1.6;
-  color: #333;
-}
+      html, body {
+        height: 100%;
+        overflow-x: hidden;
+      }
 
-/* Header */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background: yellow;
-}
+      body {
+        font-family: 'Arial', sans-serif;
+        line-height: 1.6;
+        color: #333;
+      }
 
-.logo {
-  display: flex;
-  align-items: center;
-}
+      /* Header */
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+        background: yellow;
+      }
 
-.logo img {
-  height: 50px;
-  margin-right: 10px;
-}
+      .logo {
+        display: flex;
+        align-items: center;
+      }
 
-.nav a {
-  margin-left: 15px;
-  text-decoration: none;
-  color: #000;
-  font-weight: bold;
-  font-size: 1rem;
-}
+      .logo img {
+        height: 50px;
+        margin-right: 10px;
+      }
 
-/* Hero Section */
+      .nav a {
+        margin-left: 15px;
+        text-decoration: none;
+        color: #000;
+        font-weight: bold;
+        font-size: 1rem;
+      }
+
+      /* Hero Section */
+      .hero {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+        background: #f9ff00;
+        min-height: 80vh;
+      }
+
+      .cta-button {
+        background: orange;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        margin: 1rem 0;
+        font-size: 1.2rem;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+
+      #btn {
+        margin-top: 50px;
+        display: inline-block;
+        padding: 10px 20px;
+        background: rgb(240, 111, 6);
+        color: rgb(26, 18, 18);
+        font-weight: bolder;
+        font-size: xx-large;
+        text-decoration: none;
+        border-radius: 5px;
+        display: block;
+      }
+
+      #free {
+        margin-top: 50px;
+        text-align: center;
+        font-weight: bolder;
+        font-size: xx-large;
+        color: rgb(199, 71, 12);
+      }
+
+      /* Testimonials Section */
+      .testimonials {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        background: #222;
+        color: white;
+        padding: 2rem;
+      }
+
+      .testimonial {
+        background: #333;
+        padding: 1rem;
+        border-radius: 5px;
+      }
+
+      /* Footer */
+      .footer {
+        background: #000;
+        color: white;
+        padding: 2rem;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin-top: auto;
+      }
+
+      .footer .links h4 {
+        margin-bottom: 10px;
+        font-size: 1rem;
+      }
+
+      .footer .links a {
+        display: block;
+        margin-bottom: 5px;
+        text-decoration: none;
+        color: #fff;
+      }
+  /* Fixed Images in the Hero Section */
 .hero {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 2rem;
-  background: #f9ff00;
-  position: relative;
+  position: relative; /* Required for absolute positioning of child elements */
 }
 
-.hero-content {
-  text-align: center;
-  flex: 1;
-  padding: 1rem;
+.hero img {
+  position: absolute;
+  max-width: 15%; /* Scale the images */
+  height: auto;   /* Maintain aspect ratio */
+  bottom: 20px;   /* Position from the bottom */
+  z-index: 1;     /* Ensure it's above other elements */
 }
 
-.cta-button {
-  background: orange;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  margin: 1rem 0;
-  font-size: 1.2rem;
-  cursor: pointer;
-  border-radius: 5px;
+.hero img.left {
+  left: 20px; /* Fixed position on the left */
 }
 
-.cta-button span {
-  display: block;
-  font-size: 0.8rem;
+.hero img.right {
+  right: 20px; /* Fixed position on the right */
 }
 
-.location-input input {
-  padding: 10px;
-  width: 80%;
-  margin-top: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-}
-
-
-/* Testimonials Section */
-.testimonials {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1rem;
-  background: #222;
-  color: white;
-  padding: 2rem;
-}
-
-.testimonial {
-  background: #333;
-  padding: 1rem;
-  border-radius: 5px;
-  font-size: 1rem;
-  line-height: 1.4;
-}
-
-/* End Content Section */
-.end-content {
-  text-align: center;
-  padding: 2rem;
-  background: #f9ff00;
-}
-
-.end-content .highlight {
-  color: red;
-  font-weight: bold;
-}
-
-.swipe-card {
-  margin: 1rem 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.swipe-card .card {
-  background: white;
-  border-radius: 5px;
-  padding: 1rem;
-  text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.swipe-card .card img {
-  width: 150px;
-  height: auto;
-  margin-bottom: 1rem;
-}
-
-.swipe-instructions p {
-  font-size: 1rem;
-  color: #333;
-}
-
-.bottom-navigation {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 1rem;
-}
-
-.nav-icon img {
-  width: 30px;
-  height: auto;
-}
-
-/* Footer */
-.footer {
-  background: #000;
-  color: white;
-  padding: 2rem;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-
-.footer .links h4 {
-  margin-bottom: 10px;
-  font-size: 1rem;
-}
-
-.footer .links a {
-  display: block;
-  margin-bottom: 5px;
-  text-decoration: none;
-  color: #fff;
-}
-/* Responsive Design */
+/* Adjust image size for smaller screens */
 @media (max-width: 768px) {
-  .hero {
-    flex-direction: column;
-    padding: 1rem;
+  .hero img {
+    max-width: 25%; /* Adjust size for tablets */
+    bottom: 10px;   /* Adjust spacing */
   }
-  .hero-content {
-    padding: 0.5rem;
-  }
-
-  .cta-button {
-    font-size: 1rem;
-    padding: 8px 16px;
-  }
-
-  .location-input input {
-    width: 90%;
-  }
-
-  .testimonials {
-    grid-template-columns: 1fr;
-  }
-
-  .testimonial {
-    font-size: 0.9rem;
-  }
-
-  .swipe-card .card img {
-    width: 120px;
-  }
-
-  .bottom-navigation img {
-    width: 25px;
-  }
-
-  .footer {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  
 }
 
 @media (max-width: 480px) {
-  .nav a {
-    font-size: 0.9rem;
+  .hero img {
+    max-width: 35%; /* Further adjust size for mobile devices */
+    bottom: 5px;    /* Adjust spacing */
   }
-
-  .hero-content h2 {
-    font-size: 1.5rem;
+}
+/* Adjust image size for smaller screens */
+@media (max-width: 768px) {
+  .hero img {
+    max-width: 30%; /* Increase size for better visibility on smaller screens */
+    bottom: 5px;    /* Adjust spacing */
   }
-
-  .cta-button {
-    font-size: 0.9rem;
-    padding: 6px 12px;
-  }
-
-  .swipe-card .card {
-    padding: 0.5rem;
-  }
-
-  .swipe-instructions p {
-    font-size: 0.9rem;
-  }
-  /* Centering button and free text */
-#btn {
-  margin-top: 50px;
-  display: inline-block;
-  padding: 10px 20px;
-  background: rgb(240, 111, 6);
-  color: rgb(26, 18, 18);
-  font-weight: bolder;
-  font-size: xx-large;
-  text-decoration: none;
-  border-radius: 5px;
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
 }
 
-/* Free text below the button */
-#free {
-  margin-top: 50px;
-  text-align: center;
-  font-weight: bolder;
-  font-size: xx-large;
-  color: rgb(199, 71, 12);
+@media (max-width: 480px) {
+  .hero img {
+    max-width: 40%; /* Further increase size for very small devices */
+    bottom: 2px;    /* Adjust spacing */
   }
-  
-  </style>
+}
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .hero {
+          padding: 1rem;
+        }
+
+        .cta-button {
+          font-size: 1rem;
+          padding: 8px 16px;
+        }
+
+        .testimonials {
+          grid-template-columns: 1fr;
+        }
+
+        .testimonial {
+          font-size: 0.9rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        
+        .nav a {
+          font-size: 0.9rem;
+          margin:10px;
+          
+        }
+
+        .cta-button {
+          
+          font-size: 0.9rem;
+          padding: 6px 12px;
+        }
+      }
+    </style>
+  </head>
   <body>
-     <header class="header">
-    <div class="logo">
-      <img src="https://i.postimg.cc/W1gwTmRT/burgur.jpg" alt="Swap Eat Logo">
-      <h1>SWAP EAT</h1>
-    </div>
-    <nav class="nav">
-      <a href="{% url 'signup' %}" class="btn btn-primary" style="margin-right: 50px;"  >signup</a>
-             <a href="{% url 'login' %}" class="btn btn-primary" style="margin-right: 40px;"  >login</a>
-    
-             <a href="{% url 'logout' %}" class="btn btn-primary" style="margin-right: 20px;" >Logout</a>
-   
-  </header>
-
-  <!-- Hero Section -->
-  <section class="hero">
-    
-
-    <div class="hero-content">
-      <h2>POST • SWAP • EAT</h2>
-        <a href="{% url 'home2' %}" class="btn btn-primary" id="btn" style="margin-right: 20px;" >get started</a>
-                 <h1 id="free">for free</h1>
-    </div>
-     <div class="location-input">
-        <input type="text" placeholder="Enter your location">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <img src="https://i.postimg.cc/pL3RBYB0/Picsart-25-01-14-11-24-10-237.png" alt="Swap Eat Logo">
+        <h1>SWAP EAT</h1>
       </div>
-  </section>
+      <nav class="nav">
+        <a href="{% url 'signup' %}" class="btn btn-primary">Signup</a>
+        <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+        <a href="{% url 'logout' %}" class="btn btn-primary">Logout</a>
+      </nav>
+    </header>
 
-  <!-- Testimonials Section -->
-  <section class="testimonials">
-    <div class="testimonial">
-      <p>As a homemaker in Hyderabad, SwapEat has helped me connect with my neighbors...</p>
-      <span>- Pushpendra and Divyanshi</span>
-    </div>
-    <div class="testimonial">
-      <p>In Delhi, food waste is a huge issue, and SwapEat is a fantastic way to tackle it...</p>
-      <span>- Aryan and Abhi</span>
-    </div>
-    <div class="testimonial">
-      <p>Living in Mumbai, eating out is expensive, and SwapEat gives me affordable options...</p>
-      <span>- Aryan and Pushpendra</span>
-    </div>
-    <div class="testimonial">
-      <p>As a college student in Bangalore, SwapEat is a lifesaver...</p>
-      <span>- Divyanshi and Prithviraj</span>
-    </div>
-  </section>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-content">
+        <h2>POST • SWAP • EAT</h2>
+        <a href="{% url 'home2' %}" class="btn btn-primary" id="btn">Get Started</a>
+        <h1 id="free">For Free</h1>
+      </div>
+       <img src="https://i.postimg.cc/XqnCY0Gy/left.png" alt="Food Left" class="left">
+      <img src="https://i.postimg.cc/PJcTFWjr/right.png" alt="Food Right" class="right">
+    </section>
 
-  <!-- End Content Section -->
-  <section class="end-content">
-    <h2>Aryan Feeling <span class="highlight">Hungry?</span></h2>
-    <div class="swipe-card">
-      <div class="card">
-        <img src="{% static 'images/left.png' %}" alt="Veg Burger">
-        <p>Veg Burger<br><span>Katrahills</span></p>
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+      <div class="testimonial">
+        <p>As a homemaker in Hyderabad, SwapEat has helped me connect with my neighbors...</p>
+        <span>- Aryan and vijaya</span>
       </div>
-      <div class="swipe-instructions">
-        <p>Use ( <span>&#8250;</span> ) to swipe right</p>
+      <div class="testimonial">
+        <p>In Delhi, food waste is a huge issue, and SwapEat is a fantastic way to tackle it...</p>
+        <span>- Aryan and piyush</span>
       </div>
-    </div>
+      <div class="testimonial">
+        <p>Living in Mumbai, eating out is expensive, and SwapEat gives me affordable options...</p>
+        <span>- Aryan and Naved</span>
+      </div>
+    </section>
 
-    <div class="bottom-navigation">
-      <div class="nav-icon"><i class="fas fa-home"></i></div>
-      <div class="nav-icon"><i class="fas fa-plus"></i></div>
-      <div class="nav-icon"><i class="fas fa-comments"></i></div>
-    </div>
-  </section>
-
-  <!-- Footer Section -->
-  <footer class="footer">
-    <div class="links">
-      <div>
-        <h4>Legal</h4>
-        <a href="#">Privacy</a>
-        <a href="#">Terms</a>
+    <!-- Footer Section -->
+    <footer class="footer">
+      <div class="links">
+        <div>
+          <h4>Legal</h4>
+          <a href="#">Privacy</a>
+          <a href="#">Terms</a>
+        </div>
+        <div>
+          <h4>Careers</h4>
+          <a href="#">Careers Portal</a>
+          <a href="#">Tech Blog</a>
+        </div>
+        <div>
+          <h4>Socials</h4>
+          <a href="#">Instagram</a>
+          <a href="#">Twitter</a>
+        </div>
       </div>
-      <div>
-        <h4>Careers</h4>
-        <a href="#">Careers Portal</a>
-        <a href="#">Tech Blog</a>
-      </div>
-      <div>
-        <h4>Socials</h4>
-        <a href="#">Instagram</a>
-        <a href="#">Twitter</a>
-      </div>
-    </div>
-    
-  </footer>
-    
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    </footer>
   </body>
 </html>
