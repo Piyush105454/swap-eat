@@ -74,6 +74,9 @@ def postmeal(request):
     return render(request, 'postmeal.html')
 
 @login_required
+def Home(request):
+    return render(request, 'Home.html')
+@login_required
 def chat(request):
     return render(request, 'index.html')
 
