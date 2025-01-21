@@ -70,19 +70,17 @@ def HomePage2(request):
 def explore(request):
     return render(request, 'explore.html')
 
-@login_required
-def postmeal(request):
-    return render(request, 'postmeal.html')
 
-@login_required
-def Home(request):
-    return render(request, 'Home.html')
+
+
+
 @login_required
 def chat(request):
     return render(request, 'index.html')
 
 
-def post_meal(request):
+@login_required
+def postmeal(request):
     if request.method == "POST":
         name = request.POST.get("name")
         description = request.POST.get("description")
@@ -92,6 +90,10 @@ def post_meal(request):
         return render(request, "Home.html")
     return render(request, "postmeal.html")
 
+@login_required
+def Home(request):
+    meals = Meal.objects.all()
+    return render(request, "Home.html", {"meals": meals})
 
 # Chat Room Functionality
 @login_required
