@@ -1,5 +1,15 @@
 from django.db import models
 
+
+class Meal(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    radius = models.FloatField()
+    image = models.ImageField(upload_to="meal_images/", blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
 # Create your models here.
 class user(models.Model):
     pic = models.ImageField(upload_to="profiles")
