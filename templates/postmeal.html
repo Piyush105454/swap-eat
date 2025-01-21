@@ -9,129 +9,115 @@
   </head>
   <style>
     body, html {
-  margin: 0;
-  padding: 0;
-  font-family: 'Arial', sans-serif;
-  background: yellow;
-  color: #444;
-  min-height: 100vh; /* Ensure full height */
-  display: flex;
-  flex-direction: column;
-}
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: yellow;
+      color: #444;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
     .post-form {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-}
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
 
-.post-form div {
-  padding: 10px;
-  background: #fff3e0;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
+    .post-form div {
+      padding: 10px;
+      background: #fff3e0;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
 
-label {
-  font-size: 14px;
-  font-weight: bold;
-  color: #444;
-}
+    label {
+      font-size: 14px;
+      font-weight: bold;
+      color: #444;
+    }
 
-input[type="text"] {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  border: 2px solid #ff9800;
-  border-radius: 6px;
-  font-size: 14px;
-}
+    input[type="text"], input[type="file"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 2px solid #ff9800;
+      border-radius: 6px;
+      font-size: 14px;
+    }
 
-button {
-  padding: 10px 20px;
-  background: linear-gradient(to right, #ff9800, #f57c00);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
+    button {
+      padding: 10px 20px;
+      background: linear-gradient(to right, #ff9800, #f57c00);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
 
-button:hover {
-  background: linear-gradient(to right, #f57c00, #e65100);
-}
+    button:hover {
+      background: linear-gradient(to right, #f57c00, #e65100);
+    }
 
-/* Floating Meals */
-.map {
-  height: 150px;
-  background: #ffccbc;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-weight: bold;
-}
-nav {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 150px;
-}
+    nav {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 50px;
+    }
 
-nav a {
-  text-decoration: none;
-  padding: 10px 15px;
-  background: linear-gradient(to bottom, #ff5722, #d84315);
-  color: white;
-  font-size: 14px;
-  font-weight: bold;
-  border-radius: 8px;
-  transition: background 0.3s, transform 0.2s;
-}
+    nav a {
+      text-decoration: none;
+      padding: 10px 15px;
+      background: linear-gradient(to bottom, #ff5722, #d84315);
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 8px;
+      transition: background 0.3s, transform 0.2s;
+    }
 
-nav a:hover {
-  background: #ff9800;
-  transform: scale(1.1);
-}
-    /* Add your CSS here */
+    nav a:hover {
+      background: #ff9800;
+      transform: scale(1.1);
+    }
   </style>
   <body>
     <div class="container">
       <section class="post-meal">
         <h2>Post a Meal</h2>
-        <div class="post-form">
+        <form method="POST" enctype="multipart/form-data" class="post-form">
+          {% csrf_token %}
           <div class="taste">
             <label for="taste">Taste*</label>
-            <input type="text" id="taste" name="taste" placeholder="name your cuisine...">
+            <input type="text" id="taste" name="taste" placeholder="Name your cuisine..." required>
           </div>
           <div class="tags">
             <label for="tags">Tags*</label>
-            <input type="text" id="tags" name="tags" placeholder="Tag keywords...">
+            <input type="text" id="tags" name="tags" placeholder="Tag keywords..." required>
           </div>
           <div class="rating">
             <label for="rating">Rating</label>
-            <input type="text" id="rating" name="rating" placeholder="choose stars">
+            <input type="text" id="rating" name="rating" placeholder="Choose stars" required>
           </div>
           <div class="radius">
             <label for="radius">Radius</label>
-            <input type="text" id="radius" name="radius" placeholder="Select the range of radius">
+            <input type="text" id="radius" name="radius" placeholder="Select the range of radius" required>
           </div>
-          <div class="post-your-meal">
-            <h3>Post your Meal</h3>
-            <p>Aryan Patil</p>
-            <p>Paneer Butter Masala</p>
-            <p>Mims cafe, Rgpv Bhopal</p>
-            <p>Radius: 3.5</p>
-            <button>Spread Taste</button>
+          <div class="image-upload">
+            <label for="image">Upload Image</label>
+            <input type="file" id="image" name="image" accept="image/*" required>
           </div>
-        </div>
+          <button type="submit">Spread Taste</button>
+        </form>
         <nav>
           <a href="{% url 'Home' %}" class="chat">Home</a>
           <a href="{% url 'explore' %}" class="explore">Explore</a>
           <a href="{% url 'postmeal' %}" class="chat">Post</a>
-          <a href="{% url 'Home'%}" class="notifications">Notifications</a>
+          <a href="{% url 'notifications' %}" class="notifications">Notifications</a>
           <a href="{% url 'chat' %}" class="chat">Chat</a>
-       
         </nav>
       </section>
     </div>
