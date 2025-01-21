@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Custom Layout</title>
+  <title>Food Posts</title>
   <style>
     body {
       margin: 0;
@@ -20,93 +20,100 @@
 
     .top-section {
       display: flex;
-      flex: 1;
+      flex-direction: row;
+      justify-content: space-between;
+      padding: 10px;
     }
 
     .left-box,
     .right-box {
-      flex: 1;
+      flex: 0 0 45%; /* Ensures both boxes take equal width (45% of the container) */
+      max-width: 300px; /* Prevents boxes from expanding too much */
       margin: 10px;
       padding: 20px;
       background-color: #ff6600;
       border-radius: 8px;
-    }
-
-    .left-box button {
-      display: block;
-      width: 100%;
-      padding: 15px;
-      font-size: 16px;
-      font-weight: bold;
-      color: white;
-      background-color: #ff6600;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      text-align: center;
-      margin-bottom: 10px;
-    }
-
-    .right-box {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      box-sizing: border-box; /* Ensures padding doesn't add to the box's width */
     }
 
     .gallery-tabs {
       flex: 1;
       margin-bottom: 10px;
-    }
-
-    .right-box button {
-      width: 100%;
-      padding: 15px;
-      font-size: 16px;
-      font-weight: bold;
-      color: white;
-      background-color:#ff6600 ;
-      border: none;
+      background-color: white;
+      padding: 10px;
       border-radius: 5px;
-      cursor: pointer;
+      overflow-y: auto;
     }
 
-    .bottom-nav {
-      display: flex;
-      justify-content: space-around;
-      padding: 10px 0;
-      background-color:#ff6600;
-      position: sticky;
-      bottom: 0;
-      border-top: 2px solid #ff6600;
-    }
-    .header {
-            background-color: #fef500;
-            text-align: center;
-            padding: 15px;
-            font-size: 24px;
-            font-weight: bold;
-            color: black;
-        }
-    .bottom-nav button {
-      flex: 1;
-      padding: 15px;
-      font-size: 14px;
-      font-weight: bold;
-      color: white;
-      background-color: #ff6600;
-      border: none;
-      cursor: pointer;
-      text-align: center;
+    .gallery-tabs h1 {
+      font-size: 24px;
+      color: #ff5722;
+      margin-bottom: 10px;
     }
 
-    .bottom-nav button:not(:last-child) {
-      margin-right: 5px;
+    .gallery-tabs div {
+      border: 1px solid #ccc;
+      margin: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      background-color: #fff;
+    }
+
+    .gallery-tabs img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+     .bottom-nav {
+  display: flex;
+  justify-content: space-around; /* Evenly distribute buttons */
+  padding: 10px 0;
+  background-color: #ff6600;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  border-top: 2px solid #ff6600;
+  z-index: 100;
+}
+    .nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px; /* Space inside each button */
+  text-align: center;
+  margin: 0 5px; /* Add horizontal spacing between buttons */
+}
+
+.nav-item i {
+  font-size: 20px;
+  margin-bottom: 5px; /* Space between icon and text */
+}
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .top-section {
+        flex-direction: column; /* Stack boxes vertically on smaller screens */
+        align-items: center;
+      }
+
+      .left-box,
+      .right-box {
+        flex: 0 0 90%; /* Boxes take 90% of the screen width on mobile */
+        max-width: 100%; /* Remove the max-width restriction for smaller devices */
+      }
+      
     }
   </style>
 </head>
 <body>
   <div class="container">
-      <div class="header">Eat Quietly!</div>
+    <div class="header">Eat Quietly!</div>
 
     <div class="top-section">
       <div class="left-box">
@@ -114,33 +121,47 @@
         <button>Invitees</button>
       </div>
       <div class="right-box">
-        <div class="gallery-tabs">Swap It Gallery Tab</div>
+        <div class="gallery-tabs">
+          <h1>Food Posts</h1>
+          {% for meal in meals %}
+              <div>
+                  <h2>{{ meal.name }}</h2>
+                  <p>{{ meal.description }}</p>
+                  <p><strong>Radius:</strong> {{ meal.radius }} km</p>
+                  {% if meal.image %}
+                      <img src="{{ meal.image.url }}" alt="{{ meal.name }}">
+                  {% else %}
+                      <p>No image available.</p>
+                  {% endif %}
+              </div>
+          {% endfor %}
+        </div>
         <button>Start Searching</button>
       </div>
     </div>
-     <div class="bottom-nav">
-        <div class="nav-item">
-            <i class="fas fa-home"></i>
-            <span>Home</span>
-        </div>
-        <div class="nav-item">
-            <i class="fas fa-search"></i>
-            <span>Explore</span>
-        </div>
-        <div class="nav-item">
-            <i class="fas fa-plus-circle"></i>
-            <span>Post</span>
-        </div>
-        <div class="nav-item">
-            <i class="fas fa-bell"></i>
-            <span>Notifications</span>
-        </div>
-        <div class="nav-item">
-            <i class="fas fa-comment"></i>
-            <span>Chat</span>
-        </div>
-    </div>
 
+    <div class="bottom-nav">
+      <div class="nav-item">
+        <i class="fas fa-home"></i>
+         <a href="{% url 'Home' %}" class="chat">Home</a>
+      </div>
+      <div class="nav-item">
+        <i class="fas fa-search"></i>
+         <a href="{% url 'explore' %}" class="chat">Explore</a>
+      </div>
+      <div class="nav-item">
+        <i class="fas fa-plus-circle"></i>
+         <a href="{% url 'postmeal' %}" class="chat">post</a>
+      </div>
+      <div class="nav-item">
+        <i class="fas fa-bell"></i>
+         <a href="{% url 'Home' %}" class="chat">notification</a>
+      </div>
+      <div class="nav-item">
+        <i class="fas fa-comment"></i>
+         <a href="{% url 'chat' %}" class="chat">chat</a>
+      </div>
+    </div>
   </div>
 </body>
 </html>
