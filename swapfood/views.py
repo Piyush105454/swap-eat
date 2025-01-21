@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
 from django.conf import settings
 from .models import Room, Message
+from .models import Meal
 
 # Public Views
 def SignupPage(request):
@@ -79,6 +80,17 @@ def Home(request):
 @login_required
 def chat(request):
     return render(request, 'index.html')
+
+
+def post_meal(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        description = request.POST.get("description")
+        radius = request.POST.get("radius")
+        image = request.FILES.get("image")
+        Meal.objects.create(name=name, description=description, radius=radius, image=image)
+        return render(request, "Home.html")
+    return render(request, "postmeal.html")
 
 
 # Chat Room Functionality
