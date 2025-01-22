@@ -15,11 +15,11 @@ urlpatterns = [
     path('chat/', include('swapfood.urls')), 
       # Fixed missing parenthesis
 
-    path('', views.SignupPage, name='signup'),  # Renamed for clarity
+    path('home/signup/', views.SignupPage, name='signup'),  # Renamed for clarity
     path('home2/', views.HomePage2, name='home2'),
-    path('login/', views.LoginPage, name='login'),
-    path('home/', views.HomePage, name='home'),  # Fixed trailing slash consistency
-    path('logout/', views.LogoutPage, name='logout'),
+    path('home/login/', views.LoginPage, name='login'),
+    path('', views.HomePage, name='home'),  # Fixed trailing slash consistency
+    path('home/logout/', views.LogoutPage, name='logout'),
     # Changed to use a different view for clarity
 ] 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
