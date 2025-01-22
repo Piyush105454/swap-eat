@@ -4,8 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
 from django.conf import settings
-from .models import Room, Message
-from .models import Meal
+from .models import Room, Message, Meal
 
 # Public Views
 def SignupPage(request):
@@ -50,7 +49,6 @@ def LogoutPage(request):
     logout(request)
     return redirect('login')
 
-
 # Protected Views
 @login_required
 def HomePage(request):
@@ -70,14 +68,9 @@ def HomePage2(request):
 def explore(request):
     return render(request, 'explore.html')
 
-
-
-
-
 @login_required
 def chat(request):
     return render(request, 'index.html')
-
 
 @login_required
 def postmeal(request):
@@ -87,7 +80,7 @@ def postmeal(request):
         radius = request.POST.get("radius")
         image = request.FILES.get("image")
         Meal.objects.create(name=name, description=description, radius=radius, image=image)
-         return redirect('Home')
+        return redirect('Home')  # Ensure this line is correctly indented
     return render(request, "postmeal.html")
 
 @login_required
