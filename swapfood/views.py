@@ -82,8 +82,8 @@ def chat(request):
 @login_required
 def postmeal(request):
     if request.method == "POST":
-        name = request.POST.get("name")
-        description = request.POST.get("description")
+        name = request.POST.get("taste")
+        description = request.POST.get("tags")
         radius = request.POST.get("radius")
         image = request.FILES.get("image")
         Meal.objects.create(name=name, description=description, radius=radius, image=image)
