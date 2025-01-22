@@ -73,7 +73,9 @@ def chat(request):
     return render(request, 'index.html')
 @login_required
 def post(request):
-    return render(request, 'Post.html')
+    meals = Meal.objects.all()
+    return render(request, "Post.html", {"meals": meals})
+    
 
 @login_required
 def postmeal(request):
@@ -83,7 +85,7 @@ def postmeal(request):
         radius = request.POST.get("radius")
         image = request.FILES.get("image")
         Meal.objects.create(name=name, description=description, radius=radius, image=image)
-        return redirect('post')  # Ensure this line is correctly indented
+        return redirect('Home')  # Ensure this line is correctly indented
     return render(request, "postmeal.html")
 
 @login_required
