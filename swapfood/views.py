@@ -87,7 +87,7 @@ def postmeal(request):
         radius = request.POST.get("radius")
         image = request.FILES.get("image")
         Meal.objects.create(name=name, description=description, radius=radius, image=image)
-        return render(request, "Home.html")
+         return redirect('Home')
     return render(request, "postmeal.html")
 
 @login_required
