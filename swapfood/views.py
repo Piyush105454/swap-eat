@@ -50,7 +50,7 @@ def LogoutPage(request):
     return redirect('login')
 
 # Protected Views
-@login_required
+
 def HomePage(request):
     return render(request, 'home.html')
 
