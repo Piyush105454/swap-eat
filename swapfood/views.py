@@ -71,6 +71,9 @@ def explore(request):
 @login_required
 def chat(request):
     return render(request, 'index.html')
+@login_required
+def post(request):
+    return render(request, 'Post.html')
 
 @login_required
 def postmeal(request):
