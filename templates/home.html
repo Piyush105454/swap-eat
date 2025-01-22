@@ -231,11 +231,14 @@
         <img src="https://i.postimg.cc/pL3RBYB0/Picsart-25-01-14-11-24-10-237.png" alt="Swap Eat Logo">
         <h1>SWAP EAT</h1>
       </div>
-      <nav class="nav">
-        <a href="{% url 'signup' %}" class="btn btn-primary">Signup</a>
-        <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
-        <a href="{% url 'logout' %}" class="btn btn-primary">Logout</a>
-      </nav>
+    <nav class="nav">
+  {% if user.is_authenticated %}
+    <a href="{% url 'logout' %}" class="btn btn-primary">Logout</a>
+  {% else %}
+    <a href="{% url 'signup' %}" class="btn btn-primary">Signup</a>
+    <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+  {% endif %}
+    </nav>
     </header>
 
     <!-- Hero Section -->
@@ -244,7 +247,23 @@
         <h2>POST • <span style="color: #ff4848;">SWAP</span> • EAT</h2>
         <a href="{% url 'home2' %}" class="btn btn-primary" id="btn">Get Started</a>
         <h1 id="free">For Free</h1>
+         
       </div>
+      <!-- Location Input -->
+  <div class="location-input" style="text-align: center; margin-top: 20px;">
+    <input
+      type="text"
+      id="location"
+      placeholder="Enter your location"
+      style="padding: 10px; width: 60%; border: 1px solid #ccc; border-radius: 5px;"
+    />
+    <button
+      id="searchBtn"
+      style="padding: 10px 20px; background: orange; color: white; border: none; border-radius: 5px; cursor: pointer;"
+    >
+      <i class="fas fa-search"></i>
+    </button>
+  </div>
        <img src="https://i.postimg.cc/XqnCY0Gy/left.png" alt="Food Left" class="left">
       <img src="https://i.postimg.cc/PJcTFWjr/right.png" alt="Food Right" class="right">
     </section>
@@ -285,5 +304,16 @@
         </div>
       </div>
     </footer>
+    <script>
+  document.getElementById('searchBtn').addEventListener('click', function () {
+    const location = document.getElementById('location').value.trim();
+    if (location) {
+      // Redirect to Home.html with the location as a query parameter
+      window.location.href = `{% url 'home' %}?location=${encodeURIComponent(location)}`;
+    } else {
+      alert('Please enter a location.');
+    }
+  });
+    </script>
   </body>
 </html>
