@@ -9,105 +9,136 @@
       margin: 0;
       font-family: Arial, sans-serif;
       background-color: yellow;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .container {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      justify-content: space-between;
+      width: 100%;
+      max-width: 1200px;
+      padding: 20px;
+    }
+
+    .header {
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
     }
 
     .top-section {
       display: flex;
-      flex-direction: row;
       justify-content: space-between;
-      padding: 10px;
+      gap: 20px;
+      flex-wrap: wrap; /* Ensures wrapping on smaller screens */
     }
 
     .left-box,
     .right-box {
-      flex: 0 0 45%; /* Ensures both boxes take equal width (45% of the container) */
-      max-width: 300px; /* Prevents boxes from expanding too much */
-      margin: 10px;
-      padding: 20px;
+      flex: 1 1 48%; /* Boxes take equal space, adjust as needed */
+      min-width: 300px;
       background-color: #ff6600;
+      color: white;
       border-radius: 8px;
-      box-sizing: border-box; /* Ensures padding doesn't add to the box's width */
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      box-sizing: border-box;
     }
 
     .gallery-tabs {
-      flex: 1;
-      margin-bottom: 10px;
       background-color: white;
-      padding: 10px;
-      border-radius: 5px;
+      color: #333;
+      padding: 15px;
+      border-radius: 8px;
       overflow-y: auto;
+      max-height: 300px;
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1);
     }
 
     .gallery-tabs h1 {
-      font-size: 24px;
-      color: #ff5722;
+      font-size: 20px;
       margin-bottom: 10px;
+      color: #ff5722;
     }
 
     .gallery-tabs div {
       border: 1px solid #ccc;
-      margin: 10px;
+      margin: 10px 0;
       padding: 10px;
       border-radius: 8px;
-      background-color: #fff;
     }
 
     .gallery-tabs img {
       max-width: 100%;
-      height: auto;
       border-radius: 8px;
+      margin-top: 10px;
     }
 
-     .bottom-nav {
-  display: flex;
-  justify-content: space-around; /* Evenly distribute buttons */
-  padding: 10px 0;
-  background-color: #ff6600;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  border-top: 2px solid #ff6600;
-  z-index: 100;
-}
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: white;
+      color: #ff6600;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #ff5722;
+      color: white;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: #ff6600;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      z-index: 100;
+    }
+
     .nav-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 14px;
-  font-weight: bold;
-  padding: 10px; /* Space inside each button */
-  text-align: center;
-  margin: 0 5px; /* Add horizontal spacing between buttons */
-}
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+    }
 
-.nav-item i {
-  font-size: 20px;
-  margin-bottom: 5px; /* Space between icon and text */
-}
+    .nav-item i {
+      font-size: 20px;
+      margin-bottom: 5px;
+    }
 
-    /* Responsive Styles */
+    .nav-item a {
+      text-decoration: none;
+      color: white;
+    }
+
     @media (max-width: 768px) {
       .top-section {
-        flex-direction: column; /* Stack boxes vertically on smaller screens */
-        align-items: center;
+        flex-direction: column; /* Stacks boxes vertically */
       }
 
       .left-box,
       .right-box {
-        flex: 0 0 90%; /* Boxes take 90% of the screen width on mobile */
-        max-width: 100%; /* Remove the max-width restriction for smaller devices */
+        flex: 1 1 100%; /* Boxes take full width on mobile */
+        margin-bottom: 20px; /* Adds spacing between boxes */
       }
-      
+
+      .gallery-tabs {
+        max-height: 200px; /* Adjusts for smaller screens */
+      }
     }
   </style>
 </head>
@@ -124,16 +155,16 @@
         <div class="gallery-tabs">
           <h1>Food Posts</h1>
           {% for meal in meals %}
-              <div>
-                  <h2>{{ meal.name }}</h2>
-                  <p>{{ meal.description }}</p>
-                  <p><strong>Radius:</strong> {{ meal.radius }} km</p>
-                  {% if meal.image %}
-                      <img src="{{ meal.image.url }}" alt="{{ meal.name }}">
-                  {% else %}
-                      <p>No image available.</p>
-                  {% endif %}
-              </div>
+          <div>
+            <h2>{{ meal.name }}</h2>
+            <p>{{ meal.description }}</p>
+            <p><strong>Radius:</strong> {{ meal.radius }} km</p>
+            {% if meal.image %}
+            <img src="{{ meal.image.url }}" alt="{{ meal.name }}">
+            {% else %}
+            <p>No image available.</p>
+            {% endif %}
+          </div>
           {% endfor %}
         </div>
         <button>Start Searching</button>
@@ -143,23 +174,23 @@
     <div class="bottom-nav">
       <div class="nav-item">
         <i class="fas fa-home"></i>
-         <a href="{% url 'Home' %}" class="chat">Home</a>
+        <a href="{% url 'Home' %}">Home</a>
       </div>
       <div class="nav-item">
         <i class="fas fa-search"></i>
-         <a href="{% url 'explore' %}" class="chat">Explore</a>
+        <a href="{% url 'explore' %}">Explore</a>
       </div>
       <div class="nav-item">
         <i class="fas fa-plus-circle"></i>
-         <a href="{% url 'postmeal' %}" class="chat">post</a>
+        <a href="{% url 'postmeal' %}">Post</a>
       </div>
       <div class="nav-item">
         <i class="fas fa-bell"></i>
-         <a href="{% url 'Home' %}" class="chat">notification</a>
+        <a href="{% url 'Home' %}">Notification</a>
       </div>
       <div class="nav-item">
         <i class="fas fa-comment"></i>
-         <a href="{% url 'chat' %}" class="chat">chat</a>
+        <a href="{% url 'chat' %}">Chat</a>
       </div>
     </div>
   </div>
