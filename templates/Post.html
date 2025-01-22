@@ -201,6 +201,34 @@
             background: #ff9800;
             transform: scale(1.1);
         }
+    .gallery-tabs {
+      flex: 1;
+      margin-bottom: 10px;
+      background-color: white;
+      padding: 10px;
+      border-radius: 5px;
+      overflow-y: auto;
+    }
+
+    .gallery-tabs h1 {
+      font-size: 24px;
+      color: #ff5722;
+      margin-bottom: 10px;
+    }
+
+    .gallery-tabs div {
+      border: 1px solid #ccc;
+      margin: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      background-color: #fff;
+    }
+
+    .gallery-tabs img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
     </style>
 </head>
 <body>
@@ -216,7 +244,21 @@
         <div class="slider">
             <div class="slides">
                 <div class="slide active" id="slide1">
-                    <img src="ai.png" alt="Post 1">
+                            <div class="gallery-tabs">
+          <h1>Food Posts</h1>
+          {% for meal in meals %}
+              <div>
+                  <h2>{{ meal.name }}</h2>
+                  <p>{{ meal.description }}</p>
+                  <p><strong>Radius:</strong> {{ meal.radius }} km</p>
+                  {% if meal.image %}
+                      <img src="{{ meal.image.url }}" alt="{{ meal.name }}">
+                  {% else %}
+                      <p>No image available.</p>
+                  {% endif %}
+              </div>
+          {% endfor %}
+        </div>
                 </div>
                 <div class="slide prev" id="slide2">
                     <img src="https://via.placeholder.com/300x200" alt="Post 2">
@@ -245,7 +287,7 @@
         
         <!-- Navigation Links -->
         <nav>
-            <a href="{% url 'Home' %}" class="chat">Home</a>
+            <a href="{% url 'post' %}" class="chat">Home</a>
             <a href="{% url 'explore' %}" class="explore">Explore</a>
             <a href="{% url 'postmeal' %}" class="chat">Post</a>
             <a href="{% url 'Home' %}" class="notifications">Notifications</a>
