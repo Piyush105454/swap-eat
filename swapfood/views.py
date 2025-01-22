@@ -83,7 +83,7 @@ def postmeal(request):
         radius = request.POST.get("radius")
         image = request.FILES.get("image")
         Meal.objects.create(name=name, description=description, radius=radius, image=image)
-        return redirect('Home')  # Ensure this line is correctly indented
+        return redirect('post')  # Ensure this line is correctly indented
     return render(request, "postmeal.html")
 
 @login_required
@@ -126,3 +126,6 @@ def MessageView(request, room_name, username):
         "room_name": room_name,
     }
     return render(request, 'message.html', context)
+    from django.shortcuts import render
+
+
