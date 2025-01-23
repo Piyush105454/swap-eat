@@ -133,26 +133,24 @@
         
       }
 
-    /* Footer */
-.footer {
+   .footer {
   background: #000;
   color: white;
   padding: 2rem;
-  display: flex;
-  flex-direction: colum;
-  justify-content: space-between;
-  margin-top: auto;
+  max-width: 1200px; /* Optional */
+  margin: auto; /* Center align */
 }
 
 .footer-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4 equal-width columns */
-  gap: 1rem;
+  display: grid !important; /* Ensure grid is applied */
+  grid-template-columns: repeat(4, 1fr); /* 4 columns */
+  gap: 1rem; /* Spacing between columns */
+  width: 100%;
 }
 
 .footer-section {
   display: flex;
-  flex-direction: colum;
+  flex-direction: column;
 }
 
 .footer-section h4 {
@@ -173,16 +171,16 @@
   color: #ff5a5a; /* Hover color */
 }
 
-/* Responsive design for smaller screens */
+/* Responsive Design */
 @media (max-width: 768px) {
   .footer-row {
-    grid-template-columns: repeat(2, 1fr); /* 2 columns on smaller screens */
+    grid-template-columns: repeat(2, 1fr); /* 2 columns */
   }
 }
 
 @media (max-width: 480px) {
   .footer-row {
-    grid-template-columns: 1fr; /* 1 column on very small screens */
+    grid-template-columns: 1fr; /* 1 column */
   }
 }
 
@@ -228,7 +226,86 @@
         color: white;
         font-size: 1.5rem;
       }
+       /* Chat Button */
+        .chat-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: orange;
+            border: none;
+            color: white;
+            border-radius: 50%;
+            padding: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+        }
 
+        /* Chat Box */
+        .chat-box {
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 300px;
+            height: 400px;
+            background: white;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            padding: 10px;
+            font-family: Arial, sans-serif;
+        }
+
+        .chat-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+            background-color: #ff4848;
+            color: white;
+            text-align: center;
+            padding: 5px;
+            border-radius: 10px;
+        }
+
+        .chat-body {
+            overflow-y: auto;
+            height: 280px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+    .chat-body p{
+      color:black;
+    }
+
+        .chat-footer {
+            display: flex;
+            align-items: center;
+        }
+      
+
+        .chat-footer input {
+            
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .chat-footer button {
+            margin-left: 10px;
+            padding: 8px 12px;
+            background-color: #ff4848;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .chat-footer button:hover {
+            background-color: darkorange;
+        }
 
 
       
@@ -287,10 +364,21 @@
       </div>
 
       <!-- Help Button and Animation -->
-      <div class="help-line"></div>
-      <button class="help-button">
-        <i class="fas fa-comment-dots"></i>
-      </button>
+      
+      
+       <button class="chat-button" onclick="toggleChat()">💬</button>
+
+    <div class="chat-box" id="chatBox">
+        <div class="chat-header">Ask Gemini</div>
+        <div class="chat-body" id="chatBody">
+            <p>Hello, <strong>Guest</strong>! How can I assist you today?</p>
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="userInput" placeholder="Type your question here..." />
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
 
       <!-- Location Input -->
       <div class="location-input" style="text-align: center; margin-top: 20px;">
@@ -358,6 +446,37 @@
 </footer>
     <!-- JavaScript -->
     <script>
+    function toggleChat() {
+            const chatBox = document.getElementById('chatBox');
+            chatBox.style.display = chatBox.style.display === 'none' || chatBox.style.display === '' ? 'block' : 'none';
+        }
+
+        function sendMessage() {
+            const userInput = document.getElementById('userInput').value.trim();
+            if (!userInput) return;
+
+            const chatBody = document.getElementById('chatBody');
+            chatBody.innerHTML += `<p><strong>You:</strong> ${userInput}</p>`;
+
+            // Make API request to Django backend
+            fetch('/chat-api/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ question: userInput }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    chatBody.innerHTML += `<p><strong>Gemini:</strong> ${data.answer}</p>`;
+                    chatBody.scrollTop = chatBody.scrollHeight; // Scroll to bottom
+                })
+                .catch(err => {
+                    chatBody.innerHTML += `<p><strong>Gemini:</strong> Sorry, something went wrong.</p>`;
+                });
+
+            document.getElementById('userInput').value = ''; // Clear input field
+        }
       document.getElementById('searchBtn').addEventListener('click', function () {
         const location = document.getElementById('location').value.trim();
         if (location) {
