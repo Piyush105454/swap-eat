@@ -9,6 +9,7 @@ urlpatterns = [
     path('home2/postmeal/', views.postmeal, name='postmeal'),
     path('home2/chat/', views.chat, name='chat'),
     path('home2/post/', views.post, name='post'),
+    path("chat-api/", views.chat_api, name="chat_api"),
     
     path('home2/Home/', views.Home, name='Home'),
     path('admin/', admin.site.urls),
