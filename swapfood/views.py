@@ -7,6 +7,8 @@ from django.conf import settings
 from .models import Room, Message, Meal
 import requests
 from django.http import JsonResponse
+import json
+
 
 
 # Public Views
@@ -79,42 +81,6 @@ def post(request):
     meals = Meal.objects.all()
     return render(request, "Post.html", {"meals": meals})
  
-def chat_api(request):
-    if request.method == "POST":
-        import json
-        data = json.loads(request.body)  # Get user question
-        user_question = data.get("question", "")
-
-        # Gemini API URL and Key
-        gemini_url = "https://api.openai.com/v1/chat/completions"
-        gemini_api_key = "AIzaSyA9_hSzJGQDgNAw_KN7l5U9rZAka7miIfk"
-
-        # API request payload
-        payload = {
-            "model": "text-davinci-003",  # Adjust based on Gemini API model
-            "messages": [{"role": "user", "content": user_question}],
-            "max_tokens": 150,
-        }
-        headers = {
-            "Authorization": f"Bearer {gemini_api_key}",
-            "Content-Type": "application/json",
-        }
-
-        # Send request to Gemini API
-        try:
-            response = requests.post(gemini_url, json=payload, headers=headers)
-            if response.status_code == 200:
-                gemini_response = response.json()
-                answer = gemini_response.get("choices")[0].get("message", {}).get("content", "I'm sorry, I don't have an answer.")
-            else:
-                answer = "Error: Unable to connect to Gemini API."
-        except Exception as e:
-            answer = f"An error occurred: {str(e)}"
-
-        return JsonResponse({"answer": answer})
-
-    return JsonResponse({"error": "Invalid request method."}, status=400)   
-
 @login_required
 def postmeal(request):
     if request.method == "POST":
@@ -131,7 +97,44 @@ def Home(request):
     meals = Meal.objects.all()
     return render(request, "Home.html", {"meals": meals})
 
-# Chat Room Functionality
+
+def chat_api(request):
+    if request.method == "POST":
+        data = json.loads(request.body)  # Get user question
+        user_question = data.get("question", "")
+
+        # Gemini API URL and Key
+        gemini_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyA9_hSzJGQDgNAw_KN7l5U9rZAka7miIfk"
+
+        # API request payload for Gemini 1.5
+        payload = {
+            "contents": [{
+                "parts": [{
+                    "text": user_question  # Add the user's question dynamically here
+                }]
+            }]
+        }
+
+        headers = {
+            "Authorization": f"Bearer {gemini_api_key}",  # API Key for Gemini 1.5
+            "Content-Type": "application/json",
+        }
+
+        # Send request to Gemini API
+        try:
+            response = requests.post(gemini_url, json=payload, headers=headers)
+            if response.status_code == 200:
+                gemini_response = response.json()
+                # Get the answer from the API response
+                answer = gemini_response.get("content", "Sorry, I couldn't generate a response.")
+            else:
+                answer = f"Error: Unable to connect to Gemini API. Status code: {response.status_code}"
+        except Exception as e:
+            answer = f"An error occurred: {str(e)}"
+
+        return JsonResponse({"answer": answer})
+
+    return JsonResponse({"error": "Invalid request method."}, status=400)
 @login_required
 def CreateRoom(request):
     if request.method == 'POST':
