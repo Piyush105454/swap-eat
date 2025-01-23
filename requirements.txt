@@ -35,3 +35,6 @@ txaio==23.1.1
 typing_extensions==4.7.1
 urllib3==2.0.4
 zope.interface==6.0
+
+mysqlclient
+PyMySQL
