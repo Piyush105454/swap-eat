@@ -86,8 +86,12 @@ CHANNEL_LAYERS = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'defaultdb',
+        'USER': 'avnadmin',
+        'PASSWORD': 'AVNS_ORs7d_ZbncIaIZ1qeoQ',
+        'HOST': 'mysql-39f0045-piyushmodi812-aac6.c.aivencloud.com',  # Replace with your Aiven MySQL host
+        'PORT': '28598',  # Replace with your Aiven MySQL port
     }
 }
 
