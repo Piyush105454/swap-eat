@@ -87,7 +87,7 @@ def chat_api(request):
 
         # Gemini API URL and Key
         gemini_url = "https://api.openai.com/v1/chat/completions"
-        gemini_api_key = "AIzaSyDum5P4EHJrF54qnOnmKGVfgHxvLcSTNCw"
+        gemini_api_key = "AIzaSyA9_hSzJGQDgNAw_KN7l5U9rZAka7miIfk"
 
         # API request payload
         payload = {
