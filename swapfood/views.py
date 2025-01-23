@@ -169,6 +169,6 @@ def MessageView(request, room_name, username):
         "room_name": room_name,
     }
     return render(request, 'message.html', context)
-    from django.shortcuts import render
+    
 
 
