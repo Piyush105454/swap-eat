@@ -53,30 +53,24 @@
         <div class="shape"></div>
         <div class="shape"></div>
     </div>
-    <form id="signupForm">
-        <h3>Signup Here</h3>
+    <form method="post">
+    {% csrf_token %}
+    <label for="username">Username</label>
+    <input type="text" name="username" id="username" required>
 
-        <label for="username">Username</label>
-        <input type="text" placeholder="Enter Username" id="username" required>
+    <label for="name">Name</label>
+    <input type="text" name="name" id="name" required>
 
-        <label for="name">Name</label>
-        <input type="text" placeholder="Enter Name" id="name" required>
+    <label for="email">Email</label>
+    <input type="email" name="email" id="email" required>
 
-        <label for="email">Email</label>
-        <input type="email" placeholder="Enter Email" id="email" required>
+    <label for="password1">Password</label>
+    <input type="password" name="password1" id="password1" required>
 
-        <div id="otpSection">
-            <label for="otp">Enter OTP</label>
-            <input type="text" placeholder="Enter OTP" id="otp" required>
-        </div>
+    <label for="password2">Confirm Password</label>
+    <input type="password" name="password2" id="password2" required>
 
-        <label for="password1">Password</label>
-        <input type="password" placeholder="Enter Password" id="password1" required>
-
-        <label for="password2">Confirm Password</label>
-        <input type="password" placeholder="Confirm Password" id="password2" required>
-
-        <button type="submit">Signup</button>
+    <button type="submit">Signup</button>
     </form>
 
     <script>
