@@ -8,16 +8,29 @@ from .models import Room, Message, Meal
 import requests
 from django.http import JsonResponse
 import json
+import random
+from django.core.mail import send_mail
+from .models import UserOTP
 
+# Generate OTP
+def generate_otp():
+    return random.randint(100000, 999999)
 
+# Send OTP to email
+def send_otp_email(email, otp):
+    subject = "Your OTP for Email Verification"
+    message = f"Hello,\n\nYour OTP for registration is {otp}.\n\nThank you!"
+    from_email = settings.EMAIL_HOST_USER
+    send_mail(subject, message, from_email, [email])
 
-# Public Views
+# Signup with OTP
 def SignupPage(request):
     if request.user.is_authenticated:
-        return redirect('home')  # Redirect to home if already logged in
+        return redirect('home')
 
     if request.method == 'POST':
         uname = request.POST.get('username')
+        name = request.POST.get('name')
         email = request.POST.get('email')
         pass1 = request.POST.get('password1')
         pass2 = request.POST.get('password2')
@@ -28,12 +41,39 @@ def SignupPage(request):
             return HttpResponse("Email already registered!")
         if pass1 != pass2:
             return HttpResponse("Your password and confirm password do not match!")
-        
-        # Create the user
-        my_user = User.objects.create_user(username=uname, email=email, password=pass1)
+
+        # Create inactive user
+        my_user = User.objects.create_user(username=uname, email=email, password=pass1, first_name=name, is_active=False)
         my_user.save()
-        return redirect('login')
+
+        # Generate OTP and save it
+        otp = generate_otp()
+        UserOTP.objects.create(user=my_user, otp=otp)
+
+        # Send OTP to user's email
+        send_otp_email(email, otp)
+
+        # Redirect to OTP verification page
+        return redirect('verify_otp', user_id=my_user.id)
     return render(request, 'signup.html')
+
+# OTP Verification
+def VerifyOTP(request, user_id):
+    if request.method == 'POST':
+        otp = request.POST.get('otp')
+        try:
+            user_otp = UserOTP.objects.get(user_id=user_id, otp=otp)
+            user = user_otp.user
+            user.is_active = True  # Activate user account
+            user.save()
+            user_otp.delete()  # Remove OTP after verification
+            return redirect('login')
+        except UserOTP.DoesNotExist:
+            return HttpResponse("Invalid OTP!")
+    return render(request, 'verify_otp.html', {'user_id': user_id})
+
+
+
 
 def LoginPage(request):
     if request.user.is_authenticated:
