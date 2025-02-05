@@ -3,187 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Carousel</title>
+    <title>Foodie Flip Gallery</title>
     <style>
-        /* Reset */
+        /* Base Styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        /* Body Styling */
         body {
-            font-family: Arial, sans-serif;
-            background: yellow;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            flex-direction: column;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #faff00;
             min-height: 100vh;
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
-        /* Heading Styling */
+        /* Glowing Header Animation */
         .glowing-heading {
-            width: 100%;
             text-align: center;
-            margin-top: 20px;
-            font-size: 36px;
-            font-weight: bold;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .glowing-heading .black-text {
-            color: black;
-        }
-
-        .glowing-heading .orange-text {
-            color: orange;
-            text-shadow: 0 0 5px orange, 0 0 10px orange, 0 0 20px orange, 0 0 30px red, 0 0 40px red, 0 0 50px red;
-            animation: slide-glow 2s ease-in-out infinite alternate;
-        }
-
-        /* Sliding Animation */
-        @keyframes slide-glow {
-            0% {
-                transform: translateX(0);
-                text-shadow: 0 0 5px orange, 0 0 10px orange, 0 0 20px orange, 0 0 30px red;
-            }
-            50% {
-                transform: translateX(10px);
-                text-shadow: 0 0 20px orange, 0 0 30px orange, 0 0 40px red;
-            }
-            100% {
-                transform: translateX(-10px);
-                text-shadow: 0 0 10px orange, 0 0 20px orange, 0 0 50px red;
-            }
-        }
-
-        /* Container */
-        .container {
-            width: 90%;
-            max-width: 500px;
-            text-align: center;
+            padding: 2rem 0;
             position: relative;
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            margin: 20px auto;
-        }
-
-        /* Slider */
-        .slider {
-            position: relative;
-            width: 100%;
-            height: 200px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        .slides {
-            display: flex;
-            transition: transform 1s ease-in-out;
-        }
-
-        .slide {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: absolute;
-            top: 0;
-            left: 0;
-            opacity: 0;
-            transition: opacity 1s ease, transform 1s ease;
-        }
-
-        .slide.active {
-            opacity: 1;
-            transform: scale(1);
             z-index: 2;
         }
 
-        .slide.prev,
-        .slide.next {
-            opacity: 0.5;
-            transform: scale(0.8);
-            z-index: 1;
+        .glowing-heading .black-text {
+            color: #2d3436;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
 
-        .slide img {
-            max-width: 80%;
-            height: auto;
-            object-fit: cover;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        .glowing-heading .orange-text {
+            color: #ff487f;
+            font-size: 3rem;
+            animation: glow-pulse 2s ease-in-out infinite;
+            position: relative;
+            display: inline-block;
         }
 
-        /* Controls */
-        .controls {
-            margin-top: 20px;
+        @keyframes glow-pulse {
+            0%, 100% { 
+                text-shadow: 0 0 15px #ff6b6b, 0 0 30px #ff6b6b;
+                transform: scale(1);
+            }
+            50% { 
+                text-shadow: 0 0 30px #ff6b6b, 0 0 60px #ff6b6b;
+                transform: scale(1.05);
+            }
+        }
+
+        /* 3D Flip Container */
+        .flip-container {
+            width: 50%;
+            max-width: 500px;
+            margin: 2rem auto;
+            perspective: 2000px;
+        }
+
+        .flipper {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1s;
+            min-height: 500px;
+        }
+
+        /* Flip Panels */
+        .flip-panel {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.2);
+            padding: 2rem;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
         }
 
-        .btn {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 0 10px;
+        /* Front Panel */
+        .front {
+            transform: rotateY(0deg);
+            z-index: 2;
+        }
+
+        /* Back Panel */
+        .back {
+            transform: rotateY(-180deg);
+        }
+
+        /* Active Flip State */
+        .flipped .flipper {
+            transform: rotateY(180deg);
+        }
+
+        /* Food Card Design */
+        .food-card {
+            width: 100%;
+            max-width: 300px;
+            margin: 1rem;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
             cursor: pointer;
+            position: relative;
+        }
+
+        .food-card:hover {
+            transform: translateY(-10px) rotateZ(2deg);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .food-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 3px solid #ff6b6b;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+            background: linear-gradient(45deg, #fff, #f8f9fa);
+        }
+
+        .card-content h3 {
+            color: #2d3436;
+            margin-bottom: 0.5rem;
+            font-size: 1.4rem;
+        }
+
+        .card-content p {
+            color: #636e72;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Navigation Controls */
+        .flip-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .flip-btn {
+            padding: 12px 25px;
             border: none;
-            border-radius: 5px;
-            background-color: blue;
+            border-radius: 30px;
+            background: linear-gradient(to bottom, #ff5722, #d84315);
             color: white;
-            transition: background-color 0.3s;
-        }
-
-        .btn:hover {
-            background-color: darkblue;
-        }
-
-        /* Form */
-        .form-container {
-            margin-top: 20px;
-        }
-
-        .form-container input {
-            padding: 10px;
-            font-size: 14px;
-            margin: 5px 0;
-            width: 90%;
-            max-width: 400px;
-        }
-
-        .form-container button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: green;
-            color: white;
-            border: none;
-            border-radius: 5px;
+            font-weight: bold;
             cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
-        .form-container button:hover {
-            background-color: darkgreen;
+        .flip-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255,107,107,0.4);
         }
 
-        /* Navigation */
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            background: rgba(255,255,255,0.9);
+            border-radius: 20px;
+            margin: 2rem auto;
+            max-width: 500px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .flip-container {
+                width: 95%;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .glowing-heading .black-text {
+                font-size: 2rem;
+            }
+
+            .glowing-heading .orange-text {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Navigation Styles */
         nav {
             display: flex;
-            align-items:center;
+            align-items: center;
             justify-content: space-around;
             margin-top: 40px;
-            
         }
 
         nav a {
@@ -201,143 +218,136 @@
             background: #ff9800;
             transform: scale(1.1);
         }
-    .gallery-tabs {
-      flex: 1;
-      margin-bottom: 10px;
-      background-color: white;
-      padding: 10px;
-      border-radius: 5px;
-      overflow-y: auto;
-    }
-
-    .gallery-tabs h1 {
-      font-size: 24px;
-      color: #ff5722;
-      margin-bottom: 10px;
-    }
-
-    .gallery-tabs div {
-      border: 1px solid #ccc;
-      margin: 10px;
-      padding: 10px;
-      border-radius: 8px;
-      background-color: #fff;
-    }
-
-    .gallery-tabs img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 8px;
-    }
     </style>
 </head>
 <body>
 
-    <!-- Glowing Heading -->
-    <div class="glowing-heading">
-        <span class="black-text">Aryan Feeling</span>
-        <span class="orange-text">Hungry</span>
-    </div>
+    <!-- Animated Header -->
+    <header class="glowing-heading">
+        <h1>
+            <span class="black-text">Aryan's feeling</span>
+            <span class="orange-text">Foodiverse</span>
+        </h1>
+    </header>
 
-    <div class="container">
-        <!-- Image Carousel -->
-        <div class="slider">
-            <div class="slides">
-                <div class="slide active" id="slide1">
-                            <div class="gallery-tabs">
-          <h1>Food Posts</h1>
-          {% for meal in meals %}
-              <div>
-                  <h2>{{ meal.name }}</h2>
-                  <p>{{ meal.description }}</p>
-                  <p><strong>Radius:</strong> {{ meal.radius }} km</p>
-                  {% if meal.image %}
-                      <img src="{{ meal.image.url }}" alt="{{ meal.name }}">
-                  {% else %}
-                      <p>No image available.</p>
-                  {% endif %}
-              </div>
-          {% endfor %}
-        </div>
+    <!-- Navigation Tabs -->
+   
+
+    <!-- 3D Flip Container -->
+    <div class="flip-container">
+        <div class="flipper">
+            <!-- Front Panel - Use First Meal -->
+            <div class="flip-panel front">
+                {% if meal in meals %}
+                <div class="food-card">
+                    {% if meal.image %}
+                        <img src="{{ meals.0.image.url }}" alt="{{ meals.0.name }}">
+                    {% else %}
+                        <p>No image available.</p>
+                    {% endif %}
+                    <div class="card-content">
+                        <h3>{{ meal.name }}</h3>
+                        <p>{{ meal.description }}</p>
+                        <p class="radius">Within {{ meal.radius }} km</p>
+                    </div>
                 </div>
-                <div class="slide prev" id="slide2">
-                    <img src="https://via.placeholder.com/300x200" alt="Post 2">
-                </div>
-                <div class="slide next" id="slide3">
-                    <img src="https://via.placeholder.com/300x200" alt="Post 3">
-                </div>
-                <div class="slide" id="slide4">
-                    <img src="https://via.placeholder.com/300x200" alt="Post 4">
-                </div>
+                {% endif %}
+            </div>
+
+            <!-- Back Panel - Meal Details -->
+            <div class="flip-panel back">
+                <div class="card-content">
+                    <h3>Details</h3>
+                    </div>
             </div>
         </div>
-
-        <!-- Controls -->
-        <div class="controls">
-            <button class="btn" id="prevBtn">Previous</button>
-            <button class="btn" id="nextBtn">Next</button>
-        </div>
-
-        <!-- Form to Add New Post -->
-        <div class="form-container">
-            <input type="text" id="postTitle" placeholder="Post Title" required>
-            <input type="text" id="postImage" placeholder="Image URL" required>
-            <button id="addPostBtn">Add Post</button>
-        </div>
-        
-        <!-- Navigation Links -->
-        <nav>
-            <a href="{% url 'post' %}" class="chat">Home</a>
-            <a href="{% url 'explore' %}" class="explore">Explore</a>
-            <a href="{% url 'postmeal' %}" class="chat">Post</a>
-            <a href="{% url 'Home' %}" class="notifications">Notifications</a>
-            <a href="{% url 'chat' %}" class="chat">Chat</a>
-        </nav>
     </div>
 
-    <script>
-        const slides = document.querySelector('.slides');
-        const slideElements = document.querySelectorAll('.slide');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const addPostBtn = document.getElementById('addPostBtn');
-        const postTitle = document.getElementById('postTitle');
-        const postImage = document.getElementById('postImage');
-        let currentIndex = 0;
+    <!-- Flip Controls -->
+    <div class="flip-controls">
+        <button class="flip-btn" onclick="flipCard()">View Details</button>
+        <button class="flip-btn" onclick="nextCard()">Next Meal →</button>
+    </div>
 
-        function updateSlides() {
-            slideElements.forEach((slide, index) => {
-                slide.classList.remove('active', 'prev', 'next');
-                if (index === currentIndex) {
-                    slide.classList.add('active');
-                } else if (index === (currentIndex - 1 + slideElements.length) % slideElements.length) {
-                    slide.classList.add('prev');
-                } else if (index === (currentIndex + 1) % slideElements.length) {
-                    slide.classList.add('next');
-                }
-            });
+    <!-- Food Gallery Grid -->
+    <div class="gallery-grid">
+        {% for meal in meals %}
+        <div class="food-card">
+            {% if meal.image %}
+                <img src="{{ meal.image.url }}" alt="{{ meal.name }}">
+            {% else %}
+                <p>No image available.</p>
+            {% endif %}
+            <div class="card-content">
+                <h3>{{ meal.name }}</h3>
+                <p>{{ meal.description }}</p>
+                <p class="radius">Within {{ meal.radius }} km</p>
+                <button class="flip-btn" onclick="showDetails('{{ meal.id }}')">View</button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+  <nav>
+        <a href="{% url 'post' %}" class="chat">Home</a>
+        <a href="{% url 'explore' %}" class="explore">Explore</a>
+        <a href="{% url 'postmeal' %}" class="chat">Post</a>
+        <a href="{% url 'Home' %}" class="notifications">Notifications</a>
+        <a href="{% url 'chat' %}" class="chat">Chat</a>
+    </nav>
+
+    <script>
+        // 3D Flip Animation
+        function flipCard() {
+            document.querySelector('.flip-container').classList.toggle('flipped');
         }
 
-        nextBtn.addEventListener('click', () => {
-            currentIndex = (currentIndex + 1) % slideElements.length;
-            updateSlides();
+        // Card Navigation
+        let currentMeal = 0;
+        const meals = JSON.parse('{{ meals_json|escapejs }}');
+
+        function nextCard() {
+            currentMeal = (currentMeal + 1) % meals.length;
+            updateFeaturedMeal(meals[currentMeal]);
+            if (document.querySelector('.flip-container').classList.contains('flipped')) {
+                flipCard();
+            }
+        }
+
+        function updateFeaturedMeal(meal) {
+            const featuredCard = document.querySelector('.front .food-card');
+            if (featuredCard) {
+                featuredCard.querySelector('img').src = meal.image;
+                featuredCard.querySelector('h3').textContent = meal.name;
+                featuredCard.querySelector('p').textContent = meal.description;
+                featuredCard.querySelector('.radius').textContent = `Within ${meal.radius} km`;
+            }
+        }
+
+        // Hover Effects
+        document.querySelectorAll('.food-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.transform = `
+                    perspective(1000px)
+                    rotateX(${(y - rect.height / 2) / 20}deg)
+                    rotateY(${-(x - rect.width / 2) / 20}deg)
+                    translateZ(20px)
+                `;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'none';
+            });
         });
 
-        prevBtn.addEventListener('click', () => {
-            currentIndex = (currentIndex - 1 + slideElements.length) % slideElements.length;
-            updateSlides();
-        });
-
-        addPostBtn.addEventListener('click', () => {
-            const title = postTitle.value.trim();
-            const image = postImage.value.trim();
-            if (title && image) {
-                const newSlide = document.createElement('div');
-                newSlide.className = 'slide';
-                newSlide.innerHTML = `<img src="${image}" alt="${title}">`;
-                slides.appendChild(newSlide);
-                updateSlides();
+        // Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            if (meals.length > 0) {
+                updateFeaturedMeal(meals[0]);
             }
         });
-
-        updateSlides();
+    </script>
+</body>
+</html>
