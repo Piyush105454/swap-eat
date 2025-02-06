@@ -241,7 +241,7 @@
                 {% if meal in meals %}
                 <div class="food-card">
                     {% if meal.image %}
-                        <img src="{{ meals.0.image.url }}" alt="{{ meals.0.name }}">
+                        <img src="{{ meal.image.url }}" alt="{{ meal.name }}">
                     {% else %}
                         <p>No image available.</p>
                     {% endif %}
@@ -256,8 +256,17 @@
 
             <!-- Back Panel - Meal Details -->
             <div class="flip-panel back">
+                {% if meal in meals %}
+                  {% if meal.image %}
+                        <img src="{{ meal.image.url }}" alt="{{ meal.name }}">
+                    {% else %}
+                        <p>No image available.</p>
+                    {% endif %}
                 <div class="card-content">
                     <h3>Details</h3>
+                     <h3>{{ meal.name }}</h3>
+                      <p>{{ meal.description }}</p>
+                      <p class="radius">Within {{ meal.radius }} km</p>
                     </div>
             </div>
         </div>
