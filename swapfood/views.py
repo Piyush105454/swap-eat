@@ -1,22 +1,21 @@
-from django.shortcuts import render, HttpResponse, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import default_storage
-from django.conf import settings
-from .models import Room, Message, Meal
-import requests
-from django.http import JsonResponse
-import json
-import random
 from django.core.mail import send_mail
-from .models import UserOTP
+from django.conf import settings
+from django.http import JsonResponse
+from .models import Room, Message, Meal, UserOTP
+import random
+import requests
+import json
 
-# Generate OTP
+# Helper function: Generate OTP
 def generate_otp():
     return random.randint(100000, 999999)
 
-# Send OTP to email
+# Helper function: Send OTP email
 def send_otp_email(email, otp):
     subject = "Your OTP for Email Verification"
     message = f"Hello,\n\nYour OTP for registration is {otp}.\n\nThank you!"
@@ -57,7 +56,7 @@ def SignupPage(request):
         return redirect('verify_otp', user_id=my_user.id)
     return render(request, 'signup.html')
 
-# OTP Verification
+# OTP Verification View
 def VerifyOTP(request, user_id):
     if request.method == 'POST':
         otp = request.POST.get('otp')
@@ -72,12 +71,10 @@ def VerifyOTP(request, user_id):
             return HttpResponse("Invalid OTP!")
     return render(request, 'verify_otp.html', {'user_id': user_id})
 
-
-
-
+# Login View
 def LoginPage(request):
     if request.user.is_authenticated:
-        return redirect('home')  # Redirect to home if already logged in
+        return redirect('home')
 
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -90,15 +87,17 @@ def LoginPage(request):
             return HttpResponse("Username or Password is incorrect!")
     return render(request, 'login.html')
 
+# Logout View
 def LogoutPage(request):
     logout(request)
     return redirect('login')
 
-# Protected Views
-
+# Home Page View
+@login_required
 def HomePage(request):
     return render(request, 'home.html')
 
+# Upload Image and Display
 @login_required
 def HomePage2(request):
     if request.method == 'POST' and request.FILES.get('image'):
@@ -109,18 +108,23 @@ def HomePage2(request):
         return render(request, 'home2.html', {'file_url': file_url, 'file_name': file_name})
     return render(request, 'home2.html')
 
+# Explore Section
 @login_required
 def explore(request):
     return render(request, 'explore.html')
 
+# Chat Section
 @login_required
 def chat(request):
     return render(request, 'index.html')
+
+# Post Meals Section
 @login_required
 def post(request):
     meals = Meal.objects.all()
     return render(request, "Post.html", {"meals": meals})
- 
+
+# Add a New Meal Post
 @login_required
 def postmeal(request):
     if request.method == "POST":
@@ -132,40 +136,34 @@ def postmeal(request):
         return redirect('Home')  # Ensure this line is correctly indented
     return render(request, "postmeal.html")
 
+# Meal Display Home
 @login_required
 def Home(request):
     meals = Meal.objects.all()
     return render(request, "Home.html", {"meals": meals})
 
-
+# Chatbot API (Gemini Integration)
 def chat_api(request):
     if request.method == "POST":
-        data = json.loads(request.body)  # Get user question
+        data = json.loads(request.body)
         user_question = data.get("question", "")
 
-        # Gemini API URL and Key
-        gemini_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyA9_hSzJGQDgNAw_KN7l5U9rZAka7miIfk"
+        # Gemini API URL
+        gemini_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
 
-        # API request payload for Gemini 1.5
         payload = {
-            "contents": [{
-                "parts": [{
-                    "text": user_question  # Add the user's question dynamically here
-                }]
-            }]
+            "contents": [{"parts": [{"text": user_question}]}]
         }
 
         headers = {
-            "Authorization": f"Bearer {gemini_api_key}",  # API Key for Gemini 1.5
+            "Authorization": f"Bearer {settings.GEMINI_API_KEY}",
             "Content-Type": "application/json",
         }
 
-        # Send request to Gemini API
         try:
             response = requests.post(gemini_url, json=payload, headers=headers)
             if response.status_code == 200:
                 gemini_response = response.json()
-                # Get the answer from the API response
                 answer = gemini_response.get("content", "Sorry, I couldn't generate a response.")
             else:
                 answer = f"Error: Unable to connect to Gemini API. Status code: {response.status_code}"
@@ -175,6 +173,8 @@ def chat_api(request):
         return JsonResponse({"answer": answer})
 
     return JsonResponse({"error": "Invalid request method."}, status=400)
+
+# Create a Room for Chat
 @login_required
 def CreateRoom(request):
     if request.method == 'POST':
@@ -184,7 +184,6 @@ def CreateRoom(request):
         try:
             get_room = Room.objects.get(room_name=room)
             return redirect('room', room_name=room, username=username)
-
         except Room.DoesNotExist:
             new_room = Room(room_name=room)
             new_room.save()
@@ -192,6 +191,7 @@ def CreateRoom(request):
 
     return render(request, 'index.html')
 
+# Message Handling in Chat Room
 @login_required
 def MessageView(request, room_name, username):
     get_room = Room.objects.get(room_name=room_name)
@@ -209,6 +209,3 @@ def MessageView(request, room_name, username):
         "room_name": room_name,
     }
     return render(request, 'message.html', context)
-    
-
-
