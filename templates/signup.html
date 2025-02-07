@@ -157,12 +157,8 @@ a{
       
         <label for="email">Email</label>
         <input type="email" placeholder="Email " name="email" id="email">
-        <button type="button" id="send-otp-btn">Send OTP</button><br>
-
-        <div id="otp-section" style="display: none;">
-            <label>OTP:</label>
-            <input type="text" name="otp" required><br>
-        </div>
+        
+        
         
         <label for="password1">Password</label>
         <input type="password" placeholder="Password" id="password1" name="password1">
@@ -174,31 +170,6 @@ a{
         
         <a href="{% url 'login' %}" >i have already account</a>
     </form>
-   <script>
-        $(document).ready(function () {
-            $('#send-otp-btn').click(function () {
-                const email = $('#email').val();
-
-                if (!email) {
-                    alert("Please enter a valid email.");
-                    return;
-                }
-
-                $.ajax({
-                    url: "/send-otp-api/",
-                    type: "POST",
-                    data: JSON.stringify({ "email": email }),
-                    contentType: "application/json",
-                    success: function (response) {
-                        $('#response-message').text(response.message);
-                        $('#otp-section').show();
-                    },
-                    error: function (xhr) {
-                        $('#response-message').text(xhr.responseJSON.error);
-                    }
-                });
-            });
-        });
-   </script>
+   
 </body>
 </html>
