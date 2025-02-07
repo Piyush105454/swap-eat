@@ -69,7 +69,7 @@ def VerifyOTP(request, user_id):
             return redirect('login')
         except UserOTP.DoesNotExist:
             return HttpResponse("Invalid OTP!")
-    return render(request, 'verify_otp.html', {'user_id': user_id})
+    return render(request, 'home.html', {'user_id': user_id})
 
 # Login View
 def LoginPage(request):
@@ -208,4 +208,4 @@ def MessageView(request, room_name, username):
         "user": username,
         "room_name": room_name,
     }
-    return render(request, 'message.html', context) 
+    return render(request, 'message.html', context)
