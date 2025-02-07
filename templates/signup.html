@@ -58,6 +58,9 @@
             border-radius: 5px;
             cursor: pointer;
         }
+    form a{
+        color:black;
+    }
     </style>
 </head>
 <body>
@@ -66,17 +69,20 @@
         <h3>Signup with OTP Verification</h3>
 
         {% if not otp_sent %}
+            <!-- Email input form for OTP sending -->
             <label for="email">Enter Email</label>
             <input type="email" placeholder="Enter your email" name="email" required>
             <button type="submit" name="send_otp">Send OTP</button>
 
         {% elif not otp_verified %}
+            <!-- OTP input form for OTP verification -->
             <label for="otp">Enter OTP</label>
             <input type="text" placeholder="Enter the OTP" name="otp" required>
             <input type="hidden" name="email" value="{{ email }}">
             <button type="submit" name="verify_otp">Verify OTP</button>
 
         {% else %}
+            <!-- Form for creating the username and password after OTP verification -->
             <label for="username">Username</label>
             <input type="text" name="username" placeholder="Choose a username" required>
 
@@ -88,7 +94,8 @@
 
             <input type="hidden" name="email" value="{{ email }}">
             <button type="submit" name="create_account">Create Account</button>
-            <a href="{% url 'login' %}" >i have already account</a>
+
+            <a href="{% url 'login' %}">I already have an account</a>
         {% endif %}
     </form>
 
