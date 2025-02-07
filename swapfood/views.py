@@ -6,17 +6,14 @@ from django.core.files.storage import default_storage
 from django.core.mail import send_mail
 from django.conf import settings
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from .models import Room, Message, Meal, UserOTP
 import random
 import requests
 import json
 
-
 # Helper function: Generate OTP
 def generate_otp():
     return random.randint(100000, 999999)
-
 
 # Helper function: Send OTP email
 def send_otp_email(email, otp):
@@ -24,7 +21,6 @@ def send_otp_email(email, otp):
     message = f"Hello,\n\nYour OTP for registration is {otp}.\n\nThank you!"
     from_email = settings.EMAIL_HOST_USER
     send_mail(subject, message, from_email, [email])
-
 
 # Signup with OTP
 def SignupPage(request):
@@ -60,32 +56,6 @@ def SignupPage(request):
         return redirect('verify_otp', user_id=my_user.id)
     return render(request, 'signup.html')
 
-
-# OTP Verification API (for real-time OTP sending)
-@csrf_exempt
-def send_otp_api(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        email = data.get('email', '')
-
-        if not email:
-            return JsonResponse({'error': 'Invalid email!'}, status=400)
-
-        # Check if email is already registered
-        if User.objects.filter(email=email).exists():
-            return JsonResponse({'error': 'Email already registered!'}, status=400)
-
-        # Generate and store OTP
-        otp = generate_otp()
-        otp_entry, created = UserOTP.objects.update_or_create(email=email, defaults={'otp': otp})
-
-        # Send OTP to email
-        send_otp_email(email, otp)
-        return JsonResponse({'message': f"OTP sent to {email}"}, status=200)
-
-    return JsonResponse({'error': 'Invalid request'}, status=400)
-
-
 # OTP Verification View
 def VerifyOTP(request, user_id):
     if request.method == 'POST':
@@ -100,7 +70,6 @@ def VerifyOTP(request, user_id):
         except UserOTP.DoesNotExist:
             return HttpResponse("Invalid OTP!")
     return render(request, 'verify_otp.html', {'user_id': user_id})
-
 
 # Login View
 def LoginPage(request):
@@ -118,17 +87,15 @@ def LoginPage(request):
             return HttpResponse("Username or Password is incorrect!")
     return render(request, 'login.html')
 
-
 # Logout View
 def LogoutPage(request):
     logout(request)
     return redirect('login')
 
-
 # Home Page View
+
 def HomePage(request):
     return render(request, 'home.html')
-
 
 # Upload Image and Display
 @login_required
@@ -141,25 +108,21 @@ def HomePage2(request):
         return render(request, 'home2.html', {'file_url': file_url, 'file_name': file_name})
     return render(request, 'home2.html')
 
-
 # Explore Section
 @login_required
 def explore(request):
     return render(request, 'explore.html')
-
 
 # Chat Section
 @login_required
 def chat(request):
     return render(request, 'index.html')
 
-
 # Post Meals Section
 @login_required
 def post(request):
     meals = Meal.objects.all()
     return render(request, "Post.html", {"meals": meals})
-
 
 # Add a New Meal Post
 @login_required
@@ -170,16 +133,14 @@ def postmeal(request):
         radius = request.POST.get("radius")
         image = request.FILES.get("image")
         Meal.objects.create(name=name, description=description, radius=radius, image=image)
-        return redirect('home')  # Ensure this line is correctly indented
+        return redirect('Home')  # Ensure this line is correctly indented
     return render(request, "postmeal.html")
-
 
 # Meal Display Home
 @login_required
 def Home(request):
     meals = Meal.objects.all()
     return render(request, "Home.html", {"meals": meals})
-
 
 # Chatbot API (Gemini Integration)
 def chat_api(request):
@@ -213,7 +174,6 @@ def chat_api(request):
 
     return JsonResponse({"error": "Invalid request method."}, status=400)
 
-
 # Create a Room for Chat
 @login_required
 def CreateRoom(request):
@@ -230,7 +190,6 @@ def CreateRoom(request):
             return redirect('room', room_name=room, username=username)
 
     return render(request, 'index.html')
-
 
 # Message Handling in Chat Room
 @login_required
@@ -249,4 +208,4 @@ def MessageView(request, room_name, username):
         "user": username,
         "room_name": room_name,
     }
-    return render(request, 'message.html', context)
+    return render(request, 'message.html', context) 
