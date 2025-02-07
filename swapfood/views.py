@@ -10,6 +10,8 @@ from .models import Room, Message, Meal, UserOTP
 import random
 import requests
 import json
+from django.views.decorators.csrf 
+import csrf_exempt
 
 # Helper function: Generate OTP
 def generate_otp():
@@ -56,6 +58,32 @@ def SignupPage(request):
         return redirect('verify_otp', user_id=my_user.id)
     return render(request, 'signup.html')
 
+
+# OTP Verification API (for real-time OTP sending)
+@csrf_exempt
+def send_otp_api(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        email = data.get('email', '')
+
+        if not email:
+            return JsonResponse({'error': 'Invalid email!'}, status=400)
+
+        # Check if email is already registered
+        if User.objects.filter(email=email).exists():
+            return JsonResponse({'error': 'Email already registered!'}, status=400)
+
+        # Generate and store OTP
+        otp = generate_otp()
+        otp_entry, created = UserOTP.objects.update_or_create(email=email, defaults={'otp': otp})
+
+        # Send OTP to email
+        send_otp_email(email, otp)
+        return JsonResponse({'message': f"OTP sent to {email}"}, status=200)
+
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+    
+
 # OTP Verification View
 def VerifyOTP(request, user_id):
     if request.method == 'POST':
@@ -93,7 +121,7 @@ def LogoutPage(request):
     return redirect('login')
 
 # Home Page View
-@login_required
+
 def HomePage(request):
     return render(request, 'home.html')
 
