@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Signup Page with OTP Verification</title>
+    <style media="screen">
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #faff00;
+        }
+        form {
+            height: 940px;
+            width: 450px;
+            background-color: #ff4848;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            top: 50%;
+            left: 50%;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
+            padding: 50px 35px;
+        }
+        form h3 {
+            color: black;
+            font-size: 32px;
+            font-weight: 500;
+            text-align: center;
+        }
+        label {
+            color: black;
+            display: block;
+            margin-top: 30px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        input {
+            display: block;
+            height: 40px;
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 3px;
+            padding: 0 10px;
+            margin-top: 2px;
+            font-size: 14px;
+        }
+        button {
+            margin-top: 14px;
+            width: 100%;
+            background-color: #ffffff;
+            color: #080710;
+            padding: 15px 0;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <form method="post">
+        {% csrf_token %}
+        <h3>Signup with OTP Verification</h3>
+
+        {% if not otp_sent %}
+            <label for="email">Enter Email</label>
+            <input type="email" placeholder="Enter your email" name="email" required>
+            <button type="submit" name="send_otp">Send OTP</button>
+
+        {% elif not otp_verified %}
+            <label for="otp">Enter OTP</label>
+            <input type="text" placeholder="Enter the OTP" name="otp" required>
+            <input type="hidden" name="email" value="{{ email }}">
+            <button type="submit" name="verify_otp">Verify OTP</button>
+
+        {% else %}
+            <label for="username">Username</label>
+            <input type="text" name="username" placeholder="Choose a username" required>
+
+            <label for="password1">Password</label>
+            <input type="password" name="password1" placeholder="Enter your password" required>
+
+            <label for="password2">Confirm Password</label>
+            <input type="password" name="password2" placeholder="Confirm your password" required>
+
+            <input type="hidden" name="email" value="{{ email }}">
+            <button type="submit" name="create_account">Create Account</button>
+            <a href="{% url 'login' %}" >i have already account</a>
+        {% endif %}
+    </form>
+
+    <div>
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+</body>
+</html>
