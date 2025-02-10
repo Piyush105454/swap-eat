@@ -159,3 +159,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'piyushmodi812@gmail.com'  # Replace with your email
 EMAIL_HOST_PASSWORD = 'glmh kxkv ieao ubwo'  # Replace with your app password
 DEFAULT_FROM_EMAIL = 'your_email@gmail.com'
+
+
+
+GOOGLE_MAPS_API_KEY = "AIzaSyA7EHnJzVGU1uihVkoetcnV9XiK5oGkDpY"
