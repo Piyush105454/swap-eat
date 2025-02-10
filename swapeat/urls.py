@@ -15,7 +15,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('chat/', include('swapfood.urls')), 
       # Fixed missing parenthesis
-    path('post-location/', views.post_location_map, name='post_location_map'),
+    
 
     path('signup/', views.SignupPage, name='signup'),  # Renamed for clarity
     path('home2/', views.HomePage2, name='home2'),
