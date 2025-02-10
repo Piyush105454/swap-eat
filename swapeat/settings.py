@@ -162,4 +162,4 @@ DEFAULT_FROM_EMAIL = 'your_email@gmail.com'
 
 
 
-GOOGLE_MAPS_API_KEY = "AIzaSyA7EHnJzVGU1uihVkoetcnV9XiK5oGkDpY"
+
