@@ -10,8 +10,7 @@ from .models import Room, Message, Meal, UserOTP
 import random
 import requests
 import json
-from django.shortcuts import render
-from django.conf import settings
+
 
 def post_location_map(request):
     location = {
