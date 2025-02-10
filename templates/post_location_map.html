@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Post Location</title>
-  <script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&callback=initMap"></script>
   <style>
     #map {
       height: 500px;
@@ -16,7 +16,10 @@
 
   <script>
     function initMap() {
-      var postLocation = {lat: {{ location.lat }}, lng: {{ location.lng }}};
+      var postLocation = {
+        lat: {{ location.lat|default:0 }},
+        lng: {{ location.lng|default:0 }}
+      };
       var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 14,
         center: postLocation
@@ -27,9 +30,6 @@
         map: map
       });
     }
-
-    // Initialize Map
-    google.maps.event.addDomListener(window, 'load', initMap);
   </script>
 </body>
 </html>
