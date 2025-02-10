@@ -10,7 +10,18 @@ from .models import Room, Message, Meal, UserOTP
 import random
 import requests
 import json
+from django.shortcuts import render
+from django.conf import settings
 
+def post_location_map(request):
+    location = {
+        "lat": 28.7041,  # Example latitude (change dynamically as needed)
+        "lng": 77.1025  # Example longitude (change dynamically as needed)
+    }
+    return render(request, 'post_location_map.html', {
+        'api_key': settings.GOOGLE_MAPS_API_KEY,
+        'location': location
+    })
 # Helper function: Generate OTP
 def generate_otp():
     return random.randint(100000, 999999)
