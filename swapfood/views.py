@@ -7,10 +7,21 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.http import JsonResponse
 from .models import Room, Message, Meal, UserOTP
+from .models import FoodPost
+from .forms import FoodPostForm
 import random
 import requests
 import json
 
+def post_food(request):
+    if request.method == "POST":
+        form = FoodPostForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect("map")  # Redirect to map page
+    else:
+        form = FoodPostForm()
+    return render(request, "post_food.html", {"form": form})
 
 
 # Helper function: Generate OTP
