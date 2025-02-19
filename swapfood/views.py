@@ -22,7 +22,9 @@ def post_food(request):
     else:
         form = FoodPostForm()
     return render(request, "post_food.html", {"form": form})
-
+def map_view(request):
+    food_posts = FoodPost.objects.all()  # Fetch all food posts
+    return render(request, "map.html", {"food_posts": food_posts})
 
 # Helper function: Generate OTP
 def generate_otp():
