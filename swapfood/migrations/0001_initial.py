@@ -37,6 +37,17 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='FoodPost',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('photo', models.ImageField(upload_to='food_photos/')),
+                ('latitude', models.FloatField()),
+                ('longitude', models.FloatField()),
+                
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+            ],
+        ),
+        migrations.CreateModel(
             name='UserOTP',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
