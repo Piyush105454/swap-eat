@@ -140,9 +140,9 @@ def postmeal(request):
 
 # Meal Display Home
 @login_required
-def Home(request):
+def notification(request):
     meals = Meal.objects.all()
-    return render(request, "Home.html", {"meals": meals})
+    return render(request, "notification.html", {"meals": meals})
 
 # Chatbot API (Gemini Integration)
 def chat_api(request):
