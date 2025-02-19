@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Foodiverse{% endblock %}</title>
+ <!-- Link to your global stylesheet -->
+</head>
+  <style>
+    /* Profile Button Styling */
+.profile-button {
+    position: fixed; /* Fixed position keeps it in the same place while scrolling */
+    top: 10px; /* Distance from the top of the page */
+    right: 10px; /* Distance from the right edge */
+    z-index: 1000; /* Ensure it's on top of other elements */
+}
+
+/* Profile Button Image Styling */
+
+
+/* Profile Button Username Styling */
+.profile-button .username {
+    font-size: 14px; /* Adjust the font size */
+    color: #fff; /* Make the text white */
+    margin-left: 10px; /* Space between the image and the username */
+}
+
+.profile-button a {
+    display: flex;
+    align-items: center;
+    text-decoration: none; /* Remove underline from the link */
+}
+
+
+    
+  </style>
+<body>
+    <!-- Top Right Profile Button (Only visible if the user is logged in) -->
+    <div class="profile-button">
+        {% if user.is_authenticated %}
+        <a href="{% url 'profile' %}">
+            
+            <span class="username">{{ user.first_name }}</span>
+        </a>
+        {% endif %}
+    </div>
+
+    <!-- Main content of the page -->
+    <div class="content">
+        {% block content %} <!-- Content will be injected here from child templates -->
+        {% endblock %}
+    </div>
+</body>
+</html>
+<!-- 
+{% extends 'base.html' %}
+
+{% block title %}Profile - Foodiverse{% endblock %}
+
+{% block content %}
+    <h1>{{ user.first_name }}'s Profile</h1>
+    <img src="{{ user.profile_picture.url }}" alt="{{ user.username }}" class="profile-img">
+    <p>Username: {{ user.username }}</p>
+{% endblock %}
+-->
