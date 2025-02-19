@@ -1,7 +1,100 @@
-<form method="post">
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Verification Page</title>
+
+    <style>
+
+        body {
+
+            font-family: Arial, sans-serif;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            height: 100vh;
+
+            background-color: #e3f705c4;
+
+        }
+
+        .container {
+
+            background: rgba(249, 126, 3, 0.707);
+
+            padding: 20px;
+
+            border-radius: 10px;
+
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+
+            text-align: center;
+
+        }
+        label{
+          color:black;
+        }
+        input {
+
+            padding: 10px;
+
+            margin: 10px 0;
+
+            width: 80%;
+
+            border: 1px solid #ccc;
+
+            border-radius: 5px;
+
+        }
+
+        button {
+
+            padding: 10px 15px;
+
+            background: #28a745;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 5px;
+
+            cursor: pointer;
+
+        }
+
+        button:hover {
+
+            background: #218838;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <form method="post" class="container">
     {% csrf_token %}
-    <h3>Verify OTP</h3>
+    <h2>Verify OTP</h2>
     <label for="otp">Enter OTP</label>
     <input type="text" name="otp" id="otp" required>
     <button type="submit">Verify</button>
 </form>
+
+</body>
+
+</html>
+
