@@ -11,7 +11,7 @@ urlpatterns = [
     path('post/', views.post, name='post'),
     path("chat-api/", views.chat_api, name="chat_api"),
     path('verify-otp/<int:user_id>/', views.VerifyOTP, name='verify_otp'),
-    path('home2/Home/', views.Home, name='Home'),
+    path('post/notification/', views.notification, name='notification'),
     path('admin/', admin.site.urls),
     path('chat/', include('swapfood.urls')), 
       # Fixed missing parenthesis
