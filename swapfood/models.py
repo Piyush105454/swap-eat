@@ -53,3 +53,12 @@ class Message(models.Model):
 
     def __str__(self):
         return f"Room: {self.room.room_name}, Sender: {self.sender}, Message: {self.message[:20]}"
+class FoodPost(models.Model):
+    photo = models.ImageField(upload_to="food_photos/")
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Food Post at ({self.latitude}, {self.longitude})"
