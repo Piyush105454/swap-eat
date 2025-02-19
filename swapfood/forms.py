@@ -4,4 +4,4 @@ from .models import FoodPost
 class FoodPostForm(forms.ModelForm):
     class Meta:
         model = FoodPost
-        fields = ['photo', 'latitude', 'longitude', 'description']
+        fields = ['photo', 'latitude', 'longitude']
