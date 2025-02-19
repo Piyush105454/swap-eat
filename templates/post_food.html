@@ -1,15 +1,29 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Upload Food Post</title>
+    <title>Post a Meal</title>
 </head>
 <body>
-    <h2>Post a Food Photo</h2>
+    <h2>Post a Meal</h2>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Upload</button>
     </form>
+
+    <button onclick="getLocation()">Detect My Location</button>
+
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    document.getElementById("id_latitude").value = position.coords.latitude;
+                    document.getElementById("id_longitude").value = position.coords.longitude;
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+    </script>
 </body>
 </html>
