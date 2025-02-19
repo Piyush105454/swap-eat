@@ -124,7 +124,7 @@ def chat(request):
 @login_required
 def post(request):
     meals = Meal.objects.all()
-    return render(request, "Post.html", {"meals": meals})
+    return render(request, "profile.html", {"meals": meals})
 
 # Add a New Meal Post
 @login_required
