@@ -22,8 +22,6 @@ def post_food(request):
     else:
         form = FoodPostForm()
     return render(request, "post_food.html", {"form": form})
-from django.shortcuts import render
-from .models import Meal  # Ensure you are using the correct model name
 
 def map_view(request):
     food_posts = list(Meal.objects.values("latitude", "longitude", "image"))  # Convert QuerySet to list
