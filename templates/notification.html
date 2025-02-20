@@ -157,7 +157,10 @@
       cursor: pointer;
       transition: transform 0.3s ease-in-out;
     }
-
+     .nav-item a{
+      text-decoration: none;
+      color: black;
+    }
     .nav-item:hover {
       background-color: lightgreen;
       transform: scale(1.2);
@@ -220,18 +223,23 @@
     <div class="navbar">
       <div class="nav-item home">
         <i class="fa-solid fa-house"></i>
+        <a href="{% url 'post' %}" class="chat">Home</a>
       </div>
       <div class="nav-item">
         <i class="fa-solid fa-compass"></i>
+        <a href="{% url 'explore' %}" class="chat">explore</a>
       </div>
       <div class="nav-item">
         <i class="fa-solid fa-plus"></i>
+        <a href="{% url 'postmeal' %}" class="chat">post</a>
       </div>
       <div class="nav-item">
         <i class="fa-solid fa-bell"></i>
+        <a href="{% url 'notification' %}" class="chat">notification</a>
       </div>
       <div class="nav-item">
         <i class="fa-solid fa-user"></i>
+        <a href="{% url 'chat' %}" class="chat">chat</a>
       </div>
     </div>
   </div>
