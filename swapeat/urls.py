@@ -11,6 +11,8 @@ urlpatterns = [
     path('post/', views.post, name='post'),
     path("chat-api/", views.chat_api, name="chat_api"),
     path('verify-otp/<int:user_id>/', views.VerifyOTP, name='verify_otp'),
+    path('invite/', views.invite_member, name='invite_member'),
+    path('search/', views.search_meals, name='search_meals'),
     path('post/notification/', views.notification, name='notification'),
     path('admin/', admin.site.urls),
     path('chat/', include('swapfood.urls')), 
