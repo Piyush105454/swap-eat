@@ -26,6 +26,11 @@ def post_food(request):
 
 def map_view(request):
     food_posts = list(FoodPost.objects.values("latitude", "longitude", "photo", "created_at"))
+
+    # Convert datetime objects to string
+    for post in food_posts:
+        post["created_at"] = post["created_at"].isoformat()  # Converts datetime to string
+
     return render(request, "map.html", {"food_posts": json.dumps(food_posts)})
 # Helper function: Generate OTP
 def generate_otp():
