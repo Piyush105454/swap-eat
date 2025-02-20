@@ -9,6 +9,7 @@ from django.http import JsonResponse
 from .models import Room, Message, Meal, UserOTP
 from .models import FoodPost
 from .forms import FoodPostForm
+from .forms import InvitationForm, SearchForm
 import random
 import requests
 import json
@@ -156,7 +157,38 @@ def postmeal(request):
         Meal.objects.create(name=name, description=description, radius=radius, image=image)
         return redirect('Home')  # Ensure this line is correctly indented
     return render(request, "postmeal.html")
+@login_required
+def invite_member(request):
+    if request.method == 'POST':
+        form = InvitationForm(request.POST)
+        if form.is_valid():
+            invitation = form.save(commit=False)
+            invitation.user = request.user
+            invitation.save()
+            
+            # Send invitation email
+            send_mail(
+                'You are invited to join our website!',
+                'Please join us at our website: [URL]',
+                'from@example.com',  # From email
+                [invitation.email],   # To email
+                fail_silently=False,
+            )
+            return redirect('home')  # Redirect to a success page or home
+    else:
+        form = InvitationForm()
 
+    return render(request, 'invite_member.html', {'form': form})
+
+# Search meals view
+def search_meals(request):
+    meals = None
+    query = ''
+    if 'q' in request.GET:
+        query = request.GET['q']
+        meals = Meal.objects.filter(name__icontains=query)
+    
+    return render(request, 'search_meals.html', {'meals': meals, 'query': query})
 # Meal Display Home
 @login_required
 def notification(request):
