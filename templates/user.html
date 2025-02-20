@@ -179,4 +179,111 @@ urlpatterns = [
     <p>No meals found.</p>
   {% endif %}
 {% endblock %}
+  .nav-buttom{
+
+            display: flex;
+
+            justify-content: center;
+
+            gap:20PX;
+
+        }
+
+            .navbar {
+
+            display: flex;
+
+            align-items: center;
+
+            background: linear-gradient(to right, red, orange);
+
+            padding: 12px 20px;
+
+            border-radius: 40px;
+
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+
+            gap: 20px;
+
+        }
+
+
+
+        .nav-item {
+
+            width: 50px;
+
+            height: 50px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 22px;
+
+            background-color: transparent;
+
+            color: black;
+
+            border-radius: 50%;
+
+            cursor: pointer;
+
+            transition: transform 0.3s ease-in-out;
+
+        }
+
+
+
+        .nav-item:hover {
+
+            background-color: lightgreen;
+
+            transform: scale(1.2);
+
+        }
+
+
+    <section class="nav-buttom">
+
+        
+
+        <div class="navbar">
+
+            <div class="nav-item home">
+
+                <i class="fa-solid fa-house"></i>
+
+            </div>
+
+            <div class="nav-item">
+
+                <i class="fa-solid fa-compass"></i>
+
+            </div>
+
+            <div class="nav-item">
+
+                <i class="fa-solid fa-plus"></i>
+
+            </div>
+
+            <div class="nav-item">
+
+                <i class="fa-solid fa-bell"></i>
+
+            </div>
+
+            <div class="nav-item">
+
+                <i class="fa-solid fa-user"></i>
+
+            </div>
+
+            
+
+        </div>
+
 
