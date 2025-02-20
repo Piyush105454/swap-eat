@@ -55,8 +55,8 @@ class Message(models.Model):
         return f"Room: {self.room.room_name}, Sender: {self.sender}, Message: {self.message[:20]}"
 class FoodPost(models.Model):
     photo = models.ImageField(upload_to="food_photos/")
-    latitude = models.FloatField()
-    longitude = models.FloatField()
+    latitude = models.FloatField(null=True, blank=True)  # Auto-detected location
+    longitude = models.FloatField(null=True, blank=True) # Auto-detected location
     
     created_at = models.DateTimeField(auto_now_add=True)
 
