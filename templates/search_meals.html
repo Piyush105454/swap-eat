@@ -1,0 +1,20 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <h2>Search Meals</h2>
+  <form method="get">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search for meals">
+    <button type="submit">Search</button>
+  </form>
+
+  <h3>Results:</h3>
+  {% if meals %}
+    <ul>
+      {% for meal in meals %}
+        <li>{{ meal.name }} - {{ meal.description }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No meals found.</p>
+  {% endif %}
+{% endblock %}
