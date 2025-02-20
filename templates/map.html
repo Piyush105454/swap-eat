@@ -10,17 +10,17 @@
     <div id="map" style="height: 500px;"></div>
 
     <script>
-        var map = L.map('map').setView([20.5937, 78.9629], 5); // Default India
+        var map = L.map('map').setView([20.5937, 78.9629], 5); // Default to India
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
 
-        var foodPosts = JSON.parse('{{ food_posts|safe }}');  // Ensure valid JSON
+        var foodPosts = JSON.parse('{{ food_posts|safe }}');  // Parse JSON data
 
         foodPosts.forEach(post => {
             if (post.latitude && post.longitude) {
                 var marker = L.marker([post.latitude, post.longitude]).addTo(map);
-                marker.bindPopup(`<img src="/media/${post.image}" width="100"><br>${post.description}`);
+                marker.bindPopup(`<img src="/media/${post.photo}" width="100"><br>Posted on: ${post.created_at}`);
             }
         });
     </script>
