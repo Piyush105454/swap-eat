@@ -1,12 +1,35 @@
-<!doctype html>
-{% load static %}
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
 
-    <!-- Bootstrap CSS -->
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>React App</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+         <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
@@ -116,36 +139,108 @@
       }
 
       /* Testimonials Section */
-      .testimonials {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1rem;
-        background: #222;
-        color: white;
-        padding: 2rem;
-        
-      }
-
       .testimonial {
-        background: #333;
-        padding: 1rem;
-        border-radius: 5px;
-        
+        display: flex;
+        justify-content: center;
+        gap:20PX;
       }
+      .testimonial-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 1200px;
+            padding: 20px;
+        }
+
+        .testimonial-card {
+            background-color: #111;
+            border-radius: 15px;
+            padding: 20px;
+            width: 270px;
+            margin-bottom:50px;
+            box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.1);
+            position: relative;
+            text-align: left;
+            border: 1px solid white;
+        }
+
+        .testimonial-card::before {
+            content: "“";
+            font-size: 60px;
+            color: white;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            opacity: 0.5;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .profile img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid white;
+        }
+
+        .profile h3 {
+            margin: 0;
+            font-size: 18px;
+            color: white;
+        }
+
+        .testimonial-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #ccc;
+        }
+        .social-icons {
+            padding:0px;
+            display: flex;
+            gap: 20px;
+            
+        }
+
+        .icon {
+            font-size: 30px;
+            color: white;
+            text-decoration: none;
+            transition: transform 0.3s, color 0.3s;
+        }
+
+        .icon:hover {
+            transform: scale(1.2);
+        }
+
+        .twitter:hover {
+            color: #1DA1F2;
+        }
+
+        .instagram:hover {
+            color: #E1306C;
+        }
+
 
    .footer {
-  background: #000;
+  background: #121321;
   color: white;
-  padding: 2rem;
-  max-width: auto; /* Optional */
-  margin: auto; /* Center align */
+  padding: 1rem;
+  
+  margin: 0px; /* Center align */
 }
 
 .footer-row {
-  display: grid !important; /* Ensure grid is applied */
-  grid-template-columns: repeat(4, 1fr); /* 4 columns */
-  gap: 1rem; /* Spacing between columns */
+ 
+  gap: 200px; /* Spacing between columns */
   width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .footer-section {
@@ -336,8 +431,7 @@
       }
     </style>
   </head>
-  <body>
-    <!-- Header -->
+
     <header class="header">
       <div class="logo">
         <img src="https://i.postimg.cc/pL3RBYB0/Picsart-25-01-14-11-24-10-237.png" alt="Swap Eat Logo">
@@ -345,10 +439,10 @@
       </div>
       <nav class="nav">
         {% if user.is_authenticated %}
-          <a href="{% url 'logout' %}" class="btn btn-primary">Logout</a>
+          <a href="./singup.html" class="btn btn-primary">Logout</a>
         {% else %}
-          <a href="{% url 'signup' %}" class="btn btn-primary">Signup</a>
-          <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+          <a href="./singup.html" class="btn btn-primary">Signup</a>
+          <a href="./login.html" class="btn btn-primary">Login</a>
         {% endif %}
       </nav>
     </header>
@@ -359,7 +453,7 @@
         <h2> <span style="color: #000;">POST</span> • 
             <span style="color: #ff4848;">SWAP</span> • 
             <span style="color: #000;">EAT</span></h2>
-        <a href="{% url 'post' %}" class="btn btn-primary" id="btn">Get Started</a>
+        <a href="./home2.html" class="btn btn-primary" id="btn">Get Started</a>
         <h1 id="free">For Free</h1>
       </div>
 
@@ -400,45 +494,86 @@
       <img src="https://i.postimg.cc/XqnCY0Gy/left.png" alt="Food Left" class="left">
       <img src="https://i.postimg.cc/PJcTFWjr/right.png" alt="Food Right" class="right">
     </section>
-
-    <!-- Testimonials Section -->
-    <section class="testimonials">
-      <div class="testimonial">
-        <p>As a homemaker in Hyderabad, SwapEat has helped me connect with my neighbors...</p>
-        <span>- Aryan </span>
-      </div>
-      <div class="testimonial">
-        <p>In Delhi, food waste is a huge issue, and SwapEat is a fantastic way to tackle it...</p>
-        <span>- vijaya</span>
-      </div>
-      <div class="testimonial">
-        <p>Living in mandsaur, eating out is expensive, and SwapEat gives me affordable options...</p>
-        <span>- piyush</span>
-      </div>
-      <div class="testimonial">
-        <p>Living in Mumbai, eating out is expensive, and SwapEat gives me affordable options...</p>
-        <span>- Naved</span>
-      </div>
-    </section>
+    
     <footer class="footer">
+      <!-- Testimonials Section -->
+      <div class="testimonial">
+        <div class="testimonial-card">
+          <div class="profile">
+            <img src="https://media-hosting.imagekit.io//389c600ba6964f56/WhatsApp%20Image%202025-02-20%20at%205.05.51%20PM.jpeg?Expires=1834659468&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=mMr0h81fLwthEofg18w~onpMfRhhCsgy5mlTA-g3jRX0kuPpvtNb~D7zCqplLNNhCvzHpReNcq9XFIcEalP3lZMjSqMrQ6YAAuEVQo9kDIJpt9pEg1U~Kxbttysdv~NrOpjAY19wWWN49VC1hAY0BO-y6IzZxo4VPUuHseUyzVvJE7wFkkRTCauY5AK4AjHeu67ApHEcEZSy2EPPNXll10oU2gCdsCipbddcKMzvi36wjti~E3X4BpV~BPCP~RK5bWmSMU~s2KurWmFbnmxay9vDjMPWfhq6QoVemYCO6Rh06z0bZfoJ3hCv6hlWzxR4sJFPlADZL-cS4M1zWNxA~A__" alt="Naved">
+            <h3>Naved</h3>
+          </div>
+          <p class="testimonial-text">
+            Living in Mumbai, eating out is expensive, and SwapEat gives me affordable options. 
+            If there’s a way to highlight dietary preferences, that would be amazing!
+          </p>
+        </div>
+        <div class="testimonial-card">
+            <div class="profile">
+                <img src="https://media-hosting.imagekit.io//ca3952fb43824886/WhatsApp%20Image%202025-02-20%20at%205.06.33%20PM.jpeg?Expires=1834659671&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=eYpRvdN6wlbbRrQ1k-8x4aYNsNz4p8SaqT1vAWlxZYEXH0tihsjiP3AMpXTb437MLyfwoC2GZBGXIV4DrWEQOxFEN4EcbhGMPFbTeOH3bMiSc9T-e0WLI8D1-2rBrop9NYQVwIrkY74RyIHOezcNMsVcbBjBJ1NfmD6euYrabCFFuWgiTxQ34Etnw4EN2t3hje-avwgpuGSSDWuKsnTfvsCX8zLcHEuM1ijpKMYBAQVR~7-B9sxs5OiOJATtTy9SEXgTB-k5pWdoXe3ovSnB3jPDgx0k2mRDD5fnowX2lTZm~Ue6XmIvPi8-lXZdyQQKrXsggBNOnpduycaaVh1yJA__" alt="Piyush">
+                <h3>Piyush</h3>
+            </div>
+            <p class="testimonial-text">
+                As a college student in Bangalore, SwapEat is a lifesaver. 
+                Adding a reminder feature for meal pick-up would make it even better!
+            </p>
+        </div>
+        <div class="testimonial-card">
+            <div class="profile">
+                <img src="https://media-hosting.imagekit.io//6fd12b7ca7eb4219/areyan%20chodu.jpg?Expires=1834659571&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=E1KPBzsBvRJIWBNY4yzk0m5nJp~M6qCwjUQk0geYLffHCHBXHyvdWYK7qu6QqkQXho8LfFkXOAhkMOUZs4t6iEa9r6rYxpxDjOcRiwkkd9qFWTTeQqoumak2zjqd6liSat8oKmmOHA4EAoiBLMJmcLQV3nWFSLxcRE6uWwOS9QhLIAPGX9FCjDRqILwh-Ptv740krTGLcoiWcTN-dwbuteySnQZ259dIbwO269EdFNJStTOO24ZLW71zIT1y0Hd4Fb7ox~cFyy~js0pYkGyJxXkBpBE7IDPY6NKJ4ARj6Xz8sbK3gZGHgImfwX6hFXA4Hx8conl4pUFudZG9ZxfJvg__" alt="Aryan">
+                <h3>Aryan</h3>
+            </div>
+            <p class="testimonial-text">
+                In Khandwa, food waste is a huge issue, and SwapEat is a fantastic way to tackle it. 
+                Adding notifications when new meals are listed in my area would make it more engaging.
+            </p>
+        </div>
+        <div class="testimonial-card">
+      <div class="profile">
+          <img src="https://i.postimg.cc/XJsNz1Bb/Whats-App-Image-2025-02-20-at-4-59-45-PM.jpg" alt="Vijaya">
+          <h3>Vijaya</h3>
+      </div>
+      <p class="testimonial-text">
+          As a student in Bhopal, SwapEat has helped me connect with my neighbors while sharing food. 
+          It feels good to know my extra food isn’t going to waste. I’d love to see some gamified features!
+      </p>
+  </div>
+
+
+
+</div>
+
+  
   <div class="footer-row">
     <div class="footer-section">
-      <h4>Legal</h4>
+      <h1>Legal</h1>
       <a href="#">Privacy</a>
-      <a href="#">Terms</a>
+      <a href="#">Consumer Health</a>
+      <a href="#">Data</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms</a></li>
+      <a href="#">Cookie Policy</a></li>
+      <a href="#">Intellectual Property</a>
     </div>
     <div class="footer-section">
-      <h4>Careers</h4>
+      <h1>Careers</h1>
       <a href="#">Careers Portal</a>
       <a href="#">Tech Blog</a>
     </div>
     <div class="footer-section">
-      <h4>Socials</h4>
-      <a href="#">Instagram</a>
-      <a href="#">Twitter</a>
+      <h1>Socials</h1>
+      <div class="social-icons">
+        <a href="https://twitter.com" class="icon twitter" target="_blank">
+          <i class="fab fa-twitter fa-3x"></i>
+        </a>
+        <a href="https://instagram.com" class="icon instagram" target="_blank">
+          <i class="fab fa-instagram fa-3x"></i>
+        </a>
+    </div>
+
     </div>
     <div class="footer-section">
-      <h4>Contact</h4>
+      <h1>Contact</h1>
       <a href="#">Contact Us</a>
       <a href="#">Support</a>
     </div>
