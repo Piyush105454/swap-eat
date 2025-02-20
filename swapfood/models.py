@@ -21,7 +21,13 @@ class Meal(models.Model):
     def __str__(self):
         return self.name
 
+class Invitation(models.Model):
+    email = models.EmailField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='invitations')
+    invited_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"Invitation to {self.email}"
 class UserProfile(models.Model):  # Renamed from 'user' to avoid conflict with User model
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     pic = models.ImageField(upload_to="profiles", blank=True, null=True)
