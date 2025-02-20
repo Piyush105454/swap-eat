@@ -170,7 +170,7 @@ def invite_member(request):
             send_mail(
                 'You are invited to join our website!',
                 'Please join us at our website: [URL]',
-                'from@example.com',  # From email
+                'swapeatmail@gmail.com',  # From email
                 [invitation.email],   # To email
                 fail_silently=False,
             )
