@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Food Posts</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     body {
       margin: 0;
@@ -12,6 +15,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      min-height: 100vh;
+      padding-bottom: 70px; /* To prevent content from being hidden behind navbar */
     }
 
     .container {
@@ -65,40 +70,9 @@
       color: white;
     }
 
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background-color: #ff6600;
-      display: flex;
-      justify-content: space-around;
-      padding: 10px 0;
-      z-index: 100;
-    }
-
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      color: white;
-      font-size: 14px;
-      font-weight: bold;
-    }
-
-    .nav-item i {
-      font-size: 20px;
-      margin-bottom: 5px;
-    }
-
-    .nav-item a {
-      text-decoration: none;
-      color: white;
-    }
-
     /* Modal Styles */
     .modal {
-      display: none; /* Hidden by default */
+      display: none;
       position: fixed;
       z-index: 1;
       left: 0;
@@ -145,14 +119,67 @@
         margin-bottom: 20px;
       }
     }
+
+    /* Styling for the bottom navigation bar */
+    .nav-buttom {
+      position: fixed;
+      
+      bottom: 0;
+      left: 40;
+      width: 80%;
+      display: flex;
+      justify-content: space-around;
+      background: linear-gradient(to right, red, orange);
+      padding: 10px 0;
+      border-radius: 40px 40px 0 0; /* Rounded top corners */
+      box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.3);
+      z-index: 100; /* Make sure it stays on top of other content */
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+      justify-content: space-around;
+    }
+
+    .nav-item {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      background-color: transparent;
+      color: black;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .nav-item:hover {
+      background-color: lightgreen;
+      transform: scale(1.2);
+    }
+
+    /* Nav items for mobile responsiveness */
+    @media (max-width: 768px) {
+      .nav-item {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+      }
+    }
   </style>
 </head>
+
 <body>
   <div class="container">
     <div class="header">Eat Quietly!</div>
 
     <div class="top-section">
-        <button>Notifications</button>
+      <button>Notifications</button>
       <div class="left-box">
         <button id="inviteBtn">Invite Members</button>
       </div>
@@ -167,6 +194,7 @@
         <span class="close" id="closeInviteModal">&times;</span>
         <h2>Invite a Friend</h2>
         <form method="POST" id="inviteForm">
+          {% csrf_token %}
           <label for="email">Friend's Email:</label>
           <input type="email" name="email" id="inviteEmail" required>
           <button type="submit">Send Invitation</button>
@@ -185,27 +213,25 @@
         </form>
       </div>
     </div>
+  </div>
 
-    <div class="bottom-nav">
-      <div class="nav-item">
-        <i class="fas fa-home"></i>
-        <a href="{% url 'post' %}">Home</a>
+  <!-- Bottom Nav Bar -->
+  <div class="nav-buttom">
+    <div class="navbar">
+      <div class="nav-item home">
+        <i class="fa-solid fa-house"></i>
       </div>
       <div class="nav-item">
-        <i class="fas fa-search"></i>
-        <a href="{% url 'explore' %}">Explore</a>
+        <i class="fa-solid fa-compass"></i>
       </div>
       <div class="nav-item">
-        <i class="fas fa-plus-circle"></i>
-        <a href="{% url 'postmeal' %}">Post</a>
+        <i class="fa-solid fa-plus"></i>
       </div>
       <div class="nav-item">
-        <i class="fas fa-bell"></i>
-        <a href="{% url 'notification' %}">Notification</a>
+        <i class="fa-solid fa-bell"></i>
       </div>
       <div class="nav-item">
-        <i class="fas fa-comment"></i>
-        <a href="{% url 'chat' %}">Chat</a>
+        <i class="fa-solid fa-user"></i>
       </div>
     </div>
   </div>
@@ -220,27 +246,27 @@
     var closeSearchModal = document.getElementById('closeSearchModal');
 
     // Open invite modal
-    inviteBtn.onclick = function() {
+    inviteBtn.onclick = function () {
       inviteModal.style.display = 'block';
     }
 
     // Open search modal
-    searchBtn.onclick = function() {
+    searchBtn.onclick = function () {
       searchModal.style.display = 'block';
     }
 
     // Close invite modal
-    closeInviteModal.onclick = function() {
+    closeInviteModal.onclick = function () {
       inviteModal.style.display = 'none';
     }
 
     // Close search modal
-    closeSearchModal.onclick = function() {
+    closeSearchModal.onclick = function () {
       searchModal.style.display = 'none';
     }
 
     // Close modals when clicking outside of them
-    window.onclick = function(event) {
+    window.onclick = function (event) {
       if (event.target == inviteModal) {
         inviteModal.style.display = 'none';
       }
@@ -249,20 +275,54 @@
       }
     }
 
-    // You can add AJAX to submit forms without page reload
-    document.getElementById('inviteForm').onsubmit = function(event) {
+    // AJAX for sending invitation
+    document.getElementById('inviteForm').onsubmit = function (event) {
       event.preventDefault();
       var email = document.getElementById('inviteEmail').value;
-      // Perform AJAX call to send invitation email (you can handle it in Django view)
-      console.log("Sending invite to:", email);
+
+      // Perform AJAX call to send invitation email (handle it in Django view)
+      $.ajax({
+        url: '{% url "invite_member" %}',  // Adjust the URL as needed
+        method: 'POST',
+        data: {
+          email: email,
+          csrfmiddlewaretoken: document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        success: function (response) {
+          console.log('Invitation sent:', response);
+          alert('Invitation sent successfully!');
+          inviteModal.style.display = 'none';  // Close modal after sending
+        },
+        error: function (error) {
+          console.error('Error sending invitation:', error);
+          alert('There was an error sending the invitation.');
+        }
+      });
     }
 
-    document.getElementById('searchForm').onsubmit = function(event) {
+    // AJAX for searching meals
+    document.getElementById('searchForm').onsubmit = function (event) {
       event.preventDefault();
       var query = document.getElementById('searchQuery').value;
-      // Perform search operation (you can send query to Django view)
-      console.log("Searching for meals:", query);
+
+      // Perform AJAX call to search meals
+      $.ajax({
+        url: '{% url "search_meals" %}',  // Adjust URL accordingly
+        method: 'GET',
+        data: {
+          q: query
+        },
+        success: function (response) {
+          console.log('Search results:', response);
+          // You can dynamically display the results here
+        },
+        error: function (error) {
+          console.error('Error searching:', error);
+        }
+      });
     }
   </script>
 </body>
+
 </html>
+
