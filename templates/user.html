@@ -64,3 +64,119 @@
     <p>Username: {{ user.username }}</p>
 {% endblock %}
 -->
+
+# models.py
+from django.db import models
+from django.contrib.auth.models import User
+
+class Meal(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    radius = models.PositiveIntegerField(help_text="Search radius in kilometers")
+    image = models.ImageField(upload_to='meal_images/', blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='meals')
+    
+    def __str__(self):
+        return self.name
+
+class Invitation(models.Model):
+    email = models.EmailField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='invitations')
+    invited_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Invitation to {self.email}"
+# forms.py
+from django import forms
+from .models import Invitation
+
+class InvitationForm(forms.ModelForm):
+    class Meta:
+        model = Invitation
+        fields = ['email']
+# forms.py (continued)
+class SearchForm(forms.Form):
+    query = forms.CharField(max_length=100, required=True)
+# views.py
+from django.shortcuts import render, redirect
+from django.core.mail import send_mail
+from django.contrib.auth.decorators import login_required
+from .forms import InvitationForm
+
+@login_required
+def invite_member(request):
+    if request.method == 'POST':
+        form = InvitationForm(request.POST)
+        if form.is_valid():
+            invitation = form.save(commit=False)
+            invitation.user = request.user
+            invitation.save()
+            
+            # Send invitation email (you can customize the email)
+            send_mail(
+                'You are invited to join our website!',
+                'Please join us at our website: [URL]',
+                'from@example.com',  # From email
+                [invitation.email],   # To email
+                fail_silently=False,
+            )
+            return redirect('home')  # Redirect to a success page or home
+    else:
+        form = InvitationForm()
+
+    return render(request, 'invite_member.html', {'form': form})
+# views.py (continued)
+from django.shortcuts import render
+from .forms import SearchForm
+from .models import Meal
+
+def search_meals(request):
+    meals = None
+    if 'q' in request.GET:
+        query = request.GET['q']
+        meals = Meal.objects.filter(name__icontains=query)
+    else:
+        query = ''
+    
+    return render(request, 'search_meals.html', {'meals': meals, 'query': query})
+# urls.py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('invite/', views.invite_member, name='invite_member'),
+    path('search/', views.search_meals, name='search_meals'),
+]
+<!-- invite_member.html -->
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <h2>Invite a Friend</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Send Invitation</button>
+  </form>
+{% endblock %}
+<!-- search_meals.html -->
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <h2>Search Meals</h2>
+  <form method="get">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search for meals">
+    <button type="submit">Search</button>
+  </form>
+
+  <h3>Results:</h3>
+  {% if meals %}
+    <ul>
+      {% for meal in meals %}
+        <li>{{ meal.name }} - {{ meal.description }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No meals found.</p>
+  {% endif %}
+{% endblock %}
+
