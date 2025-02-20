@@ -32,12 +32,12 @@
       display: flex;
       justify-content: space-between;
       gap: 20px;
-      flex-wrap: wrap; /* Ensures wrapping on smaller screens */
+      flex-wrap: wrap;
     }
 
     .left-box,
     .right-box {
-      flex: 1 1 48%; /* Boxes take equal space, adjust as needed */
+      flex: 1 1 48%;
       min-width: 300px;
       background-color: #ff6600;
       color: white;
@@ -45,35 +45,6 @@
       padding: 20px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
       box-sizing: border-box;
-    }
-
-    .gallery-tabs {
-      background-color: white;
-      color: #333;
-      padding: 15px;
-      border-radius: 8px;
-      overflow-y: auto;
-      max-height: 300px;
-      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .gallery-tabs h1 {
-      font-size: 20px;
-      margin-bottom: 10px;
-      color: #ff5722;
-    }
-
-    .gallery-tabs div {
-      border: 1px solid #ccc;
-      margin: 10px 0;
-      padding: 10px;
-      border-radius: 8px;
-    }
-
-    .gallery-tabs img {
-      max-width: 100%;
-      border-radius: 8px;
-      margin-top: 10px;
     }
 
     button {
@@ -125,19 +96,53 @@
       color: white;
     }
 
+    /* Modal Styles */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      overflow: auto;
+      padding-top: 60px;
+    }
+
+    .modal-content {
+      background-color: white;
+      margin: 5% auto;
+      padding: 20px;
+      border-radius: 8px;
+      width: 80%;
+      max-width: 500px;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* For responsiveness */
     @media (max-width: 768px) {
       .top-section {
-        flex-direction: column; /* Stacks boxes vertically */
+        flex-direction: column;
       }
 
       .left-box,
       .right-box {
-        flex: 1 1 100%; /* Boxes take full width on mobile */
-        margin-bottom: 20px; /* Adds spacing between boxes */
-      }
-
-      .gallery-tabs {
-        max-height: 200px; /* Adjusts for smaller screens */
+        flex: 1 1 100%;
+        margin-bottom: 20px;
       }
     }
   </style>
@@ -147,27 +152,37 @@
     <div class="header">Eat Quietly!</div>
 
     <div class="top-section">
-      <div class="left-box">
         <button>Notifications</button>
-        <button>Invitees</button>
+      <div class="left-box">
+        <button id="inviteBtn">Invite Members</button>
       </div>
       <div class="right-box">
-        <div class="gallery-tabs">
-          <h1>Food Posts</h1>
-          {% for meal in meals %}
-          <div>
-            <h2>{{ meal.name }}</h2>
-            <p>{{ meal.description }}</p>
-            <p><strong>Radius:</strong> {{ meal.radius }} km</p>
-            {% if meal.image %}
-            <img src="{{ meal.image.url }}" alt="{{ meal.name }}">
-            {% else %}
-            <p>No image available.</p>
-            {% endif %}
-          </div>
-          {% endfor %}
-        </div>
-        <button>Start Searching</button>
+        <button id="searchBtn">Search Meals</button>
+      </div>
+    </div>
+
+    <!-- Invite Members Modal -->
+    <div id="inviteModal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="closeInviteModal">&times;</span>
+        <h2>Invite a Friend</h2>
+        <form method="POST" id="inviteForm">
+          <label for="email">Friend's Email:</label>
+          <input type="email" name="email" id="inviteEmail" required>
+          <button type="submit">Send Invitation</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Search Meals Modal -->
+    <div id="searchModal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="closeSearchModal">&times;</span>
+        <h2>Search for Meals</h2>
+        <form method="GET" id="searchForm">
+          <input type="text" name="q" id="searchQuery" placeholder="Search for meals" required>
+          <button type="submit">Search</button>
+        </form>
       </div>
     </div>
 
@@ -194,5 +209,60 @@
       </div>
     </div>
   </div>
+
+  <script>
+    // Get modal elements
+    var inviteModal = document.getElementById('inviteModal');
+    var searchModal = document.getElementById('searchModal');
+    var inviteBtn = document.getElementById('inviteBtn');
+    var searchBtn = document.getElementById('searchBtn');
+    var closeInviteModal = document.getElementById('closeInviteModal');
+    var closeSearchModal = document.getElementById('closeSearchModal');
+
+    // Open invite modal
+    inviteBtn.onclick = function() {
+      inviteModal.style.display = 'block';
+    }
+
+    // Open search modal
+    searchBtn.onclick = function() {
+      searchModal.style.display = 'block';
+    }
+
+    // Close invite modal
+    closeInviteModal.onclick = function() {
+      inviteModal.style.display = 'none';
+    }
+
+    // Close search modal
+    closeSearchModal.onclick = function() {
+      searchModal.style.display = 'none';
+    }
+
+    // Close modals when clicking outside of them
+    window.onclick = function(event) {
+      if (event.target == inviteModal) {
+        inviteModal.style.display = 'none';
+      }
+      if (event.target == searchModal) {
+        searchModal.style.display = 'none';
+      }
+    }
+
+    // You can add AJAX to submit forms without page reload
+    document.getElementById('inviteForm').onsubmit = function(event) {
+      event.preventDefault();
+      var email = document.getElementById('inviteEmail').value;
+      // Perform AJAX call to send invitation email (you can handle it in Django view)
+      console.log("Sending invite to:", email);
+    }
+
+    document.getElementById('searchForm').onsubmit = function(event) {
+      event.preventDefault();
+      var query = document.getElementById('searchQuery').value;
+      // Perform search operation (you can send query to Django view)
+      console.log("Searching for meals:", query);
+    }
+  </script>
 </body>
 </html>
