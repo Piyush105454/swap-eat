@@ -33,6 +33,8 @@ class Migration(migrations.Migration):
                 ('description', models.TextField()),
                 ('radius', models.FloatField()),
                 ('image', models.ImageField(blank=True, null=True, upload_to='meal_images/')),
+                ('latitude', models.FloatField()),
+                ('longitude', models.FloatField()),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
             ],
         ),
