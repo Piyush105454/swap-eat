@@ -439,10 +439,10 @@
       </div>
       <nav class="nav">
         {% if user.is_authenticated %}
-          <a href="./singup.html" class="btn btn-primary">Logout</a>
+          <a href="{% url 'logout' %}" class="btn btn-primary">Logout</a>
         {% else %}
-          <a href="./singup.html" class="btn btn-primary">Signup</a>
-          <a href="./login.html" class="btn btn-primary">Login</a>
+          <a href="{% url 'singup' %}" class="btn btn-primary">Signup</a>
+          <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
         {% endif %}
       </nav>
     </header>
@@ -453,7 +453,7 @@
         <h2> <span style="color: #000;">POST</span> • 
             <span style="color: #ff4848;">SWAP</span> • 
             <span style="color: #000;">EAT</span></h2>
-        <a href="./home2.html" class="btn btn-primary" id="btn">Get Started</a>
+        <a href="{% url 'post' %}" class="btn btn-primary" id="btn">Get Started</a>
         <h1 id="free">For Free</h1>
       </div>
 
