@@ -16,10 +16,14 @@ class Meal(models.Model):
     description = models.TextField()
     radius = models.FloatField()
     image = models.ImageField(upload_to="meal_images/", blank=True, null=True)
+    latitude = models.FloatField(null=True, blank=True)  # Auto-detected location
+    longitude = models.FloatField(null=True, blank=True) # Auto-detected location
+  
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} at ({self.latitude}, {self.longitude})"
+        
 
 class Invitation(models.Model):
     email = models.EmailField()
