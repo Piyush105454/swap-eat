@@ -219,16 +219,16 @@
             <input type="file" id="image" name="image" accept="image/*" required>
 
           </div>
+                  <!-- Hidden Fields for Latitude & Longitude -->
+        
+          <input type="hidden" id="latitude" name="latitude" required>
+          <input type="hidden" id="longitude" name="longitude" required>
 
+          <button onclick="getLocation()">Detect My Location</button>
           <button type="submit">Spread Taste</button>
 
         </form>
-          <!-- Hidden Fields for Latitude & Longitude -->
-        
-        <input type="hidden" id="latitude" name="latitude" required>
-        <input type="hidden" id="longitude" name="longitude" required>
-
-        <button onclick="getLocation()">Detect My Location</button>
+  
 
         <nav>
 
