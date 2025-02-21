@@ -122,7 +122,8 @@
         function getLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(position => {
-                    alert("Latitude: " + position.coords.latitude + "\nLongitude: " + position.coords.longitude);
+                    document.getElementById("id_latitude").value = position.coords.latitude;
+                    document.getElementById("id_longitude").value = position.coords.longitude;
                 });
             } else {
                 alert("Geolocation is not supported by this browser.");
