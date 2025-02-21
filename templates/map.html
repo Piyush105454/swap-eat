@@ -1,137 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Food Map</title>
-
-    <!-- Leaflet.js Library -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-
-    <!-- Optional: Add some custom styling to the page -->
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: yellow; /* Set background color to yellow */
-            display: flex;
-            height: 100vh;
-        }
-
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-top: 20px;
-        }
-
-        .container {
-           
-
-            margin: 40px;
-            display: flex;
-            width: 100%;
-            height: 100%;
-        }
-
-        /* Left div - Search location */
-        .search-container {
-            height: 50%;
-            width: 30%; /* Adjust width of the search container */
-            background-color: #fff;
-            padding: 20px;
-            box-sizing: border-box;
-            border-right: 2px solid #ccc;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-
-        .search-container input {
-            
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        /* Right div - Map */
-        .map-container {
-            height: 50%;
-            width: 50%; /* Adjust width of the map container */
-            position: relative;
-        }
-
-        #map {
-            width: 100%;
-            height: 100%;
-        }
-    </style>
 </head>
 <body>
-
     <h2>Food Photo Map</h2>
-
-    <div class="container">
-        <!-- Left div for search location -->
-        <div class="search-container">
-            <h3>Search Location</h3>
-            <input type="text" id="locationSearch" placeholder="Search for a location" />
-            <button id="searchBtn">Search</button>
-        </div>
-
-        <!-- Right div for map -->
-        <div class="map-container">
-            <div id="map"></div>
-        </div>
-    </div>
+    <div id="map" style="height: 500px;"></div>
 
     <script>
-        // Create the map, centered to India as default (latitude: 20.5937, longitude: 78.9629) with zoom level 5
-        var map = L.map('map').setView([20.5937, 78.9629], 5); 
-
-        // Use OpenStreetMap tile layer for the map
+        var map = L.map('map').setView([20.5937, 78.9629], 5); // Default India
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
 
-        // Parse the JSON data for food posts (passed from Django as a safe variable)
-        var foodPosts = JSON.parse('{{ food_posts|safe }}');  // JSON data from Django
-        
-        // Loop through each food post and place a marker if lat/long data exists
+        var foodPosts = JSON.parse('{{ food_posts|escapejs }}');  // Ensure valid JSON
+
         foodPosts.forEach(post => {
             if (post.latitude && post.longitude) {
-                // Add a marker at the post's latitude and longitude
                 var marker = L.marker([post.latitude, post.longitude]).addTo(map);
-
-                // Bind a popup to the marker with the photo and post details
-                marker.bindPopup(`
-                    <div style="text-align: center;">
-                        <img src="/media/${post.photo}" width="150" alt="Food Photo"><br>
-                        <strong>Posted on:</strong> ${post.created_at}
-                    </div>
-                `);
+                marker.bindPopup(`<img src="/media/${post.photo}" width="100"><br>Posted at: ${post.created_at}`);
             }
         });
-
-        // Function to handle search input and update map center
-        document.getElementById('searchBtn').onclick = function() {
-            var location = document.getElementById('locationSearch').value;
-            
-            // You can integrate your search functionality here, for now we simulate it by centering the map to a hardcoded location
-            if (location.toLowerCase() === 'india') {
-                map.setView([20.5937, 78.9629], 5); // Default view for India
-            } else if (location.toLowerCase() === 'new york') {
-                map.setView([40.7128, -74.0060], 10); // New York coordinates for example
-            } else {
-                alert("Location not found. Try 'India' or 'New York'.");
-            }
-        };
     </script>
-
 </body>
 </html>
