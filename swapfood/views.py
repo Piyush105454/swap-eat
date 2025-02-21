@@ -145,8 +145,6 @@ def chat(request):
 def post(request):
     meals = Meal.objects.all()
     return render(request, "profile.html", {"meals": meals})
-
-# Add a New Meal Post
 @login_required
 def postmeal(request):
     if request.method == "POST":
@@ -154,9 +152,21 @@ def postmeal(request):
         description = request.POST.get("tags")
         radius = request.POST.get("radius")
         image = request.FILES.get("image")
-        Meal.objects.create(name=name, description=description, radius=radius, image=image)
-        return redirect('Home')  # Ensure this line is correctly indented
+        latitude = request.POST.get("latitude")
+        longitude = request.POST.get("longitude")
+
+        Meal.objects.create(
+            name=name, 
+            description=description, 
+            radius=radius, 
+            image=image, 
+            latitude=latitude, 
+            longitude=longitude
+        )
+        return redirect('map')  
+
     return render(request, "postmeal.html")
+    
 @login_required
 def invite_member(request):
     if request.method == 'POST':
