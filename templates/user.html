@@ -158,6 +158,27 @@ urlpatterns = [
     <button type="submit">Send Invitation</button>
   </form>
 {% endblock %}
+def postmeal(request):
+    if request.method == "POST":
+        name = request.POST.get("taste")
+        description = request.POST.get("tags")
+        radius = request.POST.get("radius")
+        image = request.FILES.get("image")
+        latitude = request.POST.get("latitude")
+        longitude = request.POST.get("longitude")
+
+        Meal.objects.create(
+            name=name, 
+            description=description, 
+            radius=radius, 
+            image=image, 
+            latitude=latitude, 
+            longitude=longitude
+        )
+        return redirect('map')  
+
+    return render(request, "postmeal.html")
+    
 <!-- search_meals.html -->
 {% extends 'base_generic.html' %}
 
