@@ -1,13 +1,271 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Food Map</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Scan</title>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+                  margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: yellow;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding-bottom: 70px; /* To prevent content from being hidden behind navbar */
+
+        }
+        .container {
+            width: 90%;
+            margin: auto;
+            padding-top: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            font-size: 2rem;
+            color: black;
+        }
+        .profile {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid black;
+        }
+        .profile img {
+            width: 100%;
+            height: 100%;
+        }
+        .main-box {
+            background: #ff6f61;
+            padding: 20px;
+            border-radius: 20px;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+        .search-box {
+            width: 90%;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        input {
+            width: 80%;
+            padding: 5px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+        }
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        .tag {
+            background: #6c63ff;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+        #map {
+            width: 100%;
+            height: 300px;
+            background: url('https://maps.googleapis.com/maps/api/staticmap?center=Bhopal&zoom=12&size=600x300') no-repeat center center/cover;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .switch {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .toggle-btn {
+            width: 50px;
+            height: 25px;
+            background: gray;
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+        }
+        .toggle-btn::before {
+            content: "";
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2.5px;
+            left: 3px;
+            transition: 0.3s;
+        }
+        .active {
+            background: #ff5722;
+        }
+        .active::before {
+            left: 27px;
+        }
+           .nav-buttom {
+      position: fixed;
+      
+      bottom: 10px;
+      left: 40;
+      width: 80%;
+      display: flex;
+      justify-content: space-around;
+      background: linear-gradient(to right, red, orange);
+      padding: 10px 0;
+      border-radius: 40px;
+      box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.3);
+      z-index: 100; /* Make sure it stays on top of other content */
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+      justify-content: space-around;
+    }
+
+    .nav-item {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      background-color: transparent;
+      color: black;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.3s ease-in-out;
+    }
+     .nav-item a{
+      text-decoration: none;
+      color: black;
+    }
+    .nav-item:hover {
+      background-color: lightgreen;
+      transform: scale(1.2);
+    }
+
+    /* Nav items for mobile responsiveness */
+    @media (max-width: 768px) {
+      .nav-item {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+      }
+    }
+    </style>
 </head>
 <body>
-    <h2>Food Photo Map</h2>
-    <div id="map" style="height: 500px;"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>• Live Scan</h1>
+            <div class="profile">
+                <img src="https://via.placeholder.com/50" alt="User">
+            </div>
+        </div>
+
+        <div class="main-box">
+            <div class="search-box">
+                <label>Select Hyper Local Distance</label>
+                <input type="range" min="1" max="10" value="3">
+                <br>
+                <input type="text" placeholder="kya khaaoge ji..">
+                <div class="tags">
+                    <span class="tag">Hara Bhara Kabab</span>
+                    <span class="tag">Burger</span>
+                    <span class="tag">Noodles</span>
+                    <span class="tag">Aloo Paratha</span>
+                    <span class="tag">Fried Bhindi Sabji</span>
+                    <span class="tag">Poha</span>
+                    <span class="tag">Dhokla Jalebi</span>
+                    <span class="tag">Matar Paneer</span>
+                    <span class="tag">Daal Bati</span>
+                </div>
+            </div>
+
+           <h2>Food Photo Map</h2>
+           <div id="map" ></div>
+
+            <div class="buttons">
+                <div class="switch">
+                    <div class="toggle-btn" id="scan-toggle"></div>
+                    <span>Scan Now</span>
+                </div>
+                <div class="switch">
+                    <div class="toggle-btn" id="meal-toggle"></div>
+                    <span>My Meal</span>
+                </div>
+            </div>
+        </div>
+    </div>
+          <!-- Bottom Nav Bar -->
+  <div class="nav-buttom">
+    <div class="navbar">
+      <div class="nav-item home">
+        <a href="{% url 'post' %}" class="chat">
+        <i class="fa-solid fa-house"></i>
+          
+        </a>
+      </div>
+      <div class="nav-item">
+        <a href="{% url 'explore' %}" class="chat">
+        <i class="fa-solid fa-compass"></i>
+          
+        </a>
+      </div>
+      <div class="nav-item">
+        <a href="{% url 'postmeal' %}" class="chat">
+        <i class="fa-solid fa-plus"></i>
+          
+        </a>
+      </div>
+      <div class="nav-item">
+        <a href="{% url 'notification' %}" class="chat">
+        <i class="fa-solid fa-bell"></i>
+          
+        </a>
+      </div>
+      <div class="nav-item">
+        <a href="{% url 'chat' %}" class="chat">
+        <i class="fa-solid fa-user"></i>
+          
+        </a>
+      </div>
+    </div>
+  </div>
+        
+        
+ 
 
     <script>
         var map = L.map('map').setView([20.5937, 78.9629], 5); // Default India
@@ -23,6 +281,14 @@
                 marker.bindPopup(`<img src="/media/${post.photo}" width="100"><br>Posted at: ${post.created_at}`);
             }
         });
+        document.getElementById("scan-toggle").addEventListener("click", function() {
+            this.classList.toggle("active");
+        });
+
+        document.getElementById("meal-toggle").addEventListener("click", function() {
+            this.classList.toggle("active");
+        });
     </script>
+
 </body>
 </html>
