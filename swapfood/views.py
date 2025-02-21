@@ -10,6 +10,7 @@ from .models import Room, Message, Meal, UserOTP
 from .models import FoodPost
 from .forms import FoodPostForm
 from .forms import InvitationForm, SearchForm
+from django.core.exceptions import ValidationError
 import random
 import requests
 import json
@@ -155,17 +156,31 @@ def postmeal(request):
         latitude = request.POST.get("latitude")
         longitude = request.POST.get("longitude")
 
+        # Convert latitude and longitude to float, as they are coming from the form
+        try:
+            latitude = float(latitude) if latitude else None
+        except ValueError:
+            latitude = None
+
+        try:
+            longitude = float(longitude) if longitude else None
+        except ValueError:
+            longitude = None
+
+        # Create a new Meal object with the user's location
         Meal.objects.create(
-            name=name, 
-            description=description, 
-            radius=radius, 
-            image=image, 
-            latitude=latitude, 
+            name=name,
+            description=description,
+            radius=radius,
+            image=image,
+            latitude=latitude,
             longitude=longitude
         )
-        return redirect('map')  
+
+        return redirect('map')
 
     return render(request, "postmeal.html")
+
     
 @login_required
 def invite_member(request):
