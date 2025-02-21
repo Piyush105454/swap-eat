@@ -109,6 +109,7 @@
           </div>
           <button type="submit">Spread Taste</button>
         </form>
+        <button onclick="getLocation()">Detect My Location</button>
         <nav>
           <a href="{% url 'post' %}" class="chat">Home</a>
           <a href="{% url 'explore' %}" class="explore">Explore</a>
@@ -118,5 +119,19 @@
         </nav>
       </section>
     </div>
+    
+
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    document.getElementById("id_latitude").value = position.coords.latitude;
+                    document.getElementById("id_longitude").value = position.coords.longitude;
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+    </script>
   </body>
 </html>
