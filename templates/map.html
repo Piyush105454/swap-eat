@@ -26,6 +26,7 @@
       padding-bottom: 70px; /* To prevent content from being hidden behind navbar */
 
         }
+        
            /* Responsive image inside the popup */
         .popup-content {
             text-align: center;
@@ -54,21 +55,26 @@
         }
         .header {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            justify-content:center;
         }
         .header h1 {
             font-size: 2rem;
             color: black;
+           
         }
+        
         .profile {
-            width: 50px;
-            height: 50px;
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             overflow: hidden;
             border: 2px solid black;
         }
         .profile img {
+            position: absolute;
             width: 100%;
             height: 100%;
         }
@@ -85,6 +91,7 @@
             width: 90%;
             background: white;
             padding: 10px;
+            margin: auto;
             border-radius: 10px;
         }
         input {
@@ -112,11 +119,13 @@
             height: 300px;
             background: url('https://maps.googleapis.com/maps/api/staticmap?center=Bhopal&zoom=12&size=600x300') no-repeat center center/cover;
             border-radius: 10px;
-            margin-top: 15px;
+            margin: 15px;
         }
         .buttons {
             margin-top: 20px;
+            margin:20px;
             display: flex;
+            flex-direction:column;
             justify-content: center;
             gap: 20px;
         }
@@ -132,6 +141,7 @@
             border-radius: 20px;
             position: relative;
             cursor: pointer;
+            transition: background 0.3s ease-in-out;
         }
         .toggle-btn::before {
             content: "";
@@ -140,15 +150,16 @@
             background: white;
             border-radius: 50%;
             position: absolute;
-            top: 2.5px;
+            top:50%;
             left: 3px;
+            transform: translateY(-50%);
             transition: 0.3s;
         }
         .active {
-            background: #ff5722;
+            background:lightgreen;
         }
         .active::before {
-            left: 27px;
+            left: calc(100% - 23px);
         }
            .nav-buttom {
       position: fixed;
@@ -203,13 +214,18 @@
         font-size: 20px;
       }
     }
+
+    .scan{
+        font-size:3rem;
+        color: red;
+    }
     </style>
 </head>
 <body>
 
     <div class="container">
         <div class="header">
-            <h1>• Live Scan</h1>
+            <h1> <spam class="scan"> • </spam> Live Scan</h1>       
             <div class="profile">
                 <img src="https://via.placeholder.com/50" alt="User">
             </div>
@@ -234,7 +250,6 @@
                 </div>
             </div>
 
-           <h2>Food Photo Map</h2>
            <div id="map" ></div>
 
             <div class="buttons">
