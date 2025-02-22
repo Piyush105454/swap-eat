@@ -4,7 +4,7 @@ from .models import Invitation
 class FoodPostForm(forms.ModelForm):
     class Meta:
         model = FoodPost
-        fields = ['photo', 'latitude', 'longitude']
+        fields = ['name', 'description','radius','photo', 'latitude', 'longitude']
 # Invitation form
 class InvitationForm(forms.ModelForm):
     class Meta:
