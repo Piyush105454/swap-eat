@@ -25,22 +25,14 @@ def post_food(request):
         form = FoodPostForm()
     return render(request, "post_food.html", {"form": form})
 def map_view(request):
-    query = request.GET.get("query", "")  # Get search query from frontend (default empty)
-    
-    # Fetch posts and filter by search query (if provided)
-    if query:
-        food_posts = list(FoodPost.objects.filter(name__icontains=query).values("latitude", "longitude", "photo", "created_at", "id", "name", "radius"))
-    else:
-        food_posts = list(FoodPost.objects.values("latitude", "longitude", "photo", "created_at", "id", "name", "radius"))
+    food_posts = list(FoodPost.objects.values("latitude", "longitude","photo","name","radius","created_at","id"))
 
-    # Convert datetime objects to string format
+    # Convert datetime objects to string
     for post in food_posts:
-        post["created_at"] = post["created_at"].isoformat()
+        post["created_at"] = post["created_at"].isoformat()  # Converts datetime to string
+
     return render(request, "map.html", {"food_posts": json.dumps(food_posts)})
-        
-
-    return JsonResponse({"food_posts": food_posts})
-
+    
 # Helper function: Generate OTP
 def generate_otp():
     return random.randint(100000, 999999)
