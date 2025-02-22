@@ -232,23 +232,19 @@
         </div>
 
         <div class="main-box">
-            <div class="search-box">
-                <label>Select Hyper Local Distance</label>
-                <input type="range" min="1" max="10" value="3">
-                <br>
-                <input type="text" placeholder="kya khaaoge ji..">
-                <div class="tags">
-                    <span class="tag">Hara Bhara Kabab</span>
-                    <span class="tag">Burger</span>
-                    <span class="tag">Noodles</span>
-                    <span class="tag">Aloo Paratha</span>
-                    <span class="tag">Fried Bhindi Sabji</span>
-                    <span class="tag">Poha</span>
-                    <span class="tag">Dhokla Jalebi</span>
-                    <span class="tag">Matar Paneer</span>
-                    <span class="tag">Daal Bati</span>
-                </div>
-            </div>
+             <div class="search-box">
+              <label>Select Hyper Local Distance</label>
+              <input type="range" min="1" max="10" value="3">
+              <br>
+              <input type="text" id="searchInput" placeholder="kya khaaoge ji..">
+             <div class="tags">
+              <span class="tag" onclick="searchFood('Burger')">Burger</span>
+              <span class="tag" onclick="searchFood('Noodles')">Noodles</span>
+              <span class="tag" onclick="searchFood('Aloo Paratha')">Aloo Paratha</span>
+              <span class="tag" onclick="searchFood('Poha')">Poha</span>
+              <span class="tag" onclick="searchFood('Matar Paneer')">Matar Paneer</span>
+             </div>
+       </div>
 
            <div id="map" ></div>
 
@@ -302,33 +298,58 @@
         
 
 <script>
-    var map = L.map('map').setView([20.5937, 78.9629], 5); // Default India
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
+var map = L.map("map").setView([20.5937, 78.9629], 5); // Default India
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "&copy; OpenStreetMap contributors"
+}).addTo(map);
 
-    var foodPosts = JSON.parse('{{ food_posts|escapejs }}');  // Ensure valid JSON
-
-    foodPosts.forEach(post => {
-        if (post.latitude && post.longitude) {
-            var formattedDate = new Date(post.created_at).toLocaleDateString("en-IN", {
-                year: "numeric",
-                month: "short",
-                day: "numeric"
+// Function to fetch posts and update map
+function searchFood(foodName) {
+    fetch(`/map_view/?query=${foodName}`)  // Request filtered data from Django
+        .then(response => response.json())
+        .then(data => {
+            // Clear previous markers
+            map.eachLayer(layer => {
+                if (layer instanceof L.Marker) {
+                    map.removeLayer(layer);
+                }
             });
 
-            var marker = L.marker([post.latitude, post.longitude]).addTo(map);
-            marker.bindPopup(`
-                <div style="text-align: center; max-width: 200px;">
-                    <img src="/media/${post.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 5px;">
-                    <h4 style="margin: 5px 0; font-size: 16px; color: #333;">${post.name}</h4>
-                    <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Radius:</strong> ${post.radius} km</p>
-                    <p style="font-size: 14px; color: #777;"><strong>Posted on:</strong> ${formattedDate}</p>
-                </div>
-            `);
-        }
-    });
+            let foodPosts = data.food_posts;
+            if (foodPosts.length === 0) {
+                alert("No matching food found!");
+                return;
+            }
 
+            // Add new markers and auto-popup first matching food post
+            foodPosts.forEach((post, index) => {
+                var formattedDate = new Date(post.created_at).toLocaleDateString("en-IN", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric"
+                });
+
+                var marker = L.marker([post.latitude, post.longitude]).addTo(map);
+                marker.bindPopup(`
+                    <div style="text-align: center; max-width: 200px;">
+                        <img src="/media/${post.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 5px;">
+                        <h4 style="margin: 5px 0; font-size: 16px; color: #333;">${post.name}</h4>
+                        <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Radius:</strong> ${post.radius} km</p>
+                        <p style="font-size: 14px; color: #777;"><strong>Posted on:</strong> ${formattedDate}</p>
+                    </div>
+                `);
+
+                if (index === 0) {
+                    marker.openPopup(); // Auto-popup for the first result
+                }
+            });
+
+            // Set map to first result's location
+            map.setView([foodPosts[0].latitude, foodPosts[0].longitude], 12);
+        })
+        .catch(error => console.error("Error fetching food posts:", error));
+}
+    
     // Toggle buttons for Scan and Meal
     document.getElementById("scan-toggle").addEventListener("click", function() {
         this.classList.toggle("active");
