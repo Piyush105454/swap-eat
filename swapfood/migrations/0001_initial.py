@@ -45,6 +45,9 @@ class Migration(migrations.Migration):
                 ('photo', models.ImageField(upload_to='food_photos/')),
                 ('latitude', models.FloatField()),
                 ('longitude', models.FloatField()),
+                ('name', models.CharField(max_length=100)),
+                ('description', models.TextField()),
+                ('radius', models.FloatField()),
                 
                 ('created_at', models.DateTimeField(auto_now_add=True)),
             ],
