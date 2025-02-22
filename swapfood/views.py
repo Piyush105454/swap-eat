@@ -36,6 +36,8 @@ def map_view(request):
     # Convert datetime objects to string format
     for post in food_posts:
         post["created_at"] = post["created_at"].isoformat()
+    return render(request, "map.html", {"food_posts": json.dumps(food_posts)})
+        
 
     return JsonResponse({"food_posts": food_posts})
 
