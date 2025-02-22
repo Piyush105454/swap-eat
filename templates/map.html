@@ -27,17 +27,25 @@
 
         }
            /* Responsive image inside the popup */
-        .popup-content img {
-            max-width: 100%; /* Make the image responsive */
-            height: auto;
-            border-radius: 8px; /* Rounded corners */
+        .popup-content {
+            text-align: center;
+            max-width: 200px;
         }
-
-        /* Date styling */
+        .popup-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
         .popup-content p {
             font-size: 14px;
             color: #555;
-            margin-top: 5px;
+            margin: 5px 0;
+        }
+        .popup-content h4 {
+            margin: 5px 0;
+            font-size: 16px;
+            color: #333;
         }
         .container {
             width: 90%;
@@ -290,6 +298,11 @@
 
         foodPosts.forEach(post => {
             if (post.latitude && post.longitude) {
+                var formattedDate = new Date(post.created_at).toLocaleDateString("en-IN", {
+                year: "numeric",
+                month: "short",
+                day: "numeric"
+            });
                 var marker = L.marker([post.latitude, post.longitude]).addTo(map);
                 marker.bindPopup(`<img src="/media/${post.photo}" width="100"><br>Posted at: ${post.created_at}`);
             }
