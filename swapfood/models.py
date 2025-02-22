@@ -67,6 +67,10 @@ class FoodPost(models.Model):
     photo = models.ImageField(upload_to="food_photos/")
     latitude = models.FloatField(null=True, blank=True)  # Auto-detected location
     longitude = models.FloatField(null=True, blank=True) # Auto-detected location
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    radius = models.FloatField()
+    
     
     created_at = models.DateTimeField(auto_now_add=True)
 
