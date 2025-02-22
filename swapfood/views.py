@@ -27,7 +27,7 @@ def post_food(request):
 
 
 def map_view(request):
-    food_posts = list(FoodPost.objects.values("latitude", "longitude","photo","created_at","id"))
+    food_posts = list(FoodPost.objects.values("latitude", "longitude","photo","name","radius","created_at","id"))
 
     # Convert datetime objects to string
     for post in food_posts:
