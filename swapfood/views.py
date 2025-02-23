@@ -258,7 +258,7 @@ def chat_api(request):
 @login_required
 def chat(request):
     """ Opens the chat page where the user can enter a username and search for a chat. """
-    return render(request, 'messages.html')
+    return render(request, 'message.html')
 
 @login_required
 def MessageView(request, room_name=None, username=None):
@@ -282,7 +282,7 @@ def MessageView(request, room_name=None, username=None):
         "chat_user": username,
         "room_name": room_name,
     }
-    return render(request, 'messages.html', context)
+    return render(request, 'message.html', context)
 
 
 @login_required
