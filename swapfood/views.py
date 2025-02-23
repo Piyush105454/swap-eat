@@ -273,21 +273,36 @@ def CreateRoom(request):
 
     return render(request, 'index.html')
 
-# Message Handling in Chat Room
 @login_required
 def MessageView(request, room_name, username):
-    get_room = Room.objects.get(room_name=room_name)
+    get_room, created = Room.objects.get_or_create(room_name=room_name)
 
     if request.method == 'POST':
         message = request.POST['message']
-        new_message = Message(room=get_room, sender=username, message=message)
+        new_message = Message(room=get_room, sender=request.user, message=message)
         new_message.save()
 
     get_messages = Message.objects.filter(room=get_room)
 
     context = {
         "messages": get_messages,
-        "user": username,
+        "chat_user": username,
         "room_name": room_name,
     }
-    return render(request, 'message.html', context) 
+    return render(request, 'messages.html', context)
+    @login_required
+def search_users(request):
+    """ Searches users by username """
+    query = request.GET.get("q", "").strip()
+    users = User.objects.filter(username__icontains=query).exclude(username=request.user.username)[:5]
+    
+    return JsonResponse({"users": [{"username": u.username} for u in users]})
+    login_required
+def get_chat_messages(request):
+    room_name = request.GET.get("room_name")
+    room = Room.objects.get(room_name=room_name)
+    messages = Message.objects.filter(room=room).order_by("id")
+
+    return JsonResponse({
+        "messages": [{"sender": msg.sender.username, "message": msg.message} for msg in messages]
+    })
