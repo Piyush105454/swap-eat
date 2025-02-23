@@ -468,20 +468,36 @@
 
 <body>
 
-<div class="profile">
-    <img id="profileImage" src="https://static.vecteezy.com/system/resources/previews/011/490/381/original/happy-smiling-young-man-avatar-3d-portrait-of-a-man-cartoon-character-people-illustration-isolated-on-white-background-vector.jpg" alt="User">
-    <input type="file" id="fileInput" accept="image/*" style="display: none;">
-    <div class="menu" id="menu">
-        <a href="#">🔵 Profile</a>
-        <a href="#">⭐ Favorite Peoples</a>
-        <a href="#">💡 Personalization</a>
-        <a href="#">🟡 Swap Eat +</a>
-        <a href="#">🚫 Blocked Users</a>
-        <a href="#">⚙️ Settings</a>
-        <a href="#">🔗 Invite</a>
-        <a href="./singup.html">↪ Logout</a>
+    <div class="profile">
+
+    <h1 class="scan">🍕 User feeling <samp class="hungry">Hungry</samp> 🍔</h1>
+
+            <img src="https://static.vecteezy.com/system/resources/previews/011/490/381/original/happy-smiling-young-man-avatar-3d-portrait-of-a-man-cartoon-character-people-illustration-isolated-on-white-background-vector.jpg" alt="User" onclick="toggleMenu()">
+
+            <div class="menu" id="menu">
+
+                <a href="#">🔵 Profile</a>
+
+                <a href="#">⭐ Favorite Peoples</a>
+
+                <a href="#">💡 Personalization</a>
+
+                <a href="#">🟡 Swap Eat +</a>
+
+                <a href="#">🚫 Blocked Users</a>
+
+                <a href="#">⚙️ Settings</a>
+
+                <a href="#">🔗 Invite</a>
+
+                <a href="./singup.html">↪ Logout</a>
+
+            </div>
+
     </div>
-</div>
+
+    
+
     <div class="container">
 
         <!-- Food Cards -->
@@ -558,7 +574,7 @@
 
         <div class="navbar">
 
-           <div class="nav-item home">
+            <div class="nav-item home">
         <a href="{% url 'post' %}" class="chat">
         <i class="fa-solid fa-house"></i>
           
@@ -589,86 +605,39 @@
         </a>
        </div> 
             
-                  
-        </div>
-   </section>
+        </div>           
+    </section>
 
 
 
     <script>
 
-       document.addEventListener("DOMContentLoaded", function () {
-    // Profile Image Code
-    const defaultImage = "https://static.vecteezy.com/..."; 
-    const savedImage = localStorage.getItem("profileImage");
-    document.getElementById("profileImage").src = savedImage || defaultImage;
+        function toggleMenu() {
 
-    document.getElementById("profileImage").addEventListener("click", function () {
-        toggleMenu();
-    });
+            var menu = document.getElementById("menu");
 
-    document.getElementById("profileImage").addEventListener("dblclick", function (event) {
-        event.stopPropagation();
-        document.getElementById("fileInput").click();
-    });
+            menu.classList.toggle("show");
 
-    document.getElementById("fileInput").addEventListener("change", function (event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                document.getElementById("profileImage").src = e.target.result;
-                localStorage.setItem("profileImage", e.target.result);
-            };
-            reader.readAsDataURL(file);
         }
-    });
 
-    function toggleMenu() {
-        document.getElementById("menu").classList.toggle("show");
+        document.addEventListener("click", function (event) {
+
+    var menu = document.getElementById("menu");
+
+    var profileImg = document.querySelector(".profile img");
+
+
+
+    // Check if the clicked area is NOT inside the menu or the profile image
+
+    if (!menu.contains(event.target) && event.target !== profileImg) {
+
+        menu.classList.remove("show");
+
     }
 
-    document.addEventListener("click", function (event) {
-        var menu = document.getElementById("menu");
-        var profileImg = document.getElementById("profileImage");
-        if (!menu.contains(event.target) && event.target !== profileImg) {
-            menu.classList.remove("show");
-        }
-    });
-
-    // Sliding Cards Code
-    let currentIndex = 0;
-    const cards = document.querySelectorAll(".card");
-    const message = document.querySelector(".message");
-
-    function updateCards() {
-        cards.forEach((card, index) => {
-            card.classList.remove("active", "prev");
-            if (index === currentIndex) {
-                card.classList.add("active");
-            } else if (index < currentIndex) {
-                card.classList.add("prev");
-            }
-        });
-        message.style.display = currentIndex >= cards.length ? "block" : "none";
-    }
-
-    window.nextCard = function () {
-        if (currentIndex < cards.length - 1) {
-            currentIndex++;
-            updateCards();
-        } else {
-            message.style.display = "block";
-        }
-    };
-
-    window.prevCard = function () {
-        if (currentIndex > 0) {
-            currentIndex--;
-            updateCards();
-        }
-    };
 });
+
 
 
         let currentIndex = 0;
