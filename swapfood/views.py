@@ -19,17 +19,22 @@ def post_food(request):
     if request.method == "POST":
         form = FoodPostForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            food_post = form.save(commit=False)
+            food_post.latitude = request.POST.get("latitude")
+            food_post.longitude = request.POST.get("longitude")
+            food_post.save()
             return redirect("map")  # Redirect to map page
     else:
         form = FoodPostForm()
+    
     return render(request, "post_food.html", {"form": form})
+
 def map_view(request):
-    food_posts = list(FoodPost.objects.values("latitude", "longitude","photo","name","radius","created_at","id"))
+    food_posts = list(FoodPost.objects.values("latitude", "longitude", "photo", "name", "radius", "created_at", "id"))
 
     # Convert datetime objects to string
     for post in food_posts:
-        post["created_at"] = post["created_at"].isoformat()  # Converts datetime to string
+        post["created_at"] = post["created_at"].isoformat()
 
     return render(request, "map.html", {"food_posts": json.dumps(food_posts)})
     
