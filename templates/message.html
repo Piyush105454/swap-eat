@@ -7,6 +7,7 @@
     {% load static %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -28,15 +29,60 @@
             color: black;
         }
 
-        /* Chat box container */
+        /* Search Bar */
+        .search-container {
+            width: 90%;
+            margin: 10px auto;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-container input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .search-container button {
+            padding: 10px;
+            margin-left: 10px;
+            background-color: #ff6600;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .search-results {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            width: 90%;
+            margin: auto;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+
+        .search-results li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            cursor: pointer;
+        }
+
+        .search-results li:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Chat box */
         .chat-container {
             width: 90%;
-            margin: 0 auto;
+            margin: auto;
             background-color: #111;
             border-radius: 15px;
             display: flex;
             flex-direction: column;
-            height: 70vh;
+            height: 60vh;
             margin-bottom: 15px;
             overflow: hidden;
         }
@@ -50,14 +96,6 @@
         .message {
             display: flex;
             margin-bottom: 10px;
-        }
-
-        .message .send {
-            align-self: flex-end;
-        }
-
-        .message .receive {
-            align-self: flex-start;
         }
 
         .message p {
@@ -74,6 +112,7 @@
 
         .message.send p {
             background-color: #B1A296;
+            align-self: flex-end;
         }
 
         .form {
@@ -102,36 +141,84 @@
             cursor: pointer;
         }
 
-        /* Bottom navigation bar */
-        .bottom-nav {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            background-color: #ff6600; /* Orange color */
-            padding: 10px 0;
-        }
+   .nav-buttom {
+  position: fixed;
+  bottom: 10px; /* Set distance from the bottom */
+  left: 50%; /* Center it horizontally */
+  transform: translateX(-50%); /* Adjust to center properly */
+  width: 80%; /* Adjust width as needed */
+  display: flex;
+  justify-content: center; /* Center the navbar inside */
+  background: linear-gradient(to right, red, orange);
+  padding: 10px 0;
+  border-radius: 40px;
+  box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+}
 
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: white;
-            cursor: pointer;
-        }
+.navbar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  justify-content: space-around;
+}
 
-        .nav-item:hover {
-            color: #ffcc00;
-        }
 
-        .nav-item i {
-            font-size: 20px;
-            margin-bottom: 5px;
-        }
+    .navbar {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+      justify-content: space-around;
+    }
+
+    .nav-item {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      background-color: transparent;
+      color: black;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.3s ease-in-out;
+    }
+     .nav-item a{
+      text-decoration: none;
+      color: black;
+    }
+    .nav-item:hover {
+      background-color: lightgreen;
+      transform: scale(1.2);
+    }
+
+    /* Nav items for mobile responsiveness */
+    @media (max-width: 768px) {
+      .nav-item {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+      }
+    }
+
     </style>
 </head>
 <body>
     <div class="header">Eat Quietly!</div>
 
+    <!-- Search Bar -->
+    <div class="search-container">
+        <input type="text" id="searchUser" placeholder="Search user by username">
+        <button onclick="searchUser()">Search</button>
+    </div>
+
+    <!-- Search Results -->
+    <ul class="search-results" id="searchResults"></ul>
+
+    <!-- Chat Container -->
     <div class="chat-container">
         <div class="messages" id="chatContainer">
             {% for i in messages %}
@@ -154,88 +241,89 @@
         </div>
     </div>
 
-    <div class="bottom-nav">
-        <div class="nav-item">
-            <i class="fas fa-home"></i>
-            <a href="{% url 'Home' %}" class="chat">Home</a>
-        </div>
-        <div class="nav-item">
-            <i class="fas fa-search"></i>
-            <a href="{% url 'explore' %}" class="chat">explore</a>
-        </div>
-        <div class="nav-item">
-            <i class="fas fa-plus-circle"></i>
-            <a href="{% url 'postmeal' %}" class="chat">postmeal</a>
-        </div>
-        <div class="nav-item">
-            <i class="fas fa-bell"></i>
-            <a href="{% url 'Home' %}" class="chat">notifications</a>
-        </div>
-        <div class="nav-item">
-            <i class="fas fa-comment"></i>
-            <a href="{% url 'Home' %}" class="chat">Home</a>
-        </div>
+     <div class="nav-buttom">
+       <div class="navbar">
+      <div class="nav-item home">
+        <a href="{% url 'post' %}" class="chat">
+        <i class="fa-solid fa-house"></i>
+          
+        </a>
+      </div>
+      <div class="nav-item">
+        <a href="{% url 'explore' %}" class="chat">
+        <i class="fa-solid fa-compass"></i>
+          
+        </a>
+      </div>
+      <div class="nav-item">
+        <a href="{% url 'postmeal' %}" class="chat">
+        <i class="fa-solid fa-plus"></i>
+          
+        </a>
+      </div>
+      <div class="nav-item">
+        <a href="{% url 'notification' %}" class="chat">
+        <i class="fa-solid fa-bell"></i>
+          
+        </a>
+      </div>
+      <div class="nav-item">
+        <a href="{% url 'chat' %}" class="chat">
+        <i class="fa-solid fa-user"></i>
+          
+        </a>
+      </div>
+    </div>
     </div>
 
     <script>
-        function scrollToBottom() {
-            const chatContainer = document.getElementById("chatContainer");
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+        function searchUser() {
+            let query = document.getElementById("searchUser").value;
+            if (query.length > 0) {
+                fetch(`/search_users/?q=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        let results = document.getElementById("searchResults");
+                        results.innerHTML = "";
+                        data.users.forEach(user => {
+                            let li = document.createElement("li");
+                            li.textContent = user.username;
+                            li.onclick = () => openChat(user.username);
+                            results.appendChild(li);
+                        });
+                    });
+            }
         }
 
-        const websocketProtocol = window.location.protocol === "https:" ? "wss" : "ws";
-        const wsEndpoint = `${websocketProtocol}://${window.location.host}/ws/notification/{{ room_name }}/`;
-        const socket = new WebSocket(wsEndpoint);
+        function openChat(username) {
+            let roomName = generateRoomName("{{ user.username }}", username);
 
-        document.getElementById('message-form').addEventListener('submit', function (event) {
-            event.preventDefault();
-            const messageInput = document.getElementById('msg');
-            const message = messageInput.value;
+            fetch(`/chat_messages/?room_name=${roomName}`)
+                .then(response => response.json())
+                .then(data => {
+                    let chatContainer = document.getElementById("chatContainer");
+                    chatContainer.innerHTML = "";
 
-            // Send the message via WebSocket
-            socket.send(
-                JSON.stringify({
-                    'message': message,
-                    'room_name': "{{ room_name }}",
-                    'sender': "{{ user }}",
-                })
-            );
+                    data.messages.forEach(msg => {
+                        let messageDiv = document.createElement("div");
+                        messageDiv.classList.add("message");
 
-            // Clear the input field
-            messageInput.value = '';
-        });
+                        if (msg.sender === "{{ user.username }}") {
+                            messageDiv.innerHTML = `<p class="send">${msg.message}</p>`;
+                        } else {
+                            messageDiv.innerHTML = `<p class="receive">${msg.message} <strong>- ${msg.sender}</strong></p>`;
+                        }
 
-        socket.addEventListener("message", (event) => {
-            const messageData = JSON.parse(event.data).message;
-            const sender = messageData.sender;
-            const message = messageData.message;
+                        chatContainer.appendChild(messageDiv);
+                    });
 
-            const chatContainer = document.getElementById('chatContainer');
-            const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message');
+                    document.getElementById("searchResults").innerHTML = "";
+                });
+        }
 
-            if (sender !== "{{ user }}") {
-                messageDiv.innerHTML = `<p class="receive">${message} <strong>- ${sender}</strong></p>`;
-            } else {
-                messageDiv.innerHTML = `<p class="send">${message}</p>`;
-            }
-
-            chatContainer.appendChild(messageDiv);
-            scrollToBottom();
-        });
-
-        socket.onopen = () => {
-            console.log("WebSocket connection opened!");
-        };
-
-        socket.onclose = () => {
-            console.log("WebSocket connection closed!");
-        };
-
-        socket.onerror = (error) => {
-            console.error("WebSocket error:", error);
-            alert("Connection error. Please try again later.");
-        };
+        function generateRoomName(user1, user2) {
+            return [user1, user2].sort().join("_");
+        }
     </script>
 </body>
 </html>
