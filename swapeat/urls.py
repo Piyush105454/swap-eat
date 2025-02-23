@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
-    path("search_users/", search_users, name="search_users"),
+    path("search_users/", views.search_users, name="search_users"),
     path('post/explore/', views.explore, name='explore'),
     path('post/postmeal/', views.postmeal, name='postmeal'),
     path('post/chat/', views.chat, name='chat'),
