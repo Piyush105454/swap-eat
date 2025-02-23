@@ -769,9 +769,13 @@
          <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
+             
+            <!-- Hidden inputs to store latitude and longitude -->
+            <input type="hidden" id="latitude" name="latitude">
+            <input type="hidden" id="longitude" name="longitude">
 
             <button type="button" onclick="getLocation()">Detect My Location</button>
-            <button type="submit">Upload Meal</button>
+            <button type="submit">Spread Taste</button>
         </form>
            </div>
 
@@ -853,7 +857,7 @@
 
         
 
-            <div class="spread-btn">Spread Taste</div>
+            <div class="spread-btn"><button type="submit">Spread Taste</button></div>
 
         </div>
 
@@ -924,6 +928,22 @@
 
 
     <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    document.getElementById("latitude").value = position.coords.latitude;
+                    document.getElementById("longitude").value = position.coords.longitude;
+                },
+                function (error) {
+                    console.error("Error detecting location:", error.message);
+                    alert("Please enable location services to continue.");
+                }
+            );
+        } else {
+            alert("Geolocation is not supported by your browser.");
+        }
+    });
     var map = L.map('map').setView([20.5937, 78.9629], 5); // Default India
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
