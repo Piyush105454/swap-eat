@@ -68,7 +68,7 @@ class FoodPost(models.Model):
     latitude = models.FloatField(null=True, blank=True)  # Auto-detected location
     longitude = models.FloatField(null=True, blank=True) # Auto-detected location
     name = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.CharField(max_length=100)
     radius = models.FloatField()
     
     
