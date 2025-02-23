@@ -1,220 +1,564 @@
-
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Sliding Food Cards</title>
+
     <!-- Corrected FontAwesome Link -->
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" crossorigin="anonymous"></script>
 
+
+
     <style>
+
         * {
+
             margin: 0;
+
             padding: 0;
+
             box-sizing: border-box;
+
         }
 
+
+
         body {
+
             font-family: Arial, sans-serif;
+
             background-color: #faff00;
+
             display: flex;
+
             flex-direction: column;
+
             align-items: center;
+
             justify-content: center;
+
             height: 100vh;
-            
+
+            overflow: hidden;
+
         }
-        html {
-    scroll-behavior: smooth;
-}
+
         body h1{
+
             margin: 20px;
+
+        }
+
+        
+
+        .hungry{
+
+            font-size: ;
+
+            color:red;
+
+            font-family: Arial, sans-serif;
+
         }
 
         .container {
+
             width: 350px;
+
             height: 450px;
+
             position: relative;
+
             overflow: hidden;
+
             border-radius: 20px;
+
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+
             background: white;
+
         }
+
+
 
         .card {
+
             width: 100%;
+
             height: 100%;
+
             position: absolute;
+
             left: 100%;
+
             transition: left 0.5s ease-in-out;
+
             display: flex;
+
             flex-direction: column;
+
             align-items: center;
+
             justify-content: center;
+
             text-align: center;
+
             background: linear-gradient(to right, red, rgb(221, 192, 137));
+
             border-radius: 20px;
+
             padding: 15px;
+
             overflow: hidden;
+
             
+
         }
+
+
 
         .card img {
+
             width: 100%;
+
             height: 250px;
+
             border-radius: 15px;
+
             object-fit: cover;
+
             display: block;
+
         }
+
+
 
         .card.active {
+
             left: 0;
+
         }
+
+
 
         .card.prev {
+
             left: -100%;
+
         }
+
+
 
         .message {
+
             display: none;
+
             font-size: 18px;
+
             color: red;
+
             margin-top: 15px;
+
         }
+
+
 
         .buttons {
+
             margin-top: 15px;
+
         }
+
+
 
         .btn {
+
             padding: 10px 15px;
+
             margin: 5px;
+
             border: none;
+
             background: #ff5722;
+
             color: white;
+
             font-size: 16px;
+
             cursor: pointer;
+
             border-radius: 5px;
+
             transition: background 0.3s, transform 0.2s;
+
         }
+
+
 
         .btn:hover {
+
             background: #d84315;
+
             transform: scale(1.1);
+
         }
 
-        /* Bottom Navigation Bar */
-        .nav-bottom {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .navbar {
-            display: flex;
-            margin:30px;
-            align-items: center;
-            background: linear-gradient(to right, red, orange);
-            padding: 12px 20px;
-            border-radius: 40px;
-            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
-            gap: 20px;
-        }
-
-        .nav-item {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            background-color: transparent;
-            color: rgb(0, 0, 0);
-            border-radius: 50%;
-            cursor: pointer;
-            transition: transform 0.3s ease-in-out, background 0.3s;
-        }
-
-        .nav-item:hover {
-            background-color: lightgreen;
-            transform: scale(1.2);
-        }
-        .hungry{
-            font-size: ;
-            color:red;
-            font-family: Arial, sans-serif;
-        }
-        .navbar a {
-    text-decoration: none;
-    color: inherit;       
-        }
         .profile{
+
             display: flex;
+
             flex-direction: column;
+
             justify-content: center;
+
             text-align:center;
+
         }
+
         .profile img {
+
+            cursor: pointer;
+
             position: absolute;
+
             top: 40px;
+
             right: 40px;
+
             width: 60px;
+
             height: 60px;
+
             border-radius: 50%;
+
             overflow: hidden;
+
             border: 2px solid black;
+
         }
+
+        .menu {
+
+            cursor: pointer;
+
+            position: absolute;
+
+            top: 90px;
+
+            right: 20px;
+
+            width: 200px;
+
+            background: white;
+
+            border-radius: 10px;
+
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+
+            opacity: 0;
+
+            visibility: hidden;
+
+            transform: translateY(-10px);
+
+            transition: opacity 0.3s ease, transform 0.3s ease;
+
+            z-index: 1;
+
+        }
+
+    
+
+        .menu.show {
+
+            opacity: 1;
+
+            visibility: visible;
+
+            transform: translateY(0);
+
+        }
+
+    
+
+        .menu a {
+
+            display: block;
+
+            padding: 10px 15px;
+
+            text-decoration: none;
+
+            color: black;
+
+            font-size: 16px;
+
+            transition: background 0.3s;
+
+            text-align: left;
+
+    
+
+        }
+
+    
+
+        .menu a:hover {
+
+            cursor: pointer;
+
+            background: lightgray;
+
+        }
+
         
 
+        /* Bottom Navigation Bar */
+
+        .nav-bottom {
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            margin-top: 20px;
+
+        }
+
+
+
+        .navbar {
+
+            display: flex;
+
+            align-items: center;
+
+            margin:20px;
+
+            background: linear-gradient(to right, red, orange);
+
+            padding: 12px 20px;
+
+            border-radius: 40px;
+
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+
+            gap: 20px;
+
+        }
+
+
+
+        .nav-item {
+
+            width: 50px;
+
+            height: 50px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 22px;
+
+            background-color: transparent;
+
+            color: rgb(0, 0, 0);
+
+            border-radius: 50%;
+
+            cursor: pointer;
+
+            transition: transform 0.3s ease-in-out, background 0.3s;
+
+        }
+
+
+
+        .nav-item:hover {
+
+            background-color: lightgreen;
+
+            transform: scale(1.2);
+
+        }
+
+        .navbar a {
+
+          text-decoration: none;
+
+          color: inherit;       
+
+        }
+
+        .chat-button {
+
+            margin-top:30px;
+
+            margin-bottom: 30px;
+
+            text-decoration: none;
+
+            background: white;
+
+            color: black;
+
+            padding: 8px 12px;
+
+            padding-bottom: 15px;
+
+            padding-top:15px ;
+
+            border-radius: 16px;
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            cursor: pointer;
+
+            transition: transform 0.3s ease-in-out;
+
+        
+
+        }
+
+        .chat-button a {
+
+            text-decoration: none;
+
+            color: inherit;
+
+        }
+
+       
+
+        .chat-button:hover {
+
+            background: lightgreen;
+
+            transform: scale(1.1);
+
+        }
+
+        
+
+
+
     </style>
+
 </head>
+
 <body>
-      <div class="profile">
-    <h1 class="scan">🍕 User feeling <samp class="hungry">Hungry</samp> 🍔</h1>
-    <label for="fileInput">
-        <img id="profileImage" src="https://via.placeholder.com/50" alt="User">
-    </label>
+
+<div class="profile">
+    <img id="profileImage" src="https://static.vecteezy.com/system/resources/previews/011/490/381/original/happy-smiling-young-man-avatar-3d-portrait-of-a-man-cartoon-character-people-illustration-isolated-on-white-background-vector.jpg" alt="User">
     <input type="file" id="fileInput" accept="image/*" style="display: none;">
+    <div class="menu" id="menu">
+        <a href="#">🔵 Profile</a>
+        <a href="#">⭐ Favorite Peoples</a>
+        <a href="#">💡 Personalization</a>
+        <a href="#">🟡 Swap Eat +</a>
+        <a href="#">🚫 Blocked Users</a>
+        <a href="#">⚙️ Settings</a>
+        <a href="#">🔗 Invite</a>
+        <a href="./singup.html">↪ Logout</a>
+    </div>
 </div>
     <div class="container">
+
         <!-- Food Cards -->
+
         <div class="card active">
+
             <img src="https://th.bing.com/th/id/R.e8e18f31bf927b67138fa204ce2e6767?rik=nF%2bHajEIvHn3HA&pid=ImgRaw&r=0" alt="Food 1" class="imgfit">
+
             <h2>Delicious Pizza</h2>
+
             <p>Hot & cheesy pizza loaded with toppings.</p>
+
         </div>
+
+
+
         <div class="card">
+
             <img src="https://th.bing.com/th/id/R.a651ee1fe850e54917f02fc58b98fcc8?rik=Gs63TudWrkxDzA&pid=ImgRaw&r=0" alt="Food 2" class="imgfit">
+
             <h2>Juicy Burger</h2>
+
             <p>A tasty beef burger with fresh veggies.</p>
+
         </div>
 
+
+
         <div class="card">
+
             <img src="https://th.bing.com/th/id/OIP.M4w8D0HqPiqPXcaipDMPawHaE7?rs=1&pid=ImgDetMain" alt="Food 3" class="imgfit">
+
             <h2>Fresh Sushi</h2>
+
             <p>Enjoy a plate of delicious Japanese sushi.</p>
+
         </div>
 
+
+
         <div class="card">
+
             <img src="https://th.bing.com/th/id/OIP.r7YEptgn6-u0ZHxVEncBXQHaHa?rs=1&pid=ImgDetMain" alt="Food 4" class="imgfit">
+
             <h2>Sweet Dessert</h2>
+
             <p>A yummy chocolate dessert to sweeten your day.</p>
+
         </div>
+
     </div>
+
+
 
     <p class="message">Oops! No more cards left. 😢</p>
 
+
+
     <!-- Navigation Buttons -->
+
     <div class="buttons">
+
         <button class="btn" onclick="prevCard()">⬅️ Previous</button>
+
         <button class="btn" onclick="nextCard()">Next ➡️</button>
+
     </div>
 
+
+
     <!-- Bottom Navigation Bar -->
+
     <section class="nav-bottom">
-      <div class="navbar">
-       <div class="nav-item home">
+
+        <div class="navbar">
+
+           <div class="nav-item home">
         <a href="{% url 'post' %}" class="chat">
         <i class="fa-solid fa-house"></i>
           
@@ -243,56 +587,160 @@
         <i class="fa-solid fa-user"></i>
           
         </a>
-       </div>
-      </div>
-        
-    </section>
+       </div> 
+            
+                  
+        </div>
+   </section>
+
+
 
     <script>
-    document.getElementById('fileInput').addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('profileImage').src = e.target.result;
-        };
-        reader.readAsDataURL(file);
+
+       document.addEventListener("DOMContentLoaded", function () {
+    // Profile Image Code
+    const defaultImage = "https://static.vecteezy.com/..."; 
+    const savedImage = localStorage.getItem("profileImage");
+    document.getElementById("profileImage").src = savedImage || defaultImage;
+
+    document.getElementById("profileImage").addEventListener("click", function () {
+        toggleMenu();
+    });
+
+    document.getElementById("profileImage").addEventListener("dblclick", function (event) {
+        event.stopPropagation();
+        document.getElementById("fileInput").click();
+    });
+
+    document.getElementById("fileInput").addEventListener("change", function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById("profileImage").src = e.target.result;
+                localStorage.setItem("profileImage", e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    function toggleMenu() {
+        document.getElementById("menu").classList.toggle("show");
     }
+
+    document.addEventListener("click", function (event) {
+        var menu = document.getElementById("menu");
+        var profileImg = document.getElementById("profileImage");
+        if (!menu.contains(event.target) && event.target !== profileImg) {
+            menu.classList.remove("show");
+        }
+    });
+
+    // Sliding Cards Code
+    let currentIndex = 0;
+    const cards = document.querySelectorAll(".card");
+    const message = document.querySelector(".message");
+
+    function updateCards() {
+        cards.forEach((card, index) => {
+            card.classList.remove("active", "prev");
+            if (index === currentIndex) {
+                card.classList.add("active");
+            } else if (index < currentIndex) {
+                card.classList.add("prev");
+            }
+        });
+        message.style.display = currentIndex >= cards.length ? "block" : "none";
+    }
+
+    window.nextCard = function () {
+        if (currentIndex < cards.length - 1) {
+            currentIndex++;
+            updateCards();
+        } else {
+            message.style.display = "block";
+        }
+    };
+
+    window.prevCard = function () {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateCards();
+        }
+    };
 });
+
+
         let currentIndex = 0;
+
         const cards = document.querySelectorAll('.card');
+
         const message = document.querySelector('.message');
 
+
+
         function updateCards() {
+
             cards.forEach((card, index) => {
+
                 card.classList.remove('active', 'prev');
+
                 if (index === currentIndex) {
+
                     card.classList.add('active');
+
                 } else if (index < currentIndex) {
+
                     card.classList.add('prev');
+
                 }
+
             });
 
+
+
             // Show message if no more cards
+
             message.style.display = currentIndex >= cards.length ? 'block' : 'none';
+
         }
+
+
 
         function nextCard() {
+
             if (currentIndex < cards.length - 1) {
+
                 currentIndex++;
+
                 updateCards();
+
             } else {
+
                 message.style.display = 'block';
+
             }
+
         }
+
+
 
         function prevCard() {
+
             if (currentIndex > 0) {
+
                 currentIndex--;
+
                 updateCards();
+
             }
+
         }
+
     </script>
 
+
+
 </body>
+
 </html>
