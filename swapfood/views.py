@@ -255,26 +255,19 @@ def chat_api(request):
         return JsonResponse({"answer": answer})
 
     return JsonResponse({"error": "Invalid request method."}, status=400)
-
-# Create a Room for Chat
 @login_required
-def CreateRoom(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        room = request.POST['room']
-
-        try:
-            get_room = Room.objects.get(room_name=room)
-            return redirect('room', room_name=room, username=username)
-        except Room.DoesNotExist:
-            new_room = Room(room_name=room)
-            new_room.save()
-            return redirect('room', room_name=room, username=username)
-
-    return render(request, 'index.html')
+def chat(request):
+    """ Opens the chat page where the user can enter a username and search for a chat. """
+    return render(request, 'messages.html')
 
 @login_required
-def MessageView(request, room_name, username):
+def MessageView(request, room_name=None, username=None):
+    """ Handles chat messages, fetching the correct room and messages. """
+    
+    # Ensure room_name and username are provided
+    if not room_name or not username:
+        return redirect('chat')  # Redirect to chat search if missing
+    
     get_room, created = Room.objects.get_or_create(room_name=room_name)
 
     if request.method == 'POST':
@@ -290,6 +283,8 @@ def MessageView(request, room_name, username):
         "room_name": room_name,
     }
     return render(request, 'messages.html', context)
+
+
 @login_required
 def search_users(request):
     """ Searches users by username """
