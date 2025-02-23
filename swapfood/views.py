@@ -290,19 +290,21 @@ def MessageView(request, room_name, username):
         "room_name": room_name,
     }
     return render(request, 'messages.html', context)
-    @login_required
+@login_required
 def search_users(request):
     """ Searches users by username """
     query = request.GET.get("q", "").strip()
     users = User.objects.filter(username__icontains=query).exclude(username=request.user.username)[:5]
-    
     return JsonResponse({"users": [{"username": u.username} for u in users]})
-    login_required
+
+@login_required
 def get_chat_messages(request):
     room_name = request.GET.get("room_name")
-    room = Room.objects.get(room_name=room_name)
-    messages = Message.objects.filter(room=room).order_by("id")
-
-    return JsonResponse({
-        "messages": [{"sender": msg.sender.username, "message": msg.message} for msg in messages]
-    })
+    try:
+        room = Room.objects.get(room_name=room_name)
+        messages = Message.objects.filter(room=room).order_by("id")
+        return JsonResponse({
+            "messages": [{"sender": msg.sender.username, "message": msg.message} for msg in messages]
+        })
+    except Room.DoesNotExist:
+        return JsonResponse({"error": "Room does not exist"}, status=404)
