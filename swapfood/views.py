@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import default_storage
 from django.core.mail import send_mail
 from django.conf import settings
@@ -20,6 +21,20 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from .models import ChatMessage
+@csrf_exempt
+
+def send_message(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        receiver = User.objects.get(id=data["receiver_id"])
+        message = ChatMessage.objects.create(
+            sender=request.user,
+            receiver=receiver,
+            message=data["message"]
+        )
+        return JsonResponse({"status": "sent"})
+
+
 
 def search_users(request):
     query = request.GET.get("username", "")
