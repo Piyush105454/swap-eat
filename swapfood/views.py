@@ -16,26 +16,25 @@ import requests
 import json
 from django.shortcuts import render, get_object_or_404
 from .models import PrivateChat
+from django.shortcuts import render
+from django.http import JsonResponse
+from django.contrib.auth.models import User
+from .models import ChatMessage
 
 def search_users(request):
-    if request.method == "POST":
-        search_username = request.POST.get("username")
-        try:
-            target_user = User.objects.get(username=search_username)
-            if request.user == target_user:
-                return render(request, "search.html", {"error": "You cannot chat with yourself."})
-            
-            # Get or create a chat room between the two users
-            chat, created = PrivateChat.objects.get_or_create(
-                user1=min(request.user, target_user, key=lambda x: x.username),
-                user2=max(request.user, target_user, key=lambda x: x.username),
-            )
-            return render(request, "chat.html", {"room_name": chat.get_chat_room_name()})
+    query = request.GET.get("username", "")
+    users = User.objects.filter(username__icontains=query).values("id", "username")
+    return JsonResponse({"users": list(users)})
 
-        except User.DoesNotExist:
-            return render(request, "search.html", {"error": "User not found."})
+def chat_view(request, receiver_id):
+    receiver = User.objects.get(id=receiver_id)
+    messages = ChatMessage.objects.filter(sender=request.user, receiver=receiver) | \
+               ChatMessage.objects.filter(sender=receiver, receiver=request.user)
+    messages = messages.order_by("timestamp")
+    
+    return render(request, "message.html", {"receiver": receiver, "messages": messages})
 
-    return render(request, "search.html")
+
 
 def post_food(request):
     if request.method == "POST":
