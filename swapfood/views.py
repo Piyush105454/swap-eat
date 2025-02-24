@@ -14,6 +14,28 @@ from django.core.exceptions import ValidationError
 import random
 import requests
 import json
+from django.shortcuts import render, get_object_or_404
+from .models import PrivateChat
+
+def search_user(request):
+    if request.method == "POST":
+        search_username = request.POST.get("username")
+        try:
+            target_user = User.objects.get(username=search_username)
+            if request.user == target_user:
+                return render(request, "search.html", {"error": "You cannot chat with yourself."})
+            
+            # Get or create a chat room between the two users
+            chat, created = PrivateChat.objects.get_or_create(
+                user1=min(request.user, target_user, key=lambda x: x.username),
+                user2=max(request.user, target_user, key=lambda x: x.username),
+            )
+            return render(request, "chat.html", {"room_name": chat.get_chat_room_name()})
+
+        except User.DoesNotExist:
+            return render(request, "search.html", {"error": "User not found."})
+
+    return render(request, "search.html")
 
 def post_food(request):
     if request.method == "POST":
@@ -284,11 +306,6 @@ def MessageView(request, room_name=None, username=None):
     }
     return render(request, 'message.html', context)
 
-
-def search_users(request):
-    query = request.GET.get("q", "").strip()
-    users = User.objects.filter(username__icontains=query).exclude(username=request.user.username)[:5]
-    return JsonResponse({"users": [{"username": u.username} for u in users]})
 @login_required
 def get_chat_messages(request):
     room_name = request.GET.get("room_name")
