@@ -47,16 +47,14 @@ def search_users(request):
     query = request.GET.get("username", "")
     users = User.objects.filter(username__icontains=query).values("id", "username")
     return JsonResponse({"users": list(users)})
-
+@login_required
 def chat_view(request, receiver_id):
     receiver = User.objects.get(id=receiver_id)
     messages = ChatMessage.objects.filter(sender=request.user, receiver=receiver) | \
                ChatMessage.objects.filter(sender=receiver, receiver=request.user)
     messages = messages.order_by("timestamp")
     
-    return render(request, "message.html", {"receiver": receiver, "messages": messages})
-
-
+    return JsonResponse({"messages": list(messages.values("sender__username", "message"))})
 
 def post_food(request):
     if request.method == "POST":
