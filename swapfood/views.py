@@ -255,7 +255,7 @@ def chat_api(request):
         return JsonResponse({"answer": answer})
 
     return JsonResponse({"error": "Invalid request method."}, status=400)
-@login_required
+
 def chat(request):
     """ Opens the chat page where the user can enter a username and search for a chat. """
     return render(request, 'message.html')
@@ -285,13 +285,10 @@ def MessageView(request, room_name=None, username=None):
     return render(request, 'message.html', context)
 
 
-@login_required
 def search_users(request):
-    """ Searches users by username """
     query = request.GET.get("q", "").strip()
     users = User.objects.filter(username__icontains=query).exclude(username=request.user.username)[:5]
     return JsonResponse({"users": [{"username": u.username} for u in users]})
-
 @login_required
 def get_chat_messages(request):
     room_name = request.GET.get("room_name")
