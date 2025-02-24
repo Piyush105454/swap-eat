@@ -21,18 +21,25 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from .models import ChatMessage
+
 @csrf_exempt
 
 def send_message(request):
     if request.method == "POST":
-        data = json.loads(request.body)
-        receiver = User.objects.get(id=data["receiver_id"])
-        message = ChatMessage.objects.create(
-            sender=request.user,
-            receiver=receiver,
-            message=data["message"]
-        )
-        return JsonResponse({"status": "sent"})
+        try:
+            data = json.loads(request.body)
+            receiver = User.objects.get(id=data["receiver_id"])
+            message = ChatMessage.objects.create(
+                sender=request.user,
+                receiver=receiver,
+                message=data["message"]
+            )
+            return JsonResponse({"status": "success", "message": message.message})
+        except Exception as e:
+            return JsonResponse({"status": "error", "error": str(e)})
+    return JsonResponse({"status": "failed", "message": "Invalid request"})
+    
+
 
 
 
