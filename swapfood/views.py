@@ -17,7 +17,7 @@ import json
 from django.shortcuts import render, get_object_or_404
 from .models import PrivateChat
 
-def search_user(request):
+def search_users(request):
     if request.method == "POST":
         search_username = request.POST.get("username")
         try:
