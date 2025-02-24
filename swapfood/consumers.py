@@ -1,59 +1,45 @@
 import json
+from django.contrib.auth import get_user_model
 from channels.generic.websocket import AsyncWebsocketConsumer
-from channels.db import database_sync_to_async
-from django.contrib.auth.models import User
-from .models import Room, Message
 
-class ChatConsumer(AsyncWebsocketConsumer):
+User = get_user_model()
+
+class PrivateChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.username = self.scope['user'].username
-        self.other_user = self.scope['url_route']['kwargs']['username']
-        
-        # Create a unique room name
-        sorted_users = sorted([self.username, self.other_user])
-        self.room_name = f"chat_{sorted_users[0]}_{sorted_users[1]}"
-        self.room_group_name = f"chat_{self.room_name}"
+        self.user = self.scope["user"]
+        self.other_username = self.scope["url_route"]["kwargs"]["username"]
+        self.other_user = await self.get_user(self.other_username)
 
-        # Add the user to the chat room group
-        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
-        await self.accept()
+        if self.user.is_authenticated and self.other_user:
+            self.room_name = f"chat_{min(self.user.username, self.other_user.username)}_{max(self.user.username, self.other_user.username)}"
+            self.room_group_name = f"chat_{self.room_name}"
+
+            await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+            await self.accept()
+        else:
+            await self.close()
 
     async def disconnect(self, close_code):
-        # Remove user from chat room
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
     async def receive(self, text_data):
-        """ Handles incoming messages """
         data = json.loads(text_data)
-        message = data['message']
-        sender = self.scope['user'].username
+        message = data["message"]
 
-        # Save message to database
-        await self.save_message(sender, message)
-
-        # Send message to the room
         await self.channel_layer.group_send(
             self.room_group_name,
             {
-                'type': 'chat_message',
-                'message': message,
-                'sender': sender,
-            }
+                "type": "chat_message",
+                "message": message,
+                "username": self.user.username,
+            },
         )
 
     async def chat_message(self, event):
-        """ Sends message to WebSocket clients """
-        message = event['message']
-        sender = event['sender']
+        await self.send(text_data=json.dumps(event))
 
-        await self.send(text_data=json.dumps({
-            'message': message,
-            'sender': sender,
-        }))
-
-    @database_sync_to_async
-    def save_message(self, sender, message):
-        """ Saves chat messages in the database """
-        user = User.objects.get(username=sender)
-        room, created = Room.objects.get_or_create(room_name=self.room_name)
-        Message.objects.create(room=room, sender=user, message=message)
+    async def get_user(self, username):
+        try:
+            return await User.objects.get(username=username)
+        except User.DoesNotExist:
+            return None
