@@ -34,7 +34,11 @@
     </div>
 
     <script>
+        let receiverId = null;
+        let csrfToken = "{{ csrf_token }}";
+
         $(document).ready(function () {
+            // Search users dynamically
             $("#searchInput").on("keyup", function () {
                 let query = $(this).val();
                 if (query.length > 0) {
@@ -49,28 +53,53 @@
                 }
             });
 
+            // Function to start chat with selected user
             window.startChat = function (userId, username) {
+                receiverId = userId;
                 $("#chatBox").html(`<strong>Chatting with ${username}</strong><br>`);
+
                 $.get(`/chat/${userId}/`, function (data) {
+                    $("#chatBox").empty();
                     data.messages.forEach(msg => {
-                        $("#chatBox").append(`<div class="message"><strong>${msg.sender}:</strong> ${msg.message}</div>`);
+                        let sender = msg.sender === "{{ request.user.username }}" ? "You" : msg.sender;
+                        $("#chatBox").append(`<div class="message"><strong>${sender}:</strong> ${msg.message}</div>`);
                     });
                 });
 
-                $("#sendMessage").off("click").on("click", function () {
-                    let message = $("#messageInput").val();
-                    if (message.trim()) {
-                        $.post("/send_message/", {
-                            receiver_id: userId,
-                            message: message,
-                            csrfmiddlewaretoken: "{{ csrf_token }}"
-                        }, function (data) {
+                // Auto refresh chat every 2 seconds
+                setInterval(fetchMessages, 2000);
+            };
+
+            // Function to send message
+            $("#sendMessage").on("click", function () {
+                let message = $("#messageInput").val();
+                if (message.trim() && receiverId) {
+                    $.ajax({
+                        url: "/send_message/",
+                        type: "POST",
+                        headers: { "X-CSRFToken": csrfToken },
+                        data: JSON.stringify({ receiver_id: receiverId, message: message }),
+                        contentType: "application/json",
+                        success: function () {
                             $("#chatBox").append(`<div class="message"><strong>You:</strong> ${message}</div>`);
                             $("#messageInput").val("");
+                        }
+                    });
+                }
+            });
+
+            // Function to fetch messages
+            function fetchMessages() {
+                if (receiverId) {
+                    $.get(`/chat/${receiverId}/`, function (data) {
+                        $("#chatBox").empty();
+                        data.messages.forEach(msg => {
+                            let sender = msg.sender === "{{ request.user.username }}" ? "You" : msg.sender;
+                            $("#chatBox").append(`<div class="message"><strong>${sender}:</strong> ${msg.message}</div>`);
                         });
-                    }
-                });
-            };
+                    });
+                }
+            }
         });
     </script>
 
