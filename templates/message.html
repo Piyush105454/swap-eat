@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Chat</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .chat-box { width: 50%; margin: auto; padding: 20px; border: 1px solid #ccc; }
+        .messages { height: 300px; overflow-y: auto; border-bottom: 1px solid #ccc; padding: 10px; }
+        .message { margin-bottom: 10px; }
+        .message.me { text-align: right; color: blue; }
+        .message.other { text-align: left; color: green; }
+        input, button { padding: 10px; margin-top: 10px; width: 100%; }
+    </style>
+</head>
+<body>
+
+    <h2>Search User to Chat</h2>
+    <input type="text" id="search-box" placeholder="Search username...">
+    <ul id="search-results"></ul>
+
+    <div class="chat-box">
+        <h3>Chat with <span id="chat-user"></span></h3>
+        <div class="messages" id="chat-messages"></div>
+        <input type="text" id="message-input" placeholder="Type your message...">
+        <button id="send-message">Send</button>
+    </div>
+
+    <script>
+        let chatSocket;
+        let chatUser;
+
+        // Search users dynamically
+        $("#search-box").on("input", function () {
+            let query = $(this).val();
+            if (query.length > 0) {
+                $.get("/search_users/?q=" + query, function (data) {
+                    $("#search-results").empty();
+                    data.users.forEach(user => {
+                        $("#search-results").append(`<li onclick="startChat('${user.username}')">${user.username}</li>`);
+                    });
+                });
+            }
+        });
+
+        // Function to start chat
+        function startChat(username) {
+            chatUser = username;
+            $("#chat-user").text(username);
+            $("#search-results").empty();
+
+            if (chatSocket) {
+                chatSocket.close();
+            }
+
+            chatSocket = new WebSocket(`ws://${window.location.host}/ws/chat/${chatUser}/`);
+
+            chatSocket.onmessage = function (event) {
+                let data = JSON.parse(event.data);
+                let sender = data.sender;
+                let message = data.message;
+                let msgClass = sender === "{{ request.user.username }}" ? "me" : "other";
+                $("#chat-messages").append(`<div class='message ${msgClass}'><b>${sender}:</b> ${message}</div>`);
+            };
+
+            chatSocket.onclose = function () {
+                console.log("WebSocket closed!");
+            };
+        }
+
+        // Send message
+        $("#send-message").on("click", function () {
+            let message = $("#message-input").val();
+            if (message && chatSocket) {
+                chatSocket.send(JSON.stringify({ "message": message }));
+                $("#message-input").val("");
+            }
+        });
+    </script>
+
+</body>
+</html>
