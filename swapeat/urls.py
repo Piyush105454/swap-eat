@@ -22,6 +22,8 @@ urlpatterns = [
     path("", views.HomePage, name="home"),  # Ensure homepage is correctly defined
     path("post/home2/", views.HomePage2, name="home2"),
     path("admin/", admin.site.urls),  # Keep this at the bottom
+    path('chat/', include('swapfood.urls')), 
+    
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
