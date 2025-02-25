@@ -2,24 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class ChatMessage(models.Model):
-    sender = models.ForeignKey(User, related_name="sent_messages", on_delete=models.CASCADE)
-    receiver = models.ForeignKey(User, related_name="received_messages", on_delete=models.CASCADE)
-    message = models.TextField()
-    timestamp = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f"From {self.sender} to {self.receiver}: {self.message[:50]}"
-
-
-class PrivateChat(models.Model):
-    user1 = models.ForeignKey(User, related_name="chat_user1", on_delete=models.CASCADE)
-    user2 = models.ForeignKey(User, related_name="chat_user2", on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def get_chat_room_name(self):
-        return f"chat_{min(self.user1.username, self.user2.username)}_{max(self.user1.username, self.user2.username)}"
-
+    
 
 class UserOTP(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
