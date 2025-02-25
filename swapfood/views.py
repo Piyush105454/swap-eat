@@ -16,45 +16,11 @@ import random
 import requests
 import json
 from django.shortcuts import render, get_object_or_404
-from .models import PrivateChat
-from django.shortcuts import render
-from django.http import JsonResponse
-from django.contrib.auth.models import User
-from .models import ChatMessage
-
-@csrf_exempt
-
-def send_message(request):
-    if request.method == "POST":
-        try:
-            data = json.loads(request.body)
-            receiver = User.objects.get(id=data["receiver_id"])
-            message = ChatMessage.objects.create(
-                sender=request.user,
-                receiver=receiver,
-                message=data["message"]
-            )
-            return JsonResponse({"status": "success", "message": message.message})
-        except Exception as e:
-            return JsonResponse({"status": "error", "error": str(e)})
-    return JsonResponse({"status": "failed", "message": "Invalid request"})
-    
 
 
 
 
-def search_users(request):
-    query = request.GET.get("username", "")
-    users = User.objects.filter(username__icontains=query).values("id", "username")
-    return JsonResponse({"users": list(users)})
-@login_required
-def chat_view(request, receiver_id):
-    receiver = User.objects.get(id=receiver_id)
-    messages = ChatMessage.objects.filter(sender=request.user, receiver=receiver) | \
-               ChatMessage.objects.filter(sender=receiver, receiver=request.user)
-    messages = messages.order_by("timestamp")
-    
-    return JsonResponse({"messages": list(messages.values("sender__username", "message"))})
+
 
 def post_food(request):
     if request.method == "POST":
@@ -296,43 +262,39 @@ def chat_api(request):
         return JsonResponse({"answer": answer})
 
     return JsonResponse({"error": "Invalid request method."}, status=400)
+@login_required
+def CreateRoom(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        room = request.POST['room']
 
-def chat(request):
-    """ Opens the chat page where the user can enter a username and search for a chat. """
-    return render(request, 'message.html')
+        try:
+            get_room = Room.objects.get(room_name=room)
+            return redirect('room', room_name=room, username=username)
+
+        except Room.DoesNotExist:
+            new_room = Room(room_name=room)
+            new_room.save()
+            return redirect('room', room_name=room, username=username)
+
+    return render(request, 'index.html')
 
 @login_required
-def MessageView(request, room_name=None, username=None):
-    """ Handles chat messages, fetching the correct room and messages. """
-    
-    # Ensure room_name and username are provided
-    if not room_name or not username:
-        return redirect('chat')  # Redirect to chat search if missing
-    
-    get_room, created = Room.objects.get_or_create(room_name=room_name)
+def MessageView(request, room_name, username):
+    get_room = Room.objects.get(room_name=room_name)
 
     if request.method == 'POST':
         message = request.POST['message']
-        new_message = Message(room=get_room, sender=request.user, message=message)
+        new_message = Message(room=get_room, sender=username, message=message)
         new_message.save()
 
     get_messages = Message.objects.filter(room=get_room)
 
     context = {
         "messages": get_messages,
-        "chat_user": username,
+        "user": username,
         "room_name": room_name,
     }
     return render(request, 'message.html', context)
 
-@login_required
-def get_chat_messages(request):
-    room_name = request.GET.get("room_name")
-    try:
-        room = Room.objects.get(room_name=room_name)
-        messages = Message.objects.filter(room=room).order_by("id")
-        return JsonResponse({
-            "messages": [{"sender": msg.sender.username, "message": msg.message} for msg in messages]
-        })
-    except Room.DoesNotExist:
-        return JsonResponse({"error": "Room does not exist"}, status=404)
+
