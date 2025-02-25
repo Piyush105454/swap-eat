@@ -21,7 +21,7 @@ from django.shortcuts import render, get_object_or_404
 
 
 
-
+@login_required
 def post_food(request):
     if request.method == "POST":
         form = FoodPostForm(request.POST, request.FILES)
