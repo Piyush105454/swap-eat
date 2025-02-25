@@ -5,8 +5,6 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
-    path("chat/<str:room_name>/<str:username>/", views.MessageView, name="chat_with_user"),
-    path("search_users/", views.search_users, name="search_users"),
     path("chat/", views.chat, name="chat"),  # Fixed duplicate include issue
     path("chat-api/", views.chat_api, name="chat_api"),
     path("post/explore/", views.explore, name="explore"),
