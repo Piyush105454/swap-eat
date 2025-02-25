@@ -1,6 +1,6 @@
 from django.urls import path
-from swapfood.consumers import PrivateChatConsumer
+from swapfood.consumers import ChatConsumer
 
 websocket_urlpatterns = [
-    path("ws/chat/<str:username>/", PrivateChatConsumer.as_asgi()),
+    path('ws/notification/<str:room_name>/', ChatConsumer.as_asgi()),
 ]
