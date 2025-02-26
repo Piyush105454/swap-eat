@@ -189,13 +189,13 @@ def search_meals(request):
 # Meal Display Home
 @login_required
 def notification(request):
-    food_posts = list(FoodPost.objects.values("latitude", "longitude", "photo", "name", "radius","location", "created_at", "id"))
-    
+    form = FoodPostForm()  # Define the form
+    food_posts = list(FoodPost.objects.values("latitude", "longitude", "photo", "name", "radius", "location", "created_at", "id"))
+
     # Convert datetime objects to string
     for post in food_posts:
         post["created_at"] = post["created_at"].isoformat()
 
-    # Render the page with form and map data
     return render(request, "notification.html", {"form": form, "food_posts": json.dumps(food_posts)})
 
     
