@@ -426,52 +426,54 @@
         
         <div class="divider"></div>
 
-        <!-- Middle Box (Posted Meal) -->
-          <!-- Middle Box (Posted Meal) -->
-    <div class="box">
-        <h3>Post your Meal</h3>
+    
+                    <div class="divider1"></div>
 
-        {% if food_posts %}
-            {% with latest_post=food_posts.first %}
-                <div class="card">
-                    <div class="cart-profile">
-                        <img src="https://static.vecteezy.com/system/resources/previews/011/490/381/original/happy-smiling-young-man-avatar-3d-portrait-of-a-man-cartoon-character-people-illustration-isolated-on-white-background-vector.jpg" alt="User">
-                        <div>
-                            <h2>{{ latest_post.user.username }}</h2>
-                            <p class="time">Shared at {{ latest_post.created_at|date:"M d, Y h:i A" }}</p>
-                        </div>
-                    </div>
+      <div class="box">
+            <h3>Post your Meal</h3>
 
-                    <div class="divider2"></div>
-
-                    <div class="meal">
-                        <div style="display: flex; align-items: center; justify-content: space-between;">
+            {% if food_posts %}
+                {% with latest_post=food_posts.first %}
+                    <div class="card">
+                        <div class="cart-profile">
+                            <img src="https://static.vecteezy.com/system/resources/previews/011/490/381/original/happy-smiling-young-man-avatar-3d-portrait-of-a-man-cartoon-character-people-illustration-isolated-on-white-background-vector.jpg" alt="User">
                             <div>
-                                <p style="color: purple; font-weight: bold;">🟩 Prepared <span style="color: gray;">{{ latest_post.prepared_time }}</span></p>
-                                <h3>{{ latest_post.meal_name }}</h3>
-                                <p>{{ latest_post.description }}</p>
+                                <h2>{{ latest_post.user.username }}</h2>
+                                <p class="time">Shared at {{ latest_post.created_at|date:"M d, Y h:i A" }}</p>
                             </div>
-                            <img src="{{ latest_post.image.url }}" alt="Meal">
                         </div>
+
+                        <div class="divider2"></div>
+
+                        <div class="meal">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div>
+                                    <p style="color: purple; font-weight: bold;">🟩 Prepared <span style="color: gray;">{{ latest_post.prepared_time }}</span></p>
+                                    <h3>{{ latest_post.meal_name }}</h3>
+                                    <p>{{ latest_post.description }}</p>
+                                </div>
+                                <img src="{{ latest_post.image.url }}" alt="Meal">
+                            </div>
+                        </div>
+
+                        <div class="divider1"></div>
+
+                        <div class="location">
+                            <p>📍 {{ latest_post.location }}</p>
+                        </div>
+
+                        <div class="divider1"></div>
+
+                        <p class="radius">Radius: {{ latest_post.radius }} km</p>
+
                     </div>
+                {% endwith %}
+            {% else %}
+                <p>No meals have been posted yet.</p>
+            {% endif %}
 
-                    <div class="divider1"></div>
+        </div>
 
-                    <div class="location">
-                        <p>📍 {{ latest_post.location }}</p>
-                    </div>
-
-                    <div class="divider1"></div>
-
-                    <p class="radius">Radius: {{ latest_post.radius }} km</p>
-
-                </div>
-            {% endwith %}
-        {% else %}
-            <p>No meals have been posted yet.</p>
-        {% endif %}
-
-    </div>
 
         
         <div class="divider"></div>
