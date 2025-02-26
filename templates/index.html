@@ -53,11 +53,54 @@
             border: none;
             border-radius: 5px;
             width: 20%;
+            text-align: center;
         }
 
         button:hover {
             padding: 15px;
             transition: 0.8s;
+        }
+        .input-container {
+            position: relative;
+            display: inline-block;
+        }
+        #selectedOption {
+            width: 150px;
+            padding-right: 30px;
+        }
+        #toggleBtn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            cursor: pointer;
+        }
+        .menu {
+            display: none;
+            list-style-type: none;
+            padding: 0;
+            margin: 5px 0 0;
+            border: 1px solid #ccc;
+            width: 150px;
+            background: #f9f9f9;
+            position: absolute;
+            top: 100%;
+            left: 0;
+        }
+        .menu li {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .menu li:hover {
+            background: #ddd;
+        }
+        #searchBox {
+            width: 140px;
+            padding: 5px;
+            margin-bottom: 5px;
+            border: 1px solid #ccc;
         }
     </style>
 </head>
@@ -69,11 +112,193 @@
                 {% csrf_token %}
                 <label for="">Username</label><br>
                 <input type="text" placeholder="Username" name="username" required><br>
-                <label for="">Room name</label><br>
-                <input type="text" placeholder="Room name" name="room" required><br>
+               <div>
+                   <form id="myForm">
+                    <div class="input-container">
+                        <input type="text" id="selectedOption" name="selectedOption" readonly>
+                        <button type="button" id="toggleBtn">▼</button>
+                        <ul id="menu" class="menu">
+                            <input type="text" id="searchBox" placeholder="Search...">
+                            <ul>
+                                <li data-value="462030">Raja Bhoj International Airport, Air Port</li>
+                                <li data-value="462042">People's University, Amarawat Kalan</li>
+                                <li data-value="462021">Christ College, Anand Nagar</li>
+                                <li data-value="462011">Madhya Pradesh Tribal Museum, Arera Hills</li>
+                                <li data-value="462041">Ayodhya Bypass Road, Ayodhya Nagar</li>
+                                <li data-value="462043">Sagar Institute of Science and Technology, Bag Mungalia</li>
+                                <li data-value="462030">Sant Hirdaram Girls College, Bairagarh</li>
+                                <li data-value="463106">Government College, Berasia</li>
+                                <li data-value="462026">Barkatullah Vishwavidyalaya, Bhopal University</li>
+                                <li data-value="462003">Kamla Nehru Government Girls Post Graduate College, C.T.T. Nagar</li>
+                                <li data-value="462001">Chhola Dussehra Maidan, Chhola Road</li>
+                                <li data-value="462001">Saifia College of Science and Education, Hamidia Road</li>
+                                <li data-value="462042">Atal Bihari Vajpayee Hindi University, Kolar Road</li>
+                                <li data-value="462004">Madhya Pradesh Legislative Assembly, M.P. Vidhan Sabha</li>
+                                <li data-value="462003">MLA Rest House, M.L.A. Rest House</li>
+                                <li data-value="462011">DB City Mall, M.P. Nagar</li>
+                                <li data-value="462026">Sagar Institute of Research and Technology, Misrod</li>
+                                <li data-value="462001">Secretariat Building, Old Secretariat</li>
+                                <li data-value="462021">BHEL Township, Piplani</li>
+                                <li data-value="462013">Maulana Azad National Institute of Technology (MANIT), Regional College</li>
+                                <li data-value="462001">Dr. Shankar Dayal Sharma Smriti Mahavidyalaya, Shahajahanabad</li>
+                                <li data-value="462016">Sardar Patel University of Police, Security and Criminal Justice, Shivaji Nagar</li>
+                                <li data-value="462013">Regional Museum of Natural History, Shyamla Hills</li>
+                                <li data-value="462003">The Bhopal School of Social Sciences, T.T. Nagar</li>
+                                <li data-value="462002">Rajiv Gandhi Proudyogiki Vishwavidyalaya, Vidya Vihar</li>
+                                <li data-value="462016">1100 Qrts</li>
+                                <li data-value="462031">3 EME Centre</li>
+                                <li data-value="462020">AIIMS</li>
+                                <li data-value="462030">Air Port</li>
+                                <li data-value="462042">Amarawat Kalan</li>
+                                <li data-value="462022">Anand Nagar</li>
+                                <li data-value="462027">Arera Hills</li>
+                                <li data-value="462038">Arwaliya</li>
+                                <li data-value="462041">Ayodhaya Nagar</li>
+                                <li data-value="462043">Bag Mungalia</li>
+                                <li data-value="462026">Bagroda</li>
+                                <li data-value="462030">Bairagarh</li>
+                                <li data-value="462042">Bairagarh Chichali</li>
+                                <li data-value="462030">Bairagarh Kalan</li>
+                                <li data-value="463106">Balachoan</li>
+                                <li data-value="462010">Balampur</li>
+                                <li data-value="462045">Bangrasia</li>
+                                <li data-value="462101">Barkheda Baramad</li>
+                                <li data-value="462022">Barkheda H.E.</li>
+                                <li data-value="462044">Barkheda Nathu</li>
+                                <li data-value="462008">Barkhedi</li>
+                                <li data-value="463106">Basai</li>
+                                <li data-value="463111">Bawachiya</li>
+                                <li data-value="462026">Bawadia Kalan</li>
+                                <li data-value="462001">Bazaria Shahajahanabad</li>
+                                <li data-value="463106">Berasia Bhopal</li>
+                                <li data-value="462001">Berasia Road</li>
+                                <li data-value="462022">BHEL</li>
+                                <li data-value="462030">Bhonri</li>
+                                <li data-value="462001">Bhopal G.P.O.</li>
+                                <li data-value="462120">Bilakho</li>
+                                <li data-value="464993">Bishankhedi</li>
+                                <li data-value="462003">C.T.T. Nagar</li>
+                                <li data-value="462010">Chandbad</li>
+                                <li data-value="462001">Chhola Road</li>
+                                <li data-value="462001">Chouk</li>
+                                <li data-value="462101">Dhamarra</li>
+                                <li data-value="463111">Dhaturiya</li>
+                                <li data-value="462101">Dillod</li>
+                                <li data-value="463111">Dungariya</li>
+                                <li data-value="462016">E-2 Sector</li>
+                                <li data-value="462030">Fanda</li>
+                                <li data-value="462120">Gada Jangeer</li>
+                                <li data-value="462001">Gandhi Medical College</li>
+                                <li data-value="462036">Gandhi Nagar</li>
+                                <li data-value="462023">Govindpura</li>
+                                <li data-value="462101">Gunga</li>
+                                <li data-value="462024">H.E. Hospital</li>
+                                <li data-value="462001">Hamidia Road</li>
+                                <li data-value="462101">Harra Kheda</li>
+                                <li data-value="462066">IISER Bhouri</li>
+                                <li data-value="462010">Imaliya</li>
+                                <li data-value="462023">Industrial Estate</li>
+                                <li data-value="462038">Islam Nagar</li>
+                                <li data-value="462001">Itwara</li>
+                                <li data-value="462008">Jahangirabad</li>
+                                <li data-value="462022">Jamunia Kalan</li>
+                                <li data-value="463111">Jamusarkalan</li>
+                                <li data-value="462044">Jhagaria Khurd</li>
+                                <li data-value="462001">Jumerati</li>
+                                <li data-value="462101">Kalara</li>
+                                <li data-value="462003">Kamla Nagar</li>
+                                <li data-value="462022">Khajuri Kalan</li>
+                                <li data-value="462030">Khajuri Sadak</li>
+                                <li data-value="462038">Khamkheda</li>
+                                <li data-value="463106">Khitwas</li>
+                                <li data-value="462101">Khukharia</li>
+                                <li data-value="462022">Kokata</li>
+                                <li data-value="462042">Kolar Road</li>
+                                <li data-value="462022">Kolua Khurd</li>
+                                <li data-value="462120">Kolukhedi</li>
+                                <li data-value="462101">Kotra Chopra</li>
+                                <li data-value="463111">Kulhoar</li>
+                                <li data-value="462030">Kurana</li>
+                                <li data-value="462101">Kutakipura</li>
+                                <li data-value="462101">Kuthar</li>
+                                <li data-value="463111">Lalariya</li>
+                                <li data-value="463106">Laloi</li>
+                                <li data-value="462007">M.A.C.T.</li>
+                                <li data-value="462038">M.L. Nagar</li>
+                                <li data-value="462003">M.L.A. Rest House</li>
+                                <li data-value="462004">M.P. Vidhan Sabha</li>
+                                <li data-value="462016">Mahaveer Nagar</li>
+                                <li data-value="462046">Mandideep</li>
+                                <li data-value="462120">Mangal Garh</li>
+                                <li data-value="463111">Meghra Kalan</li>
+                                <li data-value="462047">Misord</li>
+                                <li data-value="462026">Misrod</li>
+                                <li data-value="462016">MP Bhoj Open University</li>
+                                <li data-value="462044">Mungalia Chhap</li>
+                                <li data-value="462030">Mungaliya Hatt</li>
+                                <li data-value="462038">Nabibagh</li>
+                                <li data-value="462120">Naya Samund</li>
+                                <li data-value="462030">Nayapura</li>
+                                <li data-value="462120">Nazirabad</li>
+                                <li data-value="462010">Nishatpura</li>
+                                <li data-value="464993">Obedullaganj</li>
+                                <li data-value="462001">Old Secretriate</li>
+                                <li data-value="462030">Parwaliya Sadak</li>
+                                <li data-value="462037">Peoples Campus</li>
+                                <li data-value="462010">Pipaliya Jaheerpeer</li>
+                                <li data-value="462016">R.S. Market</li>
+                                <li data-value="462016">R.S. Nagar</li>
+                                <li data-value="462003">Raj Bhawan</li>
+                                <li data-value="462044">Ratibad</li>
+                                <li data-value="462013">Regional College</li>
+                                <li data-value="462044">Suraj Nagar</li>
+                            </ul>
+
+                        </ul>
+                    </div>
+                </form>
+               </div> 
                 <center><button type="submit">Submit</button></center><br>
             </form>
         </div>
     </div>
+    <script>
+        const toggleBtn = document.getElementById("toggleBtn");
+        const menu = document.getElementById("menu");
+        const selectedOption = document.getElementById("selectedOption");
+        const searchBox = document.getElementById("searchBox");
+
+        toggleBtn.addEventListener("click", (event) => {
+            event.stopPropagation();
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+            searchBox.value = "";
+            filterOptions();
+        });
+
+        menu.addEventListener("click", (event) => {
+            if (event.target.tagName === "LI") {
+                selectedOption.value = event.target.getAttribute("data-value");
+                menu.style.display = "none";
+            }
+        });
+
+        document.addEventListener("click", (event) => {
+            if (!menu.contains(event.target) && event.target !== toggleBtn) {
+                menu.style.display = "none";
+            }
+        });
+
+        searchBox.addEventListener("input", filterOptions);
+
+        function filterOptions() {
+            const filter = searchBox.value.toLowerCase();
+            const items = menu.getElementsByTagName("li");
+            
+            for (let item of items) {
+                let text = item.textContent.toLowerCase();
+                item.style.display = text.includes(filter) ? "block" : "none";
+            }
+        }
+    </script>
 </body>
 </html>
