@@ -18,9 +18,6 @@ import json
 from django.shortcuts import render, get_object_or_404
 
 
-
-
-
 @login_required
 def post_food(request):
     if request.method == "POST":
@@ -30,11 +27,19 @@ def post_food(request):
             food_post.latitude = request.POST.get("latitude")
             food_post.longitude = request.POST.get("longitude")
             food_post.save()
-            return redirect("map")  # Redirect to map page
+            return redirect("post_food")  # Redirect to the same page after posting
     else:
         form = FoodPostForm()
+
+    # Prepare data for the map
+    food_posts = list(FoodPost.objects.values("latitude", "longitude", "photo", "name", "radius", "created_at", "id"))
     
-    return render(request, "post_food.html", {"form": form})
+    # Convert datetime objects to string
+    for post in food_posts:
+        post["created_at"] = post["created_at"].isoformat()
+
+    # Render the page with form and map data
+    return render(request, "post_food.html", {"form": form, "food_posts": json.dumps(food_posts)})
 
 def map_view(request):
     food_posts = list(FoodPost.objects.values("latitude", "longitude", "photo", "name", "radius", "created_at", "id"))
@@ -127,20 +132,8 @@ def LogoutPage(request):
     return redirect('login')
 
 # Home Page View
-
 def HomePage(request):
     return render(request, 'home.html')
-
-# Upload Image and Display
-@login_required
-def HomePage2(request):
-    if request.method == 'POST' and request.FILES.get('image'):
-        pic = request.FILES['image']
-        file_path = default_storage.save(f'uploads/{pic.name}', pic)
-        file_url = settings.MEDIA_URL + file_path
-        file_name = pic.name
-        return render(request, 'home2.html', {'file_url': file_url, 'file_name': file_name})
-    return render(request, 'home2.html')
 
 # Explore Section
 @login_required
@@ -155,42 +148,10 @@ def chat(request):
 # Post Meals Section
 @login_required
 def post(request):
-    meals = Meal.objects.all()
-    return render(request, "profile.html", {"meals": meals})
-@login_required
-def postmeal(request):
-    if request.method == "POST":
-        name = request.POST.get("taste")
-        description = request.POST.get("tags")
-        radius = request.POST.get("radius")
-        image = request.FILES.get("image")
-        latitude = request.POST.get("latitude")
-        longitude = request.POST.get("longitude")
+    foods = FoodPost.objects.all().order_by('-created_at')  # Fetch all posts
+    return render(request, "profile.html", {"foods": foods})
+    
 
-        # Convert latitude and longitude to float, as they are coming from the form
-        try:
-            latitude = float(latitude) if latitude else None
-        except ValueError:
-            latitude = None
-
-        try:
-            longitude = float(longitude) if longitude else None
-        except ValueError:
-            longitude = None
-
-        # Create a new Meal object with the user's location
-        Meal.objects.create(
-            name=name,
-            description=description,
-            radius=radius,
-            image=image,
-            latitude=latitude,
-            longitude=longitude
-        )
-
-        return redirect('map')
-
-    return render(request, "postmeal.html")
 
     
 @login_required
