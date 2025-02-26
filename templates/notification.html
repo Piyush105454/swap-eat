@@ -1,50 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Food Posts</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: yellow;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding-bottom: 70px; /* To prevent content from being hidden behind navbar */
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Let's Party - Food App</title>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>       
+        body {
+
+                font-family: Arial, sans-serif;
+                 background: yellow;
+                margin: 0;
+                padding: 0;
+                text-align: center;
+                }
+            
+                h1 {
+                    font-size:70px;
+                    color: black;
+                    margin-top: 30px;
+                    }
+
+
+        .profile{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align:center;
+        }
+
+        .profile img {
+            cursor: pointer;
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid black;
+        }
+
+        .menu {
+            cursor: pointer;
+            position: absolute;
+            top: 90px;
+            right: 20px;
+            width: 200px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility:hidden;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .menu.show {
+            z-index: 100;
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .menu a {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: black;
+            font-size: 16px;
+            transition: background 0.3s;
+            text-align: left;
+        }
+
+        .menu a:hover {
+            cursor: pointer;
+            background: lightgray;
+        }
+
+        /* container */
+
+    .container{
+        margin:0px 50px 0px 50px ;
     }
 
-    .container {
-      width: 100%;
-      max-width: 1200px;
-      padding: 20px;
-    }
-
-    .header {
-      font-size: 24px;
-      font-weight: bold;
-      text-align: center;
-      margin-bottom: 20px;
-      color: #333;
-    }
-
-    .top-section {
+        .top-section {
       display: flex;
       justify-content: space-between;
       gap: 20px;
-      flex-wrap: wrap;
+      flex-wrap: wrap; /* Ensures wrapping on smaller screens */
     }
 
-    .left-box,
-    .right-box {
-      flex: 1 1 48%;
+    .left-box{
+      flex: 1 1 48%; /* Boxes take equal space, adjust as needed */
       min-width: 300px;
-      background-color: #ff6600;
+      background-color: #ff5e5e;
+      
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      box-sizing: border-box;
+    }
+    
+    #notification-invite{
+        
+        display: flex;
+        color: black;
+        font-weight: bolder;
+        gap: 10px;
+    }
+    #notification-invite button{
+        width: 100%;
+        padding: 10px;
+        background: linear-gradient(to right, rgba(255, 255, 255, 0.3), rgba(227, 201, 201, 0.6));
+        color: black;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        
+    }
+    
+   
+
+   #notification-invite button:hover {
+    background: linear-gradient(to right, rgba(253, 255, 165, 0.6), rgba(255, 255, 255, 0.6));
+      
+      color: white;
+    }
+
+    .notification-card {
+            width: 90%;
+        background: linear-gradient(to top left, rgba(53, 53, 53, 0.3), rgba(115, 115, 115, 0.6));
+           margin: 20PX 10px 10px 0px;
+            padding: 20px;
+            border-radius: 20px;
+            font-family: Arial, sans-serif;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .notification {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        .notification img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .notification-text {
+            display: flex;
+            flex-direction: column;
+        }
+        .notification-text strong {
+            text-align: left;
+            font-size: 14px;
+        }
+        .notification-text small {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        .highlight {
+            color: #00ff00; /* Green for special text */
+        }
+
+
+
+  
+    .right-box {
+        flex: 1 1 48%; /* Boxes take equal space, adjust as needed */
+        min-width: 300px;
+        background-color: #ff5e5e;
       color: white;
       border-radius: 8px;
       padding: 20px;
@@ -52,295 +184,316 @@
       box-sizing: border-box;
     }
 
-    button {
-      width: 100%;
-      padding: 10px;
-      background-color: white;
-      color: #ff6600;
-      font-size: 16px;
-      font-weight: bold;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    button:hover {
-      background-color: #ff5722;
-      color: white;
-    }
-
-    /* Modal Styles */
-    .modal {
-      display: none;
+        .SwapIt {
+            height: 100%;
+            border-radius: 20px;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+        .title {
+            margin-top: 5%;
+            font-size: 70px;
+            font-weight: bold;
+        }
+        .title span {
+            color: #faff00;
+        }
+        .icon svg{ 
+            margin-top: 0px;
+            width: 50%;
+            height: 50%;
+            margin-top: 20px;
+        }
+        .StartSearch {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 20px;          
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 28px;
+            color: white;
+            border: none;
+            background: linear-gradient(to right, #8a5cff, #5ccfff);
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+            text-decoration: none;
+        }
+        .StartSearch:hover {
+            opacity: 0.8;
+        }
+    
+                /* Bottom Navigation Bar */
+    .bottom-nav {
       position: fixed;
-      z-index: 1;
+      bottom: 0;
       left: 0;
-      top: 0;
       width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      overflow: auto;
-      padding-top: 60px;
+      background-color: #ff6600;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      z-index: 100;
     }
 
-    .modal-content {
-      background-color: white;
-      margin: 5% auto;
-      padding: 20px;
-      border-radius: 8px;
-      width: 80%;
-      max-width: 500px;
-    }
 
-    .close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-    }
 
-    .close:hover,
-    .close:focus {
-      color: black;
-      text-decoration: none;
-      cursor: pointer;
-    }
+            .nav-bottom {
+        display: flex;              
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+        }
+        
+        .navbar {z-index: 1;
+        display: flex;
+        align-items: center;
+        margin:20px;
+        background: linear-gradient(to right, red, orange);
+        padding: 12px 20px;
+        border-radius: 40px;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+        gap: 20px;
+        }
+        
+        .nav-item {
+        z-index: 1;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        background-color: transparent;
+        color: rgb(0, 0, 0);
+        border-radius: 50%;
+        cursor: pointer;
+        transition: transform 0.3s ease-in-out, background 0.3s;
+        }
+        
+        .nav-item:hover {
+        background-color: lightgreen;
+        transform: scale(1.2);
+        }
+        
+        .navbar a {
+        text-decoration: none;
+        color: inherit;       
+        }
+    
+    .chat-button {
+        margin-top:30px;        
+        margin-bottom: 30px;
+        text-decoration: none;
+        background: white;
+        color: black;
+        padding: 8px 12px;
+        padding-bottom: 15px;
+        padding-top:15px ;
+        border-radius: 16px;
+        font-size: 18px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        transition: transform 0.3s ease-in-out;
+        }
+        
+        .chat-button a {
+        text-decoration: none;
+        color: inherit;
+        }
+        
+        .chat-button:hover {
+        background: lightgreen;
+        transform: scale(1.1);
+        }
 
-    /* For responsiveness */
-    @media (max-width: 768px) {
+
+        @media (max-width: 768px) {
       .top-section {
-        flex-direction: column;
+        flex-direction: column; /* Stacks boxes vertically */
       }
 
       .left-box,
       .right-box {
-        flex: 1 1 100%;
-        margin-bottom: 20px;
+        flex: 1 1 100%; /* Boxes take full width on mobile */
+        margin-bottom: 20px; /* Adds spacing between boxes */
+      }
+
+      .gallery-tabs {
+        max-height: 200px; /* Adjusts for smaller screens */
       }
     }
-
-    /* Styling for the bottom navigation bar */
-    .nav-buttom {
-      position: fixed;
-      
-      bottom: 10px;
-      left: 40;
-      width: 80%;
-      display: flex;
-      justify-content: space-around;
-      background: linear-gradient(to right, red, orange);
-      padding: 10px 0;
-      border-radius: 40px;
-      box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.3);
-      z-index: 100; /* Make sure it stays on top of other content */
-    }
-
-    .navbar {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      width: 100%;
-      justify-content: space-around;
-    }
-
-    .nav-item {
-      width: 50px;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      background-color: transparent;
-      color: black;
-      border-radius: 50%;
-      cursor: pointer;
-      transition: transform 0.3s ease-in-out;
-    }
-     .nav-item a{
-      text-decoration: none;
-      color: black;
-    }
-    .nav-item:hover {
-      background-color: lightgreen;
-      transform: scale(1.2);
-    }
-
-    /* Nav items for mobile responsiveness */
-    @media (max-width: 768px) {
-      .nav-item {
-        width: 45px;
-        height: 45px;
-        font-size: 20px;
-      }
-    }
-  </style>
+        
+    </style>
 </head>
-
 <body>
-  <div class="container">
-    <div class="header">Eat Quietly!</div>
+    <div>
 
-    <div class="top-section">
-      <button>Notifications</button>
-      <div class="left-box">
-        <button id="inviteBtn">Invite Members</button>
-      </div>
-      <div class="right-box">
-        <button id="searchBtn">Search Meals</button>
-      </div>
-    </div>
+        <h1>Few Updates</h1>
 
-    <!-- Invite Members Modal -->
-    <div id="inviteModal" class="modal">
-      <div class="modal-content">
-        <span class="close" id="closeInviteModal">&times;</span>
-        <h2>Invite a Friend</h2>
-        <form method="POST" id="inviteForm">
-          {% csrf_token %}
-          <label for="email">Friend's Email:</label>
-          <input type="email" name="email" id="inviteEmail" required>
-          <button type="submit">Send Invitation</button>
-        </form>
-      </div>
-    </div>
+        <div class="profile">
 
-    <!-- Search Meals Modal -->
-    <div id="searchModal" class="modal">
-      <div class="modal-content">
-        <span class="close" id="closeSearchModal">&times;</span>
-        <h2>Search for Meals</h2>
-        <form method="GET" id="searchForm">
-          <input type="text" name="q" id="searchQuery" placeholder="Search for meals" required>
-          <button type="submit">Search</button>
-        </form>
-      </div>
-    </div>
-  </div>
+                    <img src="https://static.vecteezy.com/system/resources/previews/011/490/381/original/happy-smiling-young-man-avatar-3d-portrait-of-a-man-cartoon-character-people-illustration-isolated-on-white-background-vector.jpg" alt="User" onclick="toggleMenu()">
 
-  <!-- Bottom Nav Bar -->
-  <div class="nav-buttom">
-    <div class="navbar">
-      <div class="nav-item home">
+                    <div class="menu" id="menu">
+
+                        <a href="#">🔵 Profile</a>
+
+                        <a href="#">⭐ Favorite Peoples</a>
+
+                        <a href="#">💡 Personalization</a>
+
+                        <a href="#">🟡 Swap Eat +</a>
+
+                        <a href="#">🚫 Blocked Users</a>
+
+                        <a href="#">⚙️ Settings</a>
+
+                        <a href="#">🔗 Invite</a>
+
+                        <a href="{% url 'home' %}">↪ Logout</a>
+
+                    </div>
+
+            </div>
+        <section class="container">
+            <div class="top-section">
+                <div class="left-box">
+                    <div id="notification-invite">
+                  <button >Notifications</button>
+                  <button>Invites</button>
+                </div>
+                <div class="notification-card">
+                    <div class="notification">
+                        <img src="https://via.placeholder.com/40" alt="User">
+                        <div class="notification-text">
+                            <strong>Jay Shetty</strong>
+                            <small>Waved 👋 at you · 3 min ago</small>
+                        </div>
+                    </div>
+                    <div class="notification">
+                        <img src="https://via.placeholder.com/40" alt="User">
+                        <div class="notification-text">
+                            <strong>Swap Eat</strong>
+                            <small>Meal posted successfully · 16 min ago</small>
+                        </div>
+                    </div>
+                    <div class="notification">
+                        <img src="https://via.placeholder.com/40" alt="User">
+                        <div class="notification-text">
+                            <strong>Elon Musk</strong>
+                            <small>Waved 👋 at you · 1h ago</small>
+                        </div>
+                    </div>
+                    <div class="notification">
+                        <img src="https://via.placeholder.com/40" alt="User">
+                        <div class="notification-text">
+                            <strong>Raj Shamani</strong>
+                            <small>Sent you an invite request for party · 2h ago</small>
+                        </div>
+                    </div>
+                    <div class="notification">
+                        <img src="https://via.placeholder.com/40" alt="User">
+                        <div class="notification-text">
+                            <strong>Order: on its way</strong>
+                            <small>Meal dispatched successfully · 4h ago</small>
+                        </div>
+                    </div>
+                    <div class="notification">
+                        <img src="https://via.placeholder.com/40" alt="User">
+                        <div class="notification-text">
+                            <strong>Bhavish Agrawal</strong>
+                            <small>Waved 👋 at you · 8h ago</small>
+                        </div>
+                    </div>
+                    <div class="notification">
+                        <img src="https://via.placeholder.com/40" alt="User">
+                        <div class="notification-text">
+                            <strong>Akshat Sakre</strong>
+                            <small>Tipped you <span class="highlight">₹20</span> for your meal · 2 days ago</small>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <div class="right-box">
+                 
+                    <div class="SwapIt">
+                        <div class="title">Swap <span>it</span></div>
+                        <div class="icon">
+                            <!-- Simple SVG Stack of Cards -->
+                            <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="10" y="20" width="60" height="60" rx="10" stroke="black" stroke-width="3" fill="#FDECEB"/>
+                                <rect x="20" y="25" width="60" height="60" rx="10" stroke="black" stroke-width="3" fill="#FDECEB"/>
+                                <rect x="30" y="30" width="60" height="60" rx="10" stroke="black" stroke-width="3" fill="#FDECEB"/>
+                            </svg>
+                        </div>
+                        <a href="{% url 'post_food' %}" class="StartSearch">Start Searching</a>
+                    </div>
+                </div>
+              </div>
+            </section>
+              <!-- Bottom Menu -->
+
+    <section class="nav-bottom">
+
+        <div class="navbar">
+
+                        <div class="nav-item home">
         <a href="{% url 'post' %}" class="chat">
         <i class="fa-solid fa-house"></i>
           
         </a>
-      </div>
-      <div class="nav-item">
+       </div>
+       <div class="nav-item">
         <a href="{% url 'explore' %}" class="chat">
         <i class="fa-solid fa-compass"></i>
           
         </a>
-      </div>
-      <div class="nav-item">
+       </div>
+       <div class="nav-item">
         <a href="{% url 'post_food' %}" class="chat">
         <i class="fa-solid fa-plus"></i>
           
         </a>
-      </div>
-      <div class="nav-item">
+       </div>
+       <div class="nav-item">
         <a href="{% url 'notification' %}" class="chat">
         <i class="fa-solid fa-bell"></i>
           
         </a>
-      </div>
-      <div class="nav-item">
-        <a href="{% url 'chat' %}" class="chat">
-        <i class="fa-solid fa-user"></i>
+       </div>
+       <div class="nav-item">
+        <a href="{% url 'map' %}" class="chat">
+        <i class="fa-solid fa-map"></i>
           
         </a>
-      </div>
-    </div>
-  </div>
+       </div> 
+       
+        </div>
+        <div class="chat-button">
+            <a href="{% url 'chat' %}"><i class="fas fa-comments"></i> Chat </a>
+        </div>
+    </section>
 
-  <script>
-    // Get modal elements
-    var inviteModal = document.getElementById('inviteModal');
-    var searchModal = document.getElementById('searchModal');
-    var inviteBtn = document.getElementById('inviteBtn');
-    var searchBtn = document.getElementById('searchBtn');
-    var closeInviteModal = document.getElementById('closeInviteModal');
-    var closeSearchModal = document.getElementById('closeSearchModal');
 
-    // Open invite modal
-    inviteBtn.onclick = function () {
-      inviteModal.style.display = 'block';
-    }
 
-    // Open search modal
-    searchBtn.onclick = function () {
-      searchModal.style.display = 'block';
-    }
+      </body>
+            <script>
+            function toggleMenu() { 
+                var menu = document.getElementById("menu");
+                menu.classList.toggle("show");
+            }
 
-    // Close invite modal
-    closeInviteModal.onclick = function () {
-      inviteModal.style.display = 'none';
-    }
-
-    // Close search modal
-    closeSearchModal.onclick = function () {
-      searchModal.style.display = 'none';
-    }
-
-    // Close modals when clicking outside of them
-    window.onclick = function (event) {
-      if (event.target == inviteModal) {
-        inviteModal.style.display = 'none';
-      }
-      if (event.target == searchModal) {
-        searchModal.style.display = 'none';
-      }
-    }
-
-    // AJAX for sending invitation
-    document.getElementById('inviteForm').onsubmit = function (event) {
-      event.preventDefault();
-      var email = document.getElementById('inviteEmail').value;
-
-      // Perform AJAX call to send invitation email (handle it in Django view)
-      $.ajax({
-        url: '{% url "invite_member" %}',  // Adjust the URL as needed
-        method: 'POST',
-        data: {
-          email: email,
-          csrfmiddlewaretoken: document.querySelector('[name=csrfmiddlewaretoken]').value
-        },
-        success: function (response) {
-          console.log('Invitation sent:', response);
-          alert('Invitation sent successfully!');
-          inviteModal.style.display = 'none';  // Close modal after sending
-        },
-        error: function (error) {
-          console.error('Error sending invitation:', error);
-          alert('There was an error sending the invitation.');
-        }
-      });
-    }
-
-    // AJAX for searching meals
-    document.getElementById('searchForm').onsubmit = function (event) {
-      event.preventDefault();
-      var query = document.getElementById('searchQuery').value;
-
-      // Perform AJAX call to search meals
-      $.ajax({
-        url: '{% url "search_meals" %}',  // Adjust URL accordingly
-        method: 'GET',
-        data: {
-          q: query
-        },
-        success: function (response) {
-          console.log('Search results:', response);
-          // You can dynamically display the results here
-        },
-        error: function (error) {
-          console.error('Error searching:', error);
-        }
-      });
-    }
-  </script>
-</body>
-
-</html>
-
+            document.addEventListener("click", function (event) {            
+            var menu = document.getElementById("menu");
+            var profileImg = document.querySelector(".profile img");
+            
+            // Check if the clicked area is NOT inside the menu or the profile image
+            if (!menu.contains(event.target) && event.target !== profileImg) {
+            menu.classList.remove("show");            
+        }});
+        </script>
+    </html>
