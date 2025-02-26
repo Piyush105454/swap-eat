@@ -5,13 +5,13 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-#t^q$=_^+q00lk6uvi8aon^mazx+_&43-t7x0+pd254e!5h!2#'
+SECRET_KEY = 'django-insecure-#t^q$=_^+q00lk6uvi8aon^mazx+_&43-t7x0+pd254e!5h!2#'  # Replace with your actual secret key
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True  # Set to False in production
 
 ALLOWED_HOSTS = ['toxic-ilse-piyush105454-c639ba90.koyeb.app', 'localhost', '127.0.0.1']
-# Add this if you want to allow all hosts. Ensure DEBUG = False for this.
+# In production, set to '*' if behind a load balancer and DEBUG = False.
 # ALLOWED_HOSTS = ['*']
 
 # Application definition
@@ -29,12 +29,13 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',  # Handles various security settings
-    'django.middleware.common.CommonMiddleware',    # Handles common tasks like APPEND_SLASH
-    'django.middleware.csrf.CsrfViewMiddleware',    # Protects against cross-site request forgery
-    'django.contrib.auth.middleware.AuthenticationMiddleware',  # Manages user authentication
-    'django.contrib.messages.middleware.MessageMiddleware',      # Enables messages framework
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',  # Prevents clickjacking attacks
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'swapeat.urls'
@@ -58,7 +59,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'swapeat.wsgi.application'
 ASGI_APPLICATION = "swapeat.asgi.application"
 CHANNEL_LAYERS = {
-
     "default": {"BACKEND": "channels.layers.InMemoryChannelLayer"},
 }
 
@@ -68,7 +68,7 @@ CHANNEL_LAYERS = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',  # Or your database path
     }
 }
 
@@ -123,18 +123,19 @@ LOGOUT_REDIRECT_URL = '/login/'  # Redirect after logout
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # Use Gmail or any other email service provider
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'swapeatmail@gmail.com'  # Replace with your email
 EMAIL_HOST_PASSWORD = 'ivud didb rgrd ciil'  # Replace with your app password
-DEFAULT_FROM_EMAIL = 'your_email@gmail.com'
+DEFAULT_FROM_EMAIL = 'your_email@gmail.com' # replace with your email
 
-# Added for HTTPS in production environments on Koyeb
-USE_X_FORWARDED_HOST = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https') # Tells Django to trust the proxy
+#  Tell Django that you're behind a proxy that handles SSL.
+USE_X_FORWARDED_HOST = True  # Use the X-Forwarded-Host header
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # Trust the X-Forwarded-Proto header
+
 CSRF_TRUSTED_ORIGINS = [
-    'https://toxic-ilse-piyush105454-c639ba90.koyeb.app' # Needed for CSRF
+    'https://toxic-ilse-piyush105454-c639ba90.koyeb.app'  # Needed for CSRF when using HTTPS
 ]
-
