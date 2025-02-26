@@ -7,7 +7,7 @@ from django.core.files.storage import default_storage
 from django.core.mail import send_mail
 from django.conf import settings
 from django.http import JsonResponse
-from .models import Room, Message, Meal, UserOTP
+from .models import Room, Message, UserOTP
 from .models import FoodPost
 from .forms import FoodPostForm
 from .forms import InvitationForm, SearchForm
@@ -32,7 +32,7 @@ def post_food(request):
         form = FoodPostForm()
 
     # Prepare data for the map
-    food_posts = list(FoodPost.objects.values("latitude", "longitude", "photo", "name", "radius", "created_at", "id"))
+    food_posts = list(FoodPost.objects.values("latitude", "longitude", "photo", "name", "radius","location", "created_at", "id"))
     
     # Convert datetime objects to string
     for post in food_posts:
@@ -148,7 +148,7 @@ def chat(request):
 # Post Meals Section
 @login_required
 def post(request):
-    foods = FoodPost.objects.all().order_by('-created_at')  # Fetch all posts
+    foods = FoodPost.objects.all().order_by('created_at')  # Fetch all posts
     return render(request, "profile.html", {"foods": foods})
     
 
@@ -171,7 +171,7 @@ def invite_member(request):
                 [invitation.email],   # To email
                 fail_silently=False,
             )
-            return redirect('home')  # Redirect to a success page or home
+            return redirect('post')  # Redirect to a success page or home
     else:
         form = InvitationForm()
 
@@ -183,14 +183,23 @@ def search_meals(request):
     query = ''
     if 'q' in request.GET:
         query = request.GET['q']
-        meals = Meal.objects.filter(name__icontains=query)
+        meals = FoodPost.objects.filter(name__icontains=query)
     
     return render(request, 'search_meals.html', {'meals': meals, 'query': query})
 # Meal Display Home
 @login_required
 def notification(request):
-    meals = Meal.objects.all()
-    return render(request, "notification.html", {"meals": meals})
+    food_posts = list(FoodPost.objects.values("latitude", "longitude", "photo", "name", "radius","location", "created_at", "id"))
+    
+    # Convert datetime objects to string
+    for post in food_posts:
+        post["created_at"] = post["created_at"].isoformat()
+
+    # Render the page with form and map data
+    return render(request, "notification.html", {"form": form, "food_posts": json.dumps(food_posts)})
+
+    
+    
 
 # Chatbot API (Gemini Integration)
 def chat_api(request):
