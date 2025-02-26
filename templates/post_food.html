@@ -415,6 +415,12 @@
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.as_p }}
+                  <!-- Hidden inputs to store latitude and longitude -->
+            <input type="hidden" id="latitude" name="latitude">
+            <input type="hidden" id="longitude" name="longitude">
+        
+            <button class="spread-btn" type="button" onclick="getLocation()">Spread Taste</button>
+
             </form>
         </div>
         
@@ -456,15 +462,11 @@
                 <div class="divider1"></div>
         
                 <p class="radius">Radius: {{ post.radius }} km</p>  <!-- Meal Radius -->
+                
             </div>
             {% empty %}
             {% endfor %}
-                 <!-- Hidden inputs to store latitude and longitude -->
-            <input type="hidden" id="latitude" name="latitude">
-            <input type="hidden" id="longitude" name="longitude">
-        
-            <button class="spread-btn" type="button" onclick="getLocation()">Spread Taste</button>
-
+               
         </div>
         
         <div class="divider"></div>
