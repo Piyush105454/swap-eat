@@ -470,7 +470,7 @@
 
     <div class="profile">
 
-    <h1 class="scan">🍕 User feeling <samp class="hungry">Hungry</samp> 🍔</h1>
+   <h1> <spam class="scan"id="username">🍕 User </spam> <spam class="hungry"> feeling Hungry</spam> 🍔</h1>
 
             <img src="https://static.vecteezy.com/system/resources/previews/011/490/381/original/happy-smiling-young-man-avatar-3d-portrait-of-a-man-cartoon-character-people-illustration-isolated-on-white-background-vector.jpg" alt="User" onclick="toggleMenu()">
 
@@ -611,6 +611,10 @@
 
 
     <script>
+        let storedUsername = localStorage.getItem("username");
+             if (storedUsername) {
+                document.getElementById("username").textContent = storedUsername;
+        }
 
         function toggleMenu() {
 
