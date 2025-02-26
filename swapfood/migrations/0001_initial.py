@@ -34,13 +34,20 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('photo', models.ImageField(upload_to='food_photos/')),
-                ('latitude', models.FloatField(null=True, blank=True)),  # Fixed null=True
-                ('longitude', models.FloatField(null=True, blank=True)),  # Fixed null=True
+                ('latitude', models.FloatField(null=True, blank=True)),  
+                ('longitude', models.FloatField(null=True, blank=True)),  
                 ('name', models.CharField(max_length=100)),
-                ('description', models.CharField(max_length=255)),  # Fixed missing max_length
-                ('location', models.CharField(max_length=255)),  # Fixed missing max_length
+                ('description', models.CharField(max_length=255)),  
+                ('location', models.CharField(max_length=255)),  
                 ('radius', models.FloatField()),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
+
+                # Added user field as a ForeignKey
+                ('user', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,  # Deletes FoodPosts if the user is deleted
+                    to=settings.AUTH_USER_MODEL,  
+                    related_name='food_posts'  # Allows querying food posts by user
+                )),
             ],
         ),
         migrations.CreateModel(
