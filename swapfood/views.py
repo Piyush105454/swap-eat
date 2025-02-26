@@ -148,7 +148,7 @@ def chat(request):
 # Post Meals Section
 @login_required
 def post(request):
-    foods = FoodPost.objects.all().order_by('created_at')  # Fetch all posts
+    foods = FoodPost.objects.all().order_by('-created_at')  # Fetch all posts
     return render(request, "profile.html", {"foods": foods})
     
 
