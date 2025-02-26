@@ -8,7 +8,6 @@ urlpatterns = [
     path("chat/", views.chat, name="chat"),  # Fixed duplicate include issue
     path("chat-api/", views.chat_api, name="chat_api"),
     path("post/explore/", views.explore, name="explore"),
-    path("post/postmeal/", views.postmeal, name="postmeal"),
     path("post/", views.post, name="post"),
     path("verify-otp/<int:user_id>/", views.VerifyOTP, name="verify_otp"),
     path("invite/", views.invite_member, name="invite_member"),
@@ -20,7 +19,6 @@ urlpatterns = [
     path("login/", views.LoginPage, name="login"),
     path("logout/", views.LogoutPage, name="logout"),
     path("", views.HomePage, name="home"),  # Ensure homepage is correctly defined
-    path("post/home2/", views.HomePage2, name="home2"),
     path("admin/", admin.site.urls),  # Keep this at the bottom
     path('chat/', include('swapfood.urls')), 
     
