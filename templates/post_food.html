@@ -433,12 +433,12 @@
             <h3>Post your Meal</h3>
 
             {% if food_posts %}
-                {% with latest_post=food_posts.first %}
+                {% with latest_post=food_posts.0 %}
                     <div class="card">
                         <div class="cart-profile">
                             <img src="https://static.vecteezy.com/system/resources/previews/011/490/381/original/happy-smiling-young-man-avatar-3d-portrait-of-a-man-cartoon-character-people-illustration-isolated-on-white-background-vector.jpg" alt="User">
                             <div>
-                                <h2>{{ latest_post.user.username }}</h2>
+                                <h2>user name</h2>
                                 <p class="time">Shared at {{ latest_post.created_at|date:"M d, Y h:i A" }}</p>
                             </div>
                         </div>
@@ -449,10 +449,10 @@
                             <div style="display: flex; align-items: center; justify-content: space-between;">
                                 <div>
                                     <p style="color: purple; font-weight: bold;">🟩 Prepared <span style="color: gray;">{{ latest_post.prepared_time }}</span></p>
-                                    <h3>{{ latest_post.meal_name }}</h3>
+                                    <h3>{{ latest_post.name }}</h3>
                                     <p>{{ latest_post.description }}</p>
                                 </div>
-                                <img src="{{ latest_post.image.url }}" alt="Meal">
+                                <img src="{{ latest_post.photo.url }}" alt="Meal">
                             </div>
                         </div>
 
