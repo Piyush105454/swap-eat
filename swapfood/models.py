@@ -14,18 +14,7 @@ class UserOTP(models.Model):
         return f"{self.user.username} - OTP: {self.otp}"
 
 
-class Meal(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
-    radius = models.FloatField()
-    image = models.ImageField(upload_to="meal_images/", blank=True, null=True)
-    latitude = models.FloatField(null=True, blank=True)  # Auto-detected location
-    longitude = models.FloatField(null=True, blank=True) # Auto-detected location
-  
-    created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f"{self.name} at ({self.latitude}, {self.longitude})"
         
 
 class Invitation(models.Model):
@@ -72,6 +61,7 @@ class FoodPost(models.Model):
     longitude = models.FloatField(null=True, blank=True) # Auto-detected location
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
+    location = models.CharField(max_length=100)
     radius = models.FloatField()
     
     
