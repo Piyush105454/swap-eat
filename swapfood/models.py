@@ -66,4 +66,10 @@ class FoodPost(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-    return f"{self.name} by {self.user.username} at {self.location} ({self.latitude}, {self.longitude}), Radius: {self.radius} km, Description: {self.description}, Photo: {self.photo.url if self.photo else 'No photo'}"
+        return (
+            f"{self.name} by {self.user.username} at {self.location} "
+            f"({self.latitude}, {self.longitude}), "
+            f"Radius: {self.radius} km, "
+            f"Description: {self.description}, "
+            f"Photo: {self.photo.url if self.photo else 'No photo'}"
+        )
