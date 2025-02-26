@@ -67,8 +67,17 @@ CHANNEL_LAYERS = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',  # Or your database path
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'defaultdb',
+        'USER': 'avnadmin',
+        'PASSWORD': 'AVNS_ORs7d_ZbncIaIZ1qeoQ',  # Replace with your actual password
+        'HOST': 'mysql-39f0045-piyushmodi812-aac6.c.aivencloud.com',
+        'PORT': '28598',
+        'OPTIONS': {
+            'ssl_mode': 'REQUIRED',
+            # You may need to specify the path to your CA certificate here
+            # 'ssl': {'ca': '/path/to/ca-cert.pem'}
+        }
     }
 }
 
