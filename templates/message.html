@@ -23,15 +23,83 @@
             background-color: #fef500;
             text-align: center;
             padding: 15px;
-            font-size: 24px;
+            font-size: 50px;
             font-weight: bold;
             color: black;
         }
+
+                    
+        h1 {
+                    font-size:50px;
+                    color: black;
+                    margin-top: 30px;
+                    }
+
+
+        .profile{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align:center;
+        }
+
+        .profile img {
+            cursor: pointer;
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid black;
+        }
+
+        .menu {
+            cursor: pointer;
+            position: absolute;
+            top: 90px;
+            right: 20px;
+            width: 200px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility:hidden;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .menu.show {
+            z-index: 100;
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .menu a {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: black;
+            font-size: 16px;
+            transition: background 0.3s;
+            text-align: left;
+        }
+
+        .menu a:hover {
+            cursor: pointer;
+            background: lightgray;
+        }
+
+
 
         /* Chat box container */
         .chat-container {
             width: 90%;
             margin: 0 auto;
+            margin-top: 30px;
             background-color: #111;
             border-radius: 15px;
             display: flex;
@@ -102,35 +170,144 @@
             cursor: pointer;
         }
 
-        /* Bottom navigation bar */
-        .bottom-nav {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            background-color: #ff6600; /* Orange color */
-            padding: 10px 0;
-        }
+                      /* Bottom Navigation Bar */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: #ff6600;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      z-index: 100;
+    }
 
+
+
+            .nav-bottom {
+        display: flex;              
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+        }
+        
+        .navbar {z-index: 1;
+        display: flex;
+        align-items: center;
+        margin:20px;
+        background: linear-gradient(to right, red, orange);
+        padding: 12px 20px;
+        border-radius: 40px;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+        gap: 20px;
+        }
+        
         .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: white;
-            cursor: pointer;
+        z-index: 1;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        background-color: transparent;
+        color: rgb(0, 0, 0);
+        border-radius: 50%;
+        cursor: pointer;
+        transition: transform 0.3s ease-in-out, background 0.3s;
         }
-
+        
         .nav-item:hover {
-            color: #ffcc00;
+        background-color: lightgreen;
+        transform: scale(1.2);
+        }
+        
+        .navbar a {
+        text-decoration: none;
+        color: inherit;       
+        }
+    
+    .chat-button {
+        margin-top:30px;        
+        margin-bottom: 30px;
+        text-decoration: none;
+        background: white;
+        color: black;
+        padding: 8px 12px;
+        padding-bottom: 15px;
+        padding-top:15px ;
+        border-radius: 16px;
+        font-size: 18px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        transition: transform 0.3s ease-in-out;
+        }
+        
+        .chat-button a {
+        text-decoration: none;
+        color: inherit;
+        }
+        
+        .chat-button:hover {
+        background: lightgreen;
+        transform: scale(1.1);
         }
 
-        .nav-item i {
-            font-size: 20px;
-            margin-bottom: 5px;
-        }
+
+        @media (max-width: 768px) {
+      .top-section {
+        flex-direction: column; /* Stacks boxes vertically */
+      }
+
+      .left-box,
+      .right-box {
+        flex: 1 1 100%; /* Boxes take full width on mobile */
+        margin-bottom: 20px; /* Adds spacing between boxes */
+      }
+
+      .gallery-tabs {
+        max-height: 200px; /* Adjusts for smaller screens */
+      }
+    }
+ 
+
     </style>
 </head>
 <body>
-    <div class="header">Eat Quietly!</div>
+    <div>
+        
+        <div class="header">Eat Quietly!</div>
+
+        <div class="profile">
+
+                    <img src="https://static.vecteezy.com/system/resources/previews/011/490/381/original/happy-smiling-young-man-avatar-3d-portrait-of-a-man-cartoon-character-people-illustration-isolated-on-white-background-vector.jpg" alt="User" onclick="toggleMenu()">
+
+                    <div class="menu" id="menu">
+
+                        <a href="#">🔵 Profile</a>
+
+                        <a href="#">⭐ Favorite Peoples</a>
+
+                        <a href="#">💡 Personalization</a>
+
+                        <a href="#">🟡 Swap Eat +</a>
+
+                        <a href="#">🚫 Blocked Users</a>
+
+                        <a href="#">⚙️ Settings</a>
+
+                        <a href="#">🔗 Invite</a>
+
+                        <a href="./singup.html">↪ Logout</a>
+
+                    </div>
+
+            </div>
+  </div>
 
     <div class="chat-container">
         <div class="messages" id="chatContainer">
@@ -154,30 +331,66 @@
         </div>
     </div>
 
-    <div class="bottom-nav">
-        <div class="nav-item">
-            <i class="fas fa-home"></i>
-            <a href="{% url 'post' %}" class="chat">Home</a>
-        </div>
-        <div class="nav-item">
-            <i class="fas fa-search"></i>
-            <a href="{% url 'explore' %}" class="chat">explore</a>
-        </div>
-        <div class="nav-item">
-            <i class="fas fa-plus-circle"></i>
-            <a href="{% url 'post_food' %}" class="chat">postmeal</a>
-        </div>
-        <div class="nav-item">
-            <i class="fas fa-bell"></i>
-            <a href="{% url 'notification' %}" class="chat">notifications</a>
-        </div>
-        <div class="nav-item">
-            <i class="fas fa-comment"></i>
-            <a href="{% url 'chat' %}" class="chat">chat</a>
-        </div>
-    </div>
+               <!-- Bottom Menu -->
+
+               <section class="nav-bottom">
+
+                <div class="navbar">
+        
+                                <div class="nav-item home">
+                <a href="{% url 'post' %}" class="chat">
+                <i class="fa-solid fa-house"></i>
+                  
+                </a>
+               </div>
+               <div class="nav-item">
+                <a href="{% url 'explore' %}" class="chat">
+                <i class="fa-solid fa-compass"></i>
+                  
+                </a>
+               </div>
+               <div class="nav-item">
+                <a href="{% url 'post_food' %}" class="chat">
+                <i class="fa-solid fa-plus"></i>
+                  
+                </a>
+               </div>
+               <div class="nav-item">
+                <a href="{% url 'notification' %}" class="chat">
+                <i class="fa-solid fa-bell"></i>
+                  
+                </a>
+               </div>
+               <div class="nav-item">
+                <a href="{% url 'map' %}" class="chat">
+                <i class="fa-solid fa-map"></i>
+                  
+                </a>
+               </div> 
+               
+                </div>
+                <div class="chat-button">
+                    <a href="{% url 'chat' %}"><i class="fas fa-comments"></i> Chat </a>
+                </div>
+            </section>
+        
 
     <script>
+
+function toggleMenu() { 
+                var menu = document.getElementById("menu");
+                menu.classList.toggle("show");
+            }
+
+            document.addEventListener("click", function (event) {            
+            var menu = document.getElementById("menu");
+            var profileImg = document.querySelector(".profile img");
+            
+            // Check if the clicked area is NOT inside the menu or the profile image
+            if (!menu.contains(event.target) && event.target !== profileImg) {
+            menu.classList.remove("show");            
+        }});
+
         function scrollToBottom() {
             const chatContainer = document.getElementById("chatContainer");
             chatContainer.scrollTop = chatContainer.scrollHeight;
