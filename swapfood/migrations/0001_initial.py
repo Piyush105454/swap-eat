@@ -25,19 +25,7 @@ class Migration(migrations.Migration):
                 ('room', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='swapfood.room')),
             ],
         ),
-        migrations.CreateModel(
-            name='Meal',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100)),
-                ('description', models.TextField()),
-                ('radius', models.FloatField()),
-                ('image', models.ImageField(blank=True, null=True, upload_to='meal_images/')),
-                ('latitude', models.FloatField()),
-                ('longitude', models.FloatField()),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-            ],
-        ),
+       
         migrations.CreateModel(
             name='FoodPost',
             fields=[
@@ -46,7 +34,8 @@ class Migration(migrations.Migration):
                 ('latitude', models.FloatField()),
                 ('longitude', models.FloatField()),
                 ('name', models.CharField(max_length=100)),
-                ('description', models.TextField()),
+                ('description', models.CharField()),
+                ('location', models.CharField()),
                 ('radius', models.FloatField()),
                 
                 ('created_at', models.DateTimeField(auto_now_add=True)),
