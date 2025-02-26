@@ -45,57 +45,91 @@
             margin: 10px;
             border-radius: 5px;
         }
+        button[type="submit"] {
+        background: linear-gradient(to right, #8a5cff, #5ccfff);
+        padding: 10px;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        width: 100%;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease; /* Add smooth transition */
+    }
+    
+    button[type="submit"]:hover {
+        background: linear-gradient(to right, #7a4cef, #4cbfef); /* Darker gradient */
+        transform: scale(1.02); /* Slight enlargement effect */
+    }           
 
-        button {
-            background-color: white;
-            padding: 10px;
-            color: black;
-            border: none;
-            border-radius: 5px;
-            width: 20%;
-            text-align: center;
-        }
 
-        button:hover {
-            padding: 15px;
-            transition: 0.8s;
-        }
+
         .input-container {
-            position: relative;
-            display: inline-block;
-        }
-        #selectedOption {
-            width: 150px;
-            padding-right: 30px;
-        }
-        #toggleBtn {
-            position: absolute;
-            right: 5px;
-            top: 50%;
-            transform: translateY(-50%);
-            border: none;
-            background: transparent;
-            cursor: pointer;
-        }
-        .menu {
-            display: none;
-            list-style-type: none;
-            padding: 0;
-            margin: 5px 0 0;
-            border: 1px solid #ccc;
-            width: 150px;
-            background: #f9f9f9;
-            position: absolute;
-            top: 100%;
-            left: 0;
-        }
-        .menu li {
-            padding: 10px;
-            cursor: pointer;
-        }
-        .menu li:hover {
-            background: #ddd;
-        }
+                width: 100%;
+                position: relative;
+                display: flex;
+                align-items: center;
+            }
+
+            #selectedOption {
+                width: 100%;
+                padding: 10px;
+                padding-right: 35px; /* Adjust to prevent text overlap */
+                border: 1px solid dodgerblue;
+                border-radius: 5px;
+            }
+
+            #toggleBtn {
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                border: none;
+                background: white;
+                cursor: pointer;
+                font-size: 16px;
+                color: dodgerblue;
+                padding: 5px;
+                border-radius: 5px;
+            }
+
+            #toggleBtn:hover {
+                background: lightgray;
+            }
+
+            .menu {
+                display: none;
+                list-style-type: none;
+                padding: 5px;
+                margin: 5px 0 0;
+                border: 1px solid #ccc;
+                width: 100%;
+                background: #f9f9f9;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                max-height: 200px;
+                overflow-y: auto;
+                border-radius: 5px;
+                z-index: 10;
+            }
+
+            .menu li {
+                padding: 8px;
+                cursor: pointer;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .menu li:last-child {
+                border-bottom: none;
+            }
+
+
+            .menu li:hover {
+                background: #ddd;
+            }
         #searchBox {
             width: 140px;
             padding: 5px;
@@ -113,13 +147,80 @@
                 <label for="">Username</label><br>
                 <input type="text" placeholder="Username" name="username" required><br>
                <div>
-                   <form id="myForm">
+                  
                     <div class="input-container">
-                        <input type="text" id="selectedOption" name="selectedOption" readonly>
-                        <button type="button" id="toggleBtn">▼</button>
+                        <input type="text" id="selectedOption" placeholder="Select your area code." name="selectedOption" readonly>
+                        <button type="button"  id="toggleBtn">▼</button>
                         <ul id="menu" class="menu">
                             <input type="text" id="searchBox" placeholder="Search...">
                             <ul>
+                                <li data-value="462001">Gandhi Medical College, Gandhi Medical College, Bhopal</li>
+                                <li data-value="462036">Gandhi Nagar, Gandhi Nagar, Bhopal</li>
+                                <li data-value="462023">Govindpura Industrial Area, Govindpura, Bhopal</li>
+                                <li data-value="462038">Islam Nagar Fort, Islam Nagar, Bhopal</li>
+                                <li data-value="462008">Taj-ul-Masajid, Jahangirabad, Bhopal</li>
+                                <li data-value="462026">Barkatullah University, Bhopal University, Bhopal</li>
+                                <li data-value="462044">Ratibad, Ratibad, Bhopal</li>
+                                <li data-value="462016">Board Office, Shivaji Nagar, Bhopal</li>
+                                <li data-value="462003">T.T. Nagar Stadium, T.T. Nagar, Bhopal</li>
+                                <li data-value="462001">Moti Masjid, Chowk Bazaar, Bhopal</li>
+                                <li data-value="462001">Lower Lake, Kamla Park, Bhopal</li>
+                                <li data-value="462001">Upper Lake, Van Vihar, Bhopal</li>
+                                <li data-value="462001">Sadar Manzil, Sadar Manzil, Bhopal</li>
+                                <li data-value="462001">Shaukat Mahal, Shaukat Mahal, Bhopal</li>
+                                <li data-value="462001">Gohar Mahal, Gohar Mahal, Bhopal</li>
+                                <li data-value="462001">Birla Mandir, Arera Hills, Bhopal</li>
+                                <li data-value="462001">Regional Science Center, Shyamla Hills, Bhopal</li>
+                                <li data-value="462001">Indira Gandhi Rashtriya Manav Sangrahalaya, Shyamla Hills, Bhopal</li>
+                                <li data-value="462001">State Museum, Shyamla Hills, Bhopal</li>
+                                <li data-value="462001">Bharat Bhavan, J. Swaminathan Marg, Bhopal</li>
+                                <li data-value="462001">Van Vihar National Park, Shyamla Hills, Bhopal</li>
+                                <li data-value="462001">DB City Mall, Maharana Pratap Nagar, Bhopal</li>
+                                <li data-value="462001">Aura Mall, Arera Colony, Bhopal</li>
+                                <li data-value="462001">Aashima Mall, Hoshangabad Road, Bhopal</li>
+                                <li data-value="462001">People's Mall, Ayodhya Bypass, Bhopal</li>
+                                <li data-value="462001">New Market, T.T. Nagar, Bhopal</li>
+                                <li data-value="462001">Chinar Park, Chinar Fortune City, Bhopal</li>
+                                <li data-value="462001">Manuabhan Tekri, Lalghati, Bhopal</li>
+                                <li data-value="462001">Kanha Fun City, Hoshangabad Road, Bhopal</li>
+                                <li data-value="462001">Sair Sapata, Prempura, Bhopal</li>
+                                <li data-value="462001">Kerwa Dam, Kerwa, Bhopal</li>
+                                <li data-value="462001">Kolar Dam, Kolar Road, Bhopal</li>
+                                <li data-value="462001">Bhadbhada Dam, Bhadbhada Road, Bhopal</li>
+                                <li data-value="462001">Halali Dam, Halali, Bhopal</li>
+                                <li data-value="462001">Kaliyasot Dam, Kaliyasot, Bhopal</li>
+                                <li data-value="462001">Hathaikheda Dam, Hathaikheda, Bhopal</li>
+                                <li data-value="462001">Sanchi Stupa, Sanchi, Bhopal</li>
+                                <li data-value="462001">Bhimbetka Rock Shelters, Bhimbetka, Bhopal</li>
+                                <li data-value="462001">Udayagiri Caves, Udayagiri, Bhopal</li>
+                                <li data-value="462001">Tropic of Cancer, Vidisha Road, Bhopal</li>
+                                <li data-value="462001">Kerwa Ropeway, Kerwa, Bhopal</li>
+                                <li data-value="462001">Bhojpur Temple, Bhojpur, Bhopal</li>
+                                <li data-value="462001">Islamnagar Palace, Islamnagar, Bhopal</li>
+                                <li data-value="462001">Raisen Fort, Raisen, Bhopal</li>
+                                <li data-value="462001">Shahpura Lake, Shahpura, Bhopal</li>
+                                <li data-value="462001">Motia Talab, Motia Talab, Bhopal</li>
+                                <li data-value="462001">Lal Parade Ground, Lal Parade Ground, Bhopal</li>
+                                <li data-value="462001">Kamla Nehru Park, Kamla Park, Bhopal</li>
+                                <li data-value="462001">Ekant Park, Arera Colony, Bhopal</li>
+                                <li data-value="462001">Madhya Pradesh Tribal Museum, Shyamla Hills, Bhopal</li>
+                                <li data-value="462001">Shaurya Smarak, Arera Hills, Bhopal</li>
+                                <li data-value="462001">Birla Museum, Arera Hills, Bhopal</li>
+                                <li data-value="462001">Museum of Man, Shyamla Hills, Bhopal</li>
+                                <li data-value="462001">Fish Aquarium, Kamla Park, Bhopal</li>
+                                <li data-value="462001">Children's Park, T.T. Nagar, Bhopal</li>
+                                <li data-value="462001">Regional Park, Kolar Road, Bhopal</li>
+                                <li data-value="462001">Vardhaman Park, Arera Colony, Bhopal</li>
+                                <li data-value="462001">Madhya Pradesh Vidhan Sabha, Arera Hills, Bhopal</li>
+                                <li data-value="462001">Raj Bhavan, Arera Hills, Bhopal</li>
+                                <li data-value="462001">Mantralaya, Vallabh Bhavan, Bhopal</li>
+                                <li data-value="462001">Police Headquarters, Jahangirabad, Bhopal</li>
+                                <li data-value="462001">BHEL Township, Piplani, Bhopal</li>
+                                <li data-value="462001">Habibganj Railway Station, Habibganj, Bhopal</li>
+                                <li data-value="462001">Bhopal Junction Railway Station, Hamidia Road, Bhopal</li>
+                                <li data-value="462001">Inter State Bus Terminal, Habibganj, Bhopal</li>
+                                <li data-value="462001">AIIMS Bhopal, Saket Nagar, Bhopal</li>
+                                <li data-value="462001">National Law Institute University, Kerwa0</li>
                                 <li data-value="462030">Raja Bhoj International Airport, Air Port</li>
                                 <li data-value="462042">People's University, Amarawat Kalan</li>
                                 <li data-value="462021">Christ College, Anand Nagar</li>
@@ -256,7 +357,7 @@
 
                         </ul>
                     </div>
-                </form>
+                
                </div> 
                 <center><button type="submit">Submit</button></center><br>
             </form>
