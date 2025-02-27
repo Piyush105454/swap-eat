@@ -431,6 +431,12 @@
 
       <div class="box">
             <h3>Post your Meal</h3>
+          {% if submitted_data %}
+                     <h2>Submitted Data:</h2>
+                  <p><strong>Name:</strong> {{ submitted_data.name}}</p>
+                  <p><strong>radius:</strong> {{ submitted_data.radius }}</p>
+                  <p><strong>photo:</strong> {{ submitted_data.photo }}</p>
+           {% endif %}
                     <div class="card">
                         <div class="cart-profile">
                             <img src="https://static.vecteezy.com/system/resources/previews/011/490/381/original/happy-smiling-young-man-avatar-3d-portrait-of-a-man-cartoon-character-people-illustration-isolated-on-white-background-vector.jpg" alt="User">
