@@ -121,10 +121,14 @@
         }
 
         .message .send {
+            background-color: #939292;
+            color:#ffffff ;
             align-self: flex-end;
         }
 
         .message .receive {
+            background-color: #939292;
+            color: #ffffff;
             align-self: flex-start;
         }
 
@@ -133,7 +137,6 @@
             padding: 10px;
             border-radius: 10px;
             margin: 0;
-            color: yellow;
         }
 
         .message.receive p {
@@ -141,6 +144,7 @@
         }
 
         .message.send p {
+            
             background-color: #B1A296;
         }
 
@@ -154,7 +158,8 @@
             align-items: center;
             border-radius: 50px;
             gap: 10px;
-            margin-bottom: 5px;
+
+            margin: 5px 10px  10px 10px ;
             border: solid white;
         }
 
@@ -361,7 +366,7 @@
             {% for i in messages %}
                 <div class="message">
                     {% if i.sender != user %}
-                        <p class="receive">{{ i.message }} <strong>-{{ i.sender }}</strong></p>
+                        <p class="receive"> <strong>-{{ i.sender }}</strong> {{ i.message }} </p>
                     {% else %}
                         <p class="send">{{ i.message }}</p>
                     {% endif %}
