@@ -485,31 +485,41 @@
                 });
 
 
-        var map = L.map('map').setView([20.5937, 78.9629], 5); // Default India
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
+       var map = L.map('map').setView([20.5937, 78.9629], 5); // Default India
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
 
-        var foodPosts = JSON.parse('{{ food_posts|escapejs }}');  // Ensure valid JSON
+    var foodPosts = JSON.parse('{{ food_posts|escapejs }}');  // Ensure valid JSON
 
-        foodPosts.forEach(post => {
-            if (post.latitude && post.longitude) {
-                var formattedDate = new Date(post.created_at).toLocaleDateString("en-IN", {
+    foodPosts.forEach(post => {
+        if (post.latitude && post.longitude) {
+            var formattedDate = new Date(post.created_at).toLocaleDateString("en-IN", {
                 year: "numeric",
                 month: "short",
                 day: "numeric"
             });
-                var marker = L.marker([post.latitude, post.longitude]).addTo(map);
-                marker.bindPopup(`<img src="/media/${post.photo}" width="100"><br>Posted at: ${post.created_at}`);
-            }
-        });
-        document.getElementById("scan-toggle").addEventListener("click", function() {
-            this.classList.toggle("active");
-        });
 
-        document.getElementById("meal-toggle").addEventListener("click", function() {
-            this.classList.toggle("active");
-        });
+            var marker = L.marker([post.latitude, post.longitude]).addTo(map);
+            marker.bindPopup(`
+                <div style="text-align: center; max-width: 200px;">
+                    <img src="/media/${post.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 5px;">
+                    <h4 style="margin: 5px 0; font-size: 16px; color: #333;">${post.name}</h4>
+                    <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Radius:</strong> ${post.radius} km</p>
+                    <p style="font-size: 14px; color: #777;"><strong>Posted on:</strong> ${formattedDate}</p>
+                </div>
+            `);
+        }
+    });
+
+    // Toggle buttons for Scan and Meal
+    document.getElementById("scan-toggle").addEventListener("click", function() {
+        this.classList.toggle("active");
+    });
+
+    document.getElementById("meal-toggle").addEventListener("click", function() {
+        this.classList.toggle("active");
+    });
     </script>
 
 </body>
