@@ -24,26 +24,33 @@ def post_food(request):
         form = FoodPostForm(request.POST, request.FILES)
         if form.is_valid():
             food_post = form.save(commit=False)
-            food_post.user = request.user  # Associate the logged-in user with the post
+            food_post.user = request.user  # Associate the logged-in user
             food_post.latitude = request.POST.get("latitude")
             food_post.longitude = request.POST.get("longitude")
             food_post.save()
-            return redirect("post_food")  # Redirect to the same page after posting
-    else:
-        form = FoodPostForm()
 
-    # Fetch food posts to display on the map
+            # If AJAX request, return JSON response
+            if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                return JsonResponse({"success": True})
+
+            return redirect("post_food")
+
+        # If form is invalid, return JSON errors (for AJAX requests)
+        if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return JsonResponse({"success": False, "errors": form.errors})
+
+    # Fetch food posts for frontend
     food_posts = list(FoodPost.objects.values(
         "latitude", "longitude", "photo", "name", "radius", "location", "created_at", "id"
     ))
 
-    # Convert datetime objects to string
+    # Convert datetime to string for JSON
     for post in food_posts:
         post["created_at"] = post["created_at"].isoformat()
 
     return render(request, "post_food.html", {
-        "form": form,
-        "food_posts": json.dumps(food_posts)  # Convert data to JSON for frontend
+        "form": FoodPostForm(),
+        "food_posts": json.dumps(food_posts)
     })
 def map_view(request):
     food_posts = list(FoodPost.objects.values("latitude", "longitude", "photo", "name", "radius", "created_at", "id"))
