@@ -431,46 +431,55 @@
 
       <div class="box">
             <h3>Post your Meal</h3>
-
-            {% if food_posts %}
-                {% with latest_post=food_posts.0 %}
                     <div class="card">
                         <div class="cart-profile">
                             <img src="https://static.vecteezy.com/system/resources/previews/011/490/381/original/happy-smiling-young-man-avatar-3d-portrait-of-a-man-cartoon-character-people-illustration-isolated-on-white-background-vector.jpg" alt="User">
                             <div>
-                                <h2><spam class="scan"id="username">User </spam> </h2>
-                                <p class="time">Shared at {{ latest_post.created_at|date:"M d, Y h:i A" }}</p>
+                                <h2><spam class="scan"id="username">User</spam> </h2>
+                                <p class="time">Shared at </p>
                             </div>
                         </div>
 
                         <div class="divider2"></div>
 
                         <div class="meal">
+
                             <div style="display: flex; align-items: center; justify-content: space-between;">
+        
                                 <div>
-                                    <p style="color: purple; font-weight: bold;">🟩 Prepared <span style="color: gray;">{{ latest_post.prepared_time }}</span></p>
-                                    <h3>{{ latest_post.name }}</h3>
-                                    <p>{{ latest_post.description }}</p>
+        
+                                    <p style="color: purple; font-weight: bold;">🟩 prepared <span style="color: gray;">1hr ago</span></p>
+        
+                                    <h3>Sushi(Name:)</h3>
+        
+                                    <p>Discription about the dish</p>
+        
                                 </div>
-                                <img src="{{ latest_post.photo.url }}" alt="Meal">
+        
+                                <img src="https://th.bing.com/th/id/OIP.M4w8D0HqPiqPXcaipDMPawHaE7?rs=1&pid=ImgDetMain" alt="Meal">
+        
                             </div>
+        
                         </div>
 
                         <div class="divider1"></div>
 
                         <div class="location">
-                            <p>📍 {{ latest_post.location }}</p>
+
+                   
+
+                            <p>📍 Mims cafe, Rgpv Bhopal</p>
+        
                         </div>
 
                         <div class="divider1"></div>
 
-                        <p class="radius">Radius: {{ latest_post.radius }} km</p>
+                        <p class="radius">Radius: 5 Km</p>
 
                     </div>
-                {% endwith %}
-            {% else %}
-                <p>No meals have been posted yet.</p>
-            {% endif %}
+              
+              
+           
 
         </div>
 
