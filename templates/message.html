@@ -144,32 +144,79 @@
             background-color: #B1A296;
         }
 
-        .form {
+
+
+        .input-container {
+            background-color:#01001a;
+            
+            padding: 15px;
             display: flex;
             align-items: center;
-            padding: 10px;
-            background-color: #222;
+            border-radius: 50px;
+            gap: 10px;
+            margin-bottom: 5px;
+            border: solid white;
         }
 
-        .form textarea {
-            flex: 1;
-            height: 40px;
-            border-radius: 10px;
-            padding: 10px;
+        .emoji-button {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: transparent;
             border: none;
-            margin-right: 10px;
-        }
-
-        .form button {
-            width: auto;
-            padding: 10px 20px;
-            background-color: #FBEEC1;
-            border-radius: 5px;
-            border: none;
-            color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             cursor: pointer;
         }
 
+        .emoji-icon {
+            font-size: 24px;
+            color: yellow;
+        }
+
+        .input-field {
+            display: flex;
+            justify-content: left;
+            flex: 1;
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: none;
+            outline: none;
+            background-color: transparent;
+            color: white;
+            font-size: 16px;
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: transparent;
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .filter-icon {
+            width: 24px;
+            height: 24px;
+            color: yellow;
+        }
+
+
+       
                       /* Bottom Navigation Bar */
     .bottom-nav {
       position: fixed;
@@ -302,7 +349,7 @@
 
                         <a href="#">🔗 Invite</a>
 
-                        <a href="./singup.html">↪ Logout</a>
+                        <a href="{% url 'home' %}" >↪ Logout</a>
 
                     </div>
 
@@ -322,12 +369,25 @@
             {% endfor %}
         </div>
 
-        <div class="form">
-            <form id="message-form">
+        <form id="message-form" >
+            <div class="input-container">
+                <button class="emoji-button">
+                    <span class="emoji-icon">😀</span>
+                </button>
                 {% csrf_token %}
-                <textarea id="msg" name="message" placeholder="Enter your message" required></textarea>
-                <button type="submit">Send</button>
-            </form>
+            <input type="text" class="input-field" id="msg" name="message" placeholder="Enter your message" required>
+            <div class="action-buttons">
+                <button class="action-button" type="submit" >
+                    <svg class="send-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22 2L11 13" stroke="yellow" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="yellow" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    
+                </button>
+             
+            </div>
+        </div>
+    </form>
         </div>
     </div>
 
