@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post a Meal</title>
+    <script id="foodData" type="application/json">{{ food_posts|safe }}</script>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">    
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -437,7 +438,7 @@
                         <div class="cart-profile">
                             <img src="https://static.vecteezy.com/system/resources/previews/011/490/381/original/happy-smiling-young-man-avatar-3d-portrait-of-a-man-cartoon-character-people-illustration-isolated-on-white-background-vector.jpg" alt="User">
                             <div>
-                                <h2>{{ post.user.username}}</h2>
+                                <h2><spam class="scan"id="username">User </spam> </h2>
                                 <p class="time">Shared at {{ latest_post.created_at|date:"M d, Y h:i A" }}</p>
                             </div>
                         </div>
@@ -520,6 +521,102 @@
 
     <!-- JavaScript -->
     <script>
+        let storedUsername = localStorage.getItem("username");
+             if (storedUsername) {
+                document.getElementById("username").textContent = storedUsername;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+    let foodContainer = document.getElementById("foodContainer");
+    let form = document.getElementById("foodForm");
+
+    // Convert Django JSON to JavaScript array
+    let foodPosts = JSON.parse(document.getElementById("foodData").textContent);
+
+    // Function to render food posts
+    function renderFoodPosts(posts) {
+        foodContainer.innerHTML = ""; // Clear previous content
+
+        if (posts.length === 0) {
+            foodContainer.innerHTML = "<p class='message'>No food posts available 😢</p>";
+            return;
+        }
+
+        posts.forEach((post) => {
+            let card = document.createElement("div");
+            card.classList.add("card");
+
+            card.innerHTML = `
+                <div class="cart-profile">
+                    <img src="https://static.vecteezy.com/system/resources/previews/011/490/381/original/happy-smiling-young-man-avatar-3d-portrait-of-a-man-cartoon-character-people-illustration-isolated-on-white-background-vector.jpg" alt="User">
+                    <div>
+                        <h2>${post.user || "Anonymous"}</h2>
+                        <p class="time">Shared at ${new Date(post.created_at).toLocaleString()}</p>
+                    </div>
+                </div>
+                <div class="divider2"></div>
+                <div class="meal">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <p style="color: purple; font-weight: bold;">🟩 Prepared <span style="color: gray;">${post.prepared_time || "N/A"}</span></p>
+                            <h3>${post.name}</h3>
+                            <p>${post.description || "No description available"}</p>
+                        </div>
+                        <img src="${post.photo}" alt="Meal">
+                    </div>
+                </div>
+                <div class="divider1"></div>
+                <div class="location">
+                    <p>📍 ${post.location || "Unknown"}</p>
+                </div>
+                <div class="divider1"></div>
+                <p class="radius">Radius: ${post.radius} km</p>
+            `;
+
+            foodContainer.appendChild(card);
+        });
+    }
+
+    // Load food posts initially
+    renderFoodPosts(foodPosts);
+
+    // Handle form submission using AJAX
+    form.addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent page reload
+
+        let formData = new FormData(form);
+
+        fetch(window.location.href, {
+            method: "POST",
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("Meal posted successfully!");
+                form.reset(); // Reset form fields
+                fetchLatestPosts(); // Refresh posts dynamically
+            } else {
+                alert("Error posting meal. Please check your inputs.");
+                console.error("Form errors:", data.errors);
+            }
+        })
+        .catch(error => console.error("Error:", error));
+    });
+
+    // Fetch latest posts dynamically
+    function fetchLatestPosts() {
+        fetch(window.location.href)
+            .then(response => response.json())
+            .then(data => {
+                if (data.food_posts) {
+                    renderFoodPosts(data.food_posts);
+                }
+            })
+            .catch(error => console.error("Error fetching posts:", error));
+    }
+});
+
     // Get user location when page loads
     document.addEventListener("DOMContentLoaded", function () {
         if (navigator.geolocation) {
