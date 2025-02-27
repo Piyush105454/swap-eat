@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Food Swap Cards - Working Model</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(45deg, #ff4500, #ffd700);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    
+    .app-container {
+      width: 360px;
+      height: 640px;
+      background-color: #f8f8f8;
+      border-radius: 24px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    
+    .header {
+      height: 60px;
+      background-color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+    }
+    
+    .logo {
+      font-weight: bold;
+      font-size: 24px;
+      background: linear-gradient(45deg, #ff4500, #ffd700);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .menu-icon, .profile-icon {
+      width: 40px;
+      height: 40px;
+      background-color: #eee;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .menu-icon:hover, .profile-icon:hover {
+      background-color: #e0e0e0;
+    }
+    
+    .cards-container {
+      position: relative;
+      height: calc(100% - 130px);
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    
+    .card {
+      position: absolute;
+      width: 300px;
+      height: 400px;
+      background-color: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+      cursor: grab;
+      touch-action: none;
+    }
+    
+    .card.dragging {
+      cursor: grabbing;
+      transition: none;
+    }
+    
+    .card-image {
+      height: 75%;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    
+    .card-info {
+      padding: 15px;
+      height: 25%;
+    }
+    
+    .card-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    
+    .food-name {
+      font-size: 22px;
+      font-weight: bold;
+    }
+    
+    .food-location {
+      font-size: 16px;
+      color: #ffcc00;
+      font-weight: 500;
+    }
+    
+    .veg-indicator {
+      width: 20px;
+      height: 20px;
+      background-color: #00aa00;
+      border: 1px solid #008800;
+      border-radius: 4px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .distance-tag {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background-color: #673ab7;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    .rating-tag {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 8px;
+      border-radius: 50%;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    
+    .bottom-bar {
+      height: 70px;
+      background-color: white;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+    }
+    
+    .action-button {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+      font-size: 20px;
+    }
+    
+    .action-button:hover {
+      transform: scale(1.1);
+    }
+    
+    .dislike {
+      background-color: #ff4757;
+      color: white;
+      box-shadow: 0 4px 10px rgba(255, 71, 87, 0.4);
+    }
+    
+    .superlike {
+      background-color: #00ccff;
+      color: white;
+      box-shadow: 0 4px 10px rgba(0, 204, 255, 0.4);
+    }
+    
+    .like {
+      background-color: #2ed573;
+      color: white;
+      box-shadow: 0 4px 10px rgba(46, 213, 115, 0.4);
+    }
+    
+    .boost {
+      background-color: #ffa502;
+      color: white;
+      box-shadow: 0 4px 10px rgba(255, 165, 2, 0.4);
+    }
+    
+    /* Reaction indicators */
+    .reaction-indicators {
+      position: absolute;
+      bottom: 15px;
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .indicator {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 20px;
+      transition: transform 0.2s;
+      cursor: pointer;
+    }
+    
+    .indicator:hover {
+      transform: scale(1.1);
+    }
+    
+    /* More details about the food */
+    .food-details {
+      display: flex;
+      gap: 10px;
+      margin-top: 5px;
+      flex-wrap: wrap;
+    }
+    
+    .detail-tag {
+      background-color: #f5f5f5;
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-size: 12px;
+      color: #666;
+    }
+    
+    /* Like and Nope stamps */
+    .stamp {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%) rotate(-30deg);
+      font-size: 80px;
+      font-weight: bold;
+      text-transform: uppercase;
+      border: 10px solid;
+      border-radius: 10px;
+      padding: 0 10px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 5;
+    }
+    
+    .like-stamp {
+      right: 10px;
+      color: #2ed573;
+      border-color: #2ed573;
+      transform: translateY(-50%) rotate(30deg);
+    }
+    
+    .nope-stamp {
+      left: 10px;
+      color: #ff4757;
+      border-color: #ff4757;
+    }
+    
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 14px;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 100;
+    }
+    
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(10px);
+    }
+    
+    /* No more cards message */
+    .no-more-cards {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: #666;
+    }
+    
+    .no-more-cards h2 {
+      margin-bottom: 10px;
+    }
+    
+    .reload-button {
+      background: linear-gradient(45deg, #ff4500, #ffd700);
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    
+    /* Match animation */
+    .match-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: 200;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      animation: fadeIn 0.5s;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .match-title {
+      color: white;
+      font-size: 48px;
+      margin-bottom: 20px;
+      text-align: center;
+      text-shadow: 0 0 10px rgba(255, 204, 0, 0.8);
+    }
+    
+    .match-subtitle {
+      color: white;
+      font-size: 18px;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+    
+    .match-buttons {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .match-button {
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    
+    .message-btn {
+      background-color: #2ed573;
+      color: white;
+    }
+    
+    .continue-btn {
+      background-color: white;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <div class="header">
+      <div class="menu-icon">≡</div>
+      <div class="logo">FoodSwap</div>
+      <div class="profile-icon">👤</div>
+    </div>
+    
+    <div id="foodCards class="cards-container">
+      <!-- Cards will be inserted here by JavaScript -->
+      
+      <div class="no-more-cards">
+        <h2>No more foods nearby</h2>
+        <p>Check back later or expand your search radius</p>
+        <button class="reload-button">Reload Foods</button>
+      </div>
+    </div>
+    
+    <div class="bottom-bar">
+      <div class="action-button dislike">✕</div>
+      <div class="action-button superlike">★</div>
+      <div class="action-button like">♥</div>
+      <div class="action-button boost">⚡</div>
+    </div>
+  </div>
+  
+  <div class="toast">You super-liked Veg Burger!</div>
+  
+  <div class="match-container">
+    <div class="match-title">It's a Match!</div>
+    <div class="match-subtitle">You and Veggie Pete both liked each other's food.</div>
+    <div class="match-buttons">
+      <div class="match-button message-btn">Send Message</div>
+      <div class="match-button continue-btn">Keep Swiping</div>
+    </div>
+  </div>
+
+  <script>
+        // Parse JSON data safely
+    var foodPosts = JSON.parse('{{ food_posts|escapejs }}');
+    var foodCardsContainer = document.getElementById("foodCards");
+       foodPosts.forEach(post => {
+            if (post.latitude && post.longitude) {
+                var formattedDate = new Date(post.created_at).toLocaleDateString("en-IN", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric"
+                });
+                    var card = document.createElement("div");
+                card.classList.add("card");
+
+                card.innerHTML = `
+                    <img src="/media/${post.photo}" alt="Food Image">
+                    <h4>${post.name}</h4>
+                    <p><strong>Radius:</strong> ${post.radius} km</p>
+                    <p><strong>Location:</strong> ${post.location}</p>
+                    <p><strong>Posted on:</strong> ${formattedDate}</p>
+                `;
+
+                // Append the card to the container
+                foodCardsContainer.appendChild(card);
+            }
+        });
+    document.addEventListener('DOMContentLoaded', function() {
+      // Food data
+      const foodData = [
+        {
+          name: "Veg Burger",
+          location: "Katara Hills",
+          distance: "2.5km away",
+          rating: "73%",
+          isVeg: true,
+          tags: ["Homemade", "Extra spicy"],
+          image: "/api/placeholder/300/300"
+        },
+        {
+          name: "Pasta Alfredo",
+          location: "Downtown",
+          distance: "3.1km away",
+          rating: "89%",
+          isVeg: true,
+          tags: ["Restaurant", "Creamy"],
+          image: "/api/placeholder/300/300"
+        },
+        {
+          name: "Veggie Sushi",
+          location: "Marina Bay",
+          distance: "4.3km away",
+          rating: "95%",
+          isVeg: true,
+          tags: ["Chef's Special"],
+          image: "/api/placeholder/300/300"
+        },
+        {
+          name: "Falafel Wrap",
+          location: "Green Street",
+          distance: "1.8km away",
+          rating: "84%",
+          isVeg: true,
+          tags: ["Quick Bites", "Mediterranean"],
+          image: "/api/placeholder/300/300"
+        },
+        {
+          name: "Vegan Pizza",
+          location: "City Center",
+          distance: "3.7km away",
+          rating: "92%",
+          isVeg: true,
+          tags: ["Wood Fired", "Italian"],
+          image: "/api/placeholder/300/300"
+        }
+      ];
+      
+      const cardsContainer = document.querySelector('.cards-container');
+      const likeBtn = document.querySelector('.like');
+      const dislikeBtn = document.querySelector('.dislike');
+      const superlikeBtn = document.querySelector('.superlike');
+      const boostBtn = document.querySelector('.boost');
+      const toast = document.querySelector('.toast');
+      const noMoreCards = document.querySelector('.no-more-cards');
+      const reloadButton = document.querySelector('.reload-button');
+      const matchContainer = document.querySelector('.match-container');
+      const continueBtn = document.querySelector('.continue-btn');
+      const messageBtn = document.querySelector('.message-btn');
+      
+      let currentCardIndex = 0;
+      let isDragging = false;
+      let startX = 0;
+      let startY = 0;
+      let offsetX = 0;
+      let offsetY = 0;
+      let currentRotation = 0;
+      
+      // Create cards from data
+      function createCards() {
+        cardsContainer.innerHTML = '';
+        foodData.forEach((food, index) => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.style.zIndex = foodData.length - index;
+          card.style.transform = index > 0 ? `translateY(${index * 10}px) scale(${1 - index * 0.05})` : '';
+          card.style.opacity = index > 0 ? 1 - index * 0.1 : 1;
+          
+          // Create card HTML structure
+          card.innerHTML = `
+            <div class="card-image" style="background-image: url('${food.image}');">
+              <div class="distance-tag">${food.distance}</div>
+              <div class="rating-tag">${food.rating}</div>
+              <div class="reaction-indicators">
+                <div class="indicator" style="background-color: #00cc00;">✓</div>
+                <div class="indicator" style="background-color: #ffcc00;">★</div>
+                <div class="indicator" style="background-color: #ff6666;">😕</div>
+                <div class="indicator" style="background-color: #ffcc00;">😊</div>
+              </div>
+              <div class="stamp like-stamp">LIKE</div>
+              <div class="stamp nope-stamp">NOPE</div>
+            </div>
+            <div class="card-info">
+              <div class="card-title">
+                <span class="food-name">${food.name}</span>
+                ${food.isVeg ? '<div class="veg-indicator"><span style="color: white; font-size: 12px;">✓</span></div>' : ''}
+              </div>
+              <div class="food-location">${food.location}</div>
+              <div class="food-details">
+                ${food.tags.map(tag => `<span class="detail-tag">${tag}</span>`).join('')}
+              </div>
+            </div>
+          `;
+          
+          cardsContainer.appendChild(card);
+        });
+        
+        // Add event listeners to the newly created cards
+        setupCardListeners();
+        
+        // Check if there are cards
+        updateCardVisibility();
+      }
+      
+      function setupCardListeners() {
+        const cards = document.querySelectorAll('.card');
+        
+        cards.forEach((card, index) => {
+          // Touch events for mobile
+          card.addEventListener('touchstart', handleTouchStart);
+          card.addEventListener('touchmove', handleTouchMove);
+          card.addEventListener('touchend', handleTouchEnd);
+          
+          // Mouse events for desktop
+          card.addEventListener('mousedown', handleMouseDown);
+          
+          // Reaction indicators
+          const indicators = card.querySelectorAll('.indicator');
+          indicators.forEach((indicator, i) => {
+            indicator.addEventListener('click', (e) => {
+              e.stopPropagation();
+              handleReaction(i);
+            });
+          });
+        });
+        
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+      }
+      
+      function handleTouchStart(e) {
+        if (currentCardIndex >= foodData.length) return;
+        
+        const touch = e.touches[0];
+        startDrag(touch.clientX, touch.clientY, e.currentTarget);
+      }
+      
+      function handleTouchMove(e) {
+        if (!isDragging) return;
+        
+        const touch = e.touches[0];
+        moveDrag(touch.clientX, touch.clientY);
+        e.preventDefault();
+      }
+      
+      function handleTouchEnd(e) {
+        if (!isDragging) return;
+        
+        endDrag();
+      }
+      
+      function handleMouseDown(e) {
+        if (currentCardIndex >= foodData.length) return;
+        
+        startDrag(e.clientX, e.clientY, e.currentTarget);
+        e.preventDefault();
+      }
+      
+      function handleMouseMove(e) {
+        if (!isDragging) return;
+        
+        moveDrag(e.clientX, e.clientY);
+      }
+      
+      function handleMouseUp(e) {
+        if (!isDragging) return;
+        
+        endDrag();
+      }
+      
+      function startDrag(clientX, clientY, cardElement) {
+        const card = document.querySelectorAll('.card')[currentCardIndex];
+        if (card !== cardElement) return;
+        
+        isDragging = true;
+        card.classList.add('dragging');
+        
+        startX = clientX;
+        startY = clientY;
+        
+        const rect = card.getBoundingClientRect();
+        offsetX = clientX - rect.left;
+        offsetY = clientY - rect.top;
+      }
+      
+      function moveDrag(clientX, clientY) {
+        const card = document.querySelectorAll('.card')[currentCardIndex];
+        const deltaX = clientX - startX;
+        const deltaY = clientY - startY;
+        
+        // Calculate rotation based on horizontal movement
+        currentRotation = deltaX * 0.1; // Adjust rotation sensitivity
+        
+        // Apply transform to the card
+        card.style.transform = `translate(${deltaX}px, ${deltaY}px) rotate(${currentRotation}deg)`;
+        
+        // Show like/nope stamps based on the direction
+        const likeStamp = card.querySelector('.like-stamp');
+        const nopeStamp = card.querySelector('.nope-stamp');
+        
+        if (deltaX > 50) {
+          likeStamp.style.opacity = Math.min(deltaX / 100, 1);
+          nopeStamp.style.opacity = 0;
+        } else if (deltaX < -50) {
+          nopeStamp.style.opacity = Math.min(-deltaX / 100, 1);
+          likeStamp.style.opacity = 0;
+        } else {
+          likeStamp.style.opacity = 0;
+          nopeStamp.style.opacity = 0;
+        }
+      }
+      
+      function endDrag() {
+        const card = document.querySelectorAll('.card')[currentCardIndex];
+        
+        // Get the final position of the card
+        const transform = card.style.transform;
+        const match = transform.match(/translate\(([^,]+)px,\s*([^)]+)px\)/);
+        
+        if (match) {
+          const deltaX = parseFloat(match[1]);
+          
+          // Threshold for swipe detection
+          if (deltaX > 100) {
+            swipeRight();
+          } else if (deltaX < -100) {
+            swipeLeft();
+          } else {
+            resetCardPosition();
+          }
+        } else {
+          resetCardPosition();
+        }
+        
+        isDragging = false;
+        card.classList.remove('dragging');
+      }
+      
+      function resetCardPosition() {
+        const card = document.querySelectorAll('.card')[currentCardIndex];
+        card.style.transition = 'transform 0.3s ease-out';
+        card.style.transform = '';
+        
+        // Reset stamps
+        const likeStamp = card.querySelector('.like-stamp');
+        const nopeStamp = card.querySelector('.nope-stamp');
+        likeStamp.style.opacity = 0;
+        nopeStamp.style.opacity = 0;
+        
+        // Remove transition after it completes
+        setTimeout(() => {
+          card.style.transition = '';
+        }, 300);
+      }
+      
+      function swipeLeft() {
+        const card = document.querySelectorAll('.card')[currentCardIndex];
+        
+        // Animate the card off-screen to the left
+        card.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
+        card.style.transform = `translateX(-1000px) rotate(-30deg)`;
+        card.style.opacity = '0';
+        
+        showToast("Nope! Maybe next time!");
+        advanceToNextCard();
+      }
+      
+      function swipeRight() {
+        const card = document.querySelectorAll('.card')[currentCardIndex];
+        
+        // Animate the card off-screen to the right
+        card.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
+        card.style.transform = `translateX(1000px) rotate(30deg)`;
+        card.style.opacity = '0';
+        
+        // Randomly decide if it's a match (20% chance)
+        const isMatch = Math.random() < 0.2;
+        
+        if (isMatch) {
+          setTimeout(() => {
+            showMatch();
+          }, 300);
+        } else {
+          showToast("Like! Good choice!");
+        }
+        
+        advanceToNextCard();
+      }
+      
+      function superLike() {
+        const card = document.querySelectorAll('.card')[currentCardIndex];
+        if (!card) return;
+        
+        // Animate the card off-screen upwards
+        card.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
+        card.style.transform = `translateY(-1000px) scale(0.5)`;
+        card.style.opacity = '0';
+        
+        const foodName = foodData[currentCardIndex].name;
+        showToast(`You super-liked ${foodName}!`);
+        
+        // Higher chance for a match with super like (40%)
+        const isMatch = Math.random() < 0.4;
+        
+        if (isMatch) {
+          setTimeout(() => {
+            showMatch();
+          }, 300);
+        }
+        
+        advanceToNextCard();
+      }
+      
+      function boost() {
+        showToast("Boosting your profile for 30 minutes!");
+      }
+      
+      function handleReaction(reactionIndex) {
+        const reactions = ["Yes!", "Super Like!", "Not really...", "Love it!"];
+        showToast(reactions[reactionIndex]);
+        
+        // Different actions based on reaction
+        switch(reactionIndex) {
+          case 0: // Green checkmark
+            setTimeout(() => swipeRight(), 300);
+            break;
+          case 1: // Yellow star
+            setTimeout(() => superLike(), 300);
+            break;
+          case 2: // Sad face
+            setTimeout(() => swipeLeft(), 300);
+            break;
+          case 3: // Happy face
+            setTimeout(() => swipeRight(), 300);
+            break;
+        }
+      }
+      
+      function advanceToNextCard() {
+        currentCardIndex++;
+        
+        setTimeout(() => {
+          updateCardPositions();
+          updateCardVisibility();
+        }, 300);
+      }
+      
+      function updateCardPositions() {
+        const cards = document.querySelectorAll('.card');
+        
+        cards.forEach((card, index) => {
+          if (index < currentCardIndex) {
+            // Hide swiped cards
+            card.style.display = 'none';
+          } else {
+            const relativeIndex = index - currentCardIndex;
+            
+            // Position the visible cards
+            card.style.zIndex = cards.length - relativeIndex;
+            card.style.transform = relativeIndex > 0 ? 
+              `translateY(${relativeIndex * 10}px) scale(${1 - relativeIndex * 0.05})` : '';
+            card.style.opacity = relativeIndex > 0 ? 1 - relativeIndex * 0.2 : 1;
+          }
+        });
+      }
+      
+      function updateCardVisibility() {
+        if (currentCardIndex >= foodData.length) {
+          noMoreCards.style.display = 'block';
+        } else {
+          noMoreCards.style.display = 'none';
+        }
+      }
+      
+      function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add('show');
+        
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, 2000);
+      }
+      
+      function showMatch() {
+        matchContainer.style.display = 'flex';
+      }
+      
+      function hideMatch() {
+        matchContainer.style.display = 'none';
+      }
+      
+      // Button event listeners
+      likeBtn.addEventListener('click', () => {
+        if (currentCardIndex < foodData.length) {
+          swipeRight();
+        }
+      });
+      
+      dislikeBtn.addEventListener('click', () => {
+        if (currentCardIndex < foodData.length) {
+          swipeLeft();
+        }
+      });
+      
+      superlikeBtn.addEventListener('click', () => {
+        if (currentCardIndex < foodData.length) {
+          superLike();
+        }
+      });
+      
+      boostBtn.addEventListener('click', boost);
+      
+      reloadButton.addEventListener('click', () => {
+        currentCardIndex = 0;
+        createCards();
+        noMoreCards.style.display = 'none';
+      });
+      
+      continueBtn.addEventListener('click', hideMatch);
+      messageBtn.addEventListener('click', () => {
+        hideMatch();
+        showToast("Opening messages...");
+      });
+      
+      // Initialize the cards
+      createCards();
+    });
+  </script>
+</body>
+</html>
