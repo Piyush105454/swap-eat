@@ -52,6 +52,17 @@ def post_food(request):
         "form": FoodPostForm(),
         "food_posts": json.dumps(food_posts)
     })
+def my_view(request):
+    submitted_data = None 
+    if request.method == "POST":
+        form = FoodPostForm(request.POST)
+        if form.is_valid():
+            submitted_data = form.cleaned_data
+            form = FoodPostForm()
+        else:
+            form = FoodPostForm()
+
+    return render(request, 'my_template.html', {'form': form})
 def map_view(request):
     food_posts = list(FoodPost.objects.values("latitude", "longitude", "photo", "name", "radius", "created_at", "id"))
 
