@@ -7,6 +7,7 @@ from django.conf import settings
 urlpatterns = [
     path("chat/", views.chat, name="chat"),  # Fixed duplicate include issue
     path("chat-api/", views.chat_api, name="chat_api"),
+    path('my-form/',views.my_view, name='my_form'), 
     path("post/explore/", views.explore, name="explore"),
     path("post/", views.post, name="post"),
     path("verify-otp/<int:user_id>/", views.VerifyOTP, name="verify_otp"),
