@@ -546,6 +546,7 @@
             <p>A yummy chocolate dessert to sweeten your day.</p>
 
         </div>
+        <div id ="food-posts-container"class="card" ></div>
 
     </div>
 
@@ -614,6 +615,52 @@
 
 
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let foodPosts = JSON.parse('{{ food_posts|escapejs }}');  // Parse JSON data from Django
+            let container = document.getElementById("food-posts-container");
+
+            function renderPosts(posts) {
+                container.innerHTML = ""; // Clear old posts
+                posts.forEach(post => {
+                    let postDiv = document.createElement("div");
+                    postDiv.innerHTML = `
+                   
+                    <img src="/media/${post.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 5px;">
+                    <h4 style="margin: 5px 0; font-size: 16px; color: #333;">${post.name}</h4>
+                    <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Radius:</strong> ${post.radius} km</p>
+                    <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>location:</strong> ${post.location} </p>
+                    <p style="font-size: 14px; color: #777;"><strong>Posted on:</strong> ${formattedDate}</p>
+                 <hr>
+                    `;
+                    container.appendChild(postDiv);
+                });
+            }
+
+            renderPosts(foodPosts);  // Initial render
+
+            // AJAX form submission
+            document.getElementById("foodPostForm").addEventListener("submit", function (e) {
+                e.preventDefault();
+                let formData = new FormData(this);
+
+                fetch("", {  // Submits to the same URL
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();  // Refresh the page to show the new post
+                    } else {
+                        alert("Form submission failed!");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+            });
+        });
 
         function toggleMenu() {
 
