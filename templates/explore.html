@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,36 +8,35 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">    
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>       
-        body {
-
-                font-family: Arial, sans-serif;
-                 background: yellow;
-                margin: 0;
-                padding: 0;
-                text-align: center;
-                }
+ body {
+            font-family: Arial, sans-serif;
+            background: yellow;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
             
-                h1 {
-                    font-size:50px;
-                    color: black;
-                    margin-top: 30px;
-                    }
+        h1 {
+            font-size: 2.5rem;
+            color: black;
+            margin-top: 20px;
+        }
 
-
-        .profile{
+        /* Profile and menu */
+        .profile {
             display: flex;
             flex-direction: column;
             justify-content: center;
-            text-align:center;
+            text-align: center;
         }
 
         .profile img {
             cursor: pointer;
             position: absolute;
-            top: 40px;
-            right: 40px;
-            width: 60px;
-            height: 60px;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             overflow: hidden;
             border: 2px solid black;
@@ -46,14 +45,14 @@
         .menu {
             cursor: pointer;
             position: absolute;
-            top: 90px;
+            top: 80px;
             right: 20px;
             width: 200px;
             background: white;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             opacity: 0;
-            visibility:hidden;
+            visibility: hidden;
             transform: translateY(-10px);
             transition: opacity 0.3s ease, transform 0.3s ease;
             z-index: 1000;
@@ -81,9 +80,9 @@
             background: lightgray;
         }
 
-            /* Bottom Navigation Bar */
+           /* Bottom Navigation Bar */
 
-            .nav-bottom {
+           .nav-bottom {
         display: flex;              
         justify-content: center;
         align-items: center;
@@ -155,26 +154,30 @@
         transform: scale(1.1);
         }
 
+ 
+
+        /* Main content container */
         .container {
             background: linear-gradient(to right, #5374f5, #34c6ee);
             border-radius: 25px;
-            padding: 20px;
-            margin: AUTO;
+            padding: 15px;
+            margin: 20px auto;
             display: flex;
-            justify-items: center;
+            flex-wrap: wrap;
             justify-content: center;
-            text-align: center;
-            width: 80%;
+            width: 90%;
+            max-width: 1200px;
             border: 4px solid black;
         }
 
+        /* Profile cards */
         .profile-card {
             background-color: white;
             margin: 10px;
             border-radius: 15px;
-            width: calc(25% - 10px);
+            width: calc(100% - 20px);
+            max-width: 250px;
             padding: 10px;
-            color: white;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
@@ -190,11 +193,12 @@
             padding: 2px 6px;
             border-radius: 8px;
             font-size: 12px;
+            color: white;
         }
 
         .main-photo {
             width: 100%;
-            height: 200px;
+            height: 180px;
             border-radius: 10px;
             object-fit: cover;
             margin-bottom: 8px;
@@ -208,15 +212,14 @@
         }
 
         .profile-item {
-            
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
         .small-photo {
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
             object-fit: cover;
         }
@@ -251,18 +254,18 @@
         .emoji-bar {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 15px;
             margin-bottom: 5px;
         }
 
         .emoji {
-            width: 30px;
-            height: 30px;
+            width: 25px;
+            height: 25px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 18px;
+            font-size: 16px;
         }
 
         .emoji-meter {
@@ -270,26 +273,112 @@
             border-radius: 10px;
         }
 
-        .emoji-sad {
-            background-color: #ffd967;
-        }
-
-        .emoji-happy {
+        .emoji-sad, .emoji-happy {
             background-color: #ffd967;
         }
 
         .profile-name {
             font-weight: bold;
-            font-size: 12px;
+            font-size: 14px;
             text-align: center;
+            color: black;
         }
 
         .location {
-            font-size: 10px;
+            font-size: 12px;
             color: #ff0000;
             text-align: center;
         }
 
+        /* Media Queries for Responsive Design */
+        @media (max-width: 1200px) {
+            .container {
+                width: 95%;
+            }
+            
+            .profile-card {
+                width: calc(33.33% - 20px);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .profile-card {
+                width: calc(50% - 20px);
+            }
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+                margin-top: 15px;
+                margin-bottom: 60px;
+            }
+            
+            .profile img {
+                top: 15px;
+                right: 15px;
+                width: 40px;
+                height: 40px;
+            }
+            
+            .container {
+                padding: 10px;
+                border-width: 3px;
+            }
+            
+            .profile-card {
+                width: 100%;
+                max-width: none;
+                margin: 10px 0;
+            }
+            
+            .main-photo {
+                height: 160px;
+            }
+            
+            .navbar {
+                padding: 8px;
+                width: 95%;
+            }
+            
+            .nav-item {
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .profile img {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .small-photo {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .user-icon {
+                width: 25px;
+                height: 25px;
+            }
+            
+            .emoji {
+                width: 20px;
+                height: 20px;
+                font-size: 14px;
+            }
+            
+            .chat-button {
+                font-size: 16px;
+                padding: 8px 12px;
+            }
+        }
         
     </style>
 </head>
@@ -423,69 +512,4 @@
                       <div class="emoji emoji-happy">😊</div>
                   </div>
                   <div class="profile-name">healthy hood</div>
-                  <div class="location">Bhopal, India</div>
-              </div>
-          </div>
-
-              <!-- Bottom Menu -->
-
-    <section class="nav-bottom">
-
-        <div class="navbar">
-
-                        <div class="nav-item home">
-        <a href="{% url 'post' %}" class="chat">
-        <i class="fa-solid fa-house"></i>
-          
-        </a>
-       </div>
-       <div class="nav-item">
-        <a href="{% url 'explore' %}" class="chat">
-        <i class="fa-solid fa-compass"></i>
-          
-        </a>
-       </div>
-       <div class="nav-item">
-        <a href="{% url 'post_food' %}" class="chat">
-        <i class="fa-solid fa-plus"></i>
-          
-        </a>
-       </div>
-       <div class="nav-item">
-        <a href="{% url 'notification' %}" class="chat">
-        <i class="fa-solid fa-bell"></i>
-          
-        </a>
-       </div>
-       <div class="nav-item">
-        <a href="{% url 'map' %}" class="chat">
-        <i class="fa-solid fa-map"></i>
-          
-        </a>
-       </div> 
-       
-        </div>
-        <div class="chat-button">
-            <a href="{% url 'chat' %}"><i class="fas fa-comments"></i> Chat </a>
-        </div>
-    </section>
-
-
-
-      </body>
-            <script>
-            function toggleMenu() { 
-                var menu = document.getElementById("menu");
-                menu.classList.toggle("show");
-            }
-
-            document.addEventListener("click", function (event) {            
-            var menu = document.getElementById("menu");
-            var profileImg = document.querySelector(".profile img");
-            
-            // Check if the clicked area is NOT inside the menu or the profile image
-            if (!menu.contains(event.target) && event.target !== profileImg) {
-            menu.classList.remove("show");            
-        }});
-        </script>
-    </html>
+                  <div class=
