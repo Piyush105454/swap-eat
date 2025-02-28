@@ -117,16 +117,21 @@
 
         .message {
             display: flex;
+            flex-direction: column;
             margin-bottom: 10px;
         }
 
         .message .send {
+            display: flex;
+            justify-content: right;
             background-color: #939292;
             color:#ffffff ;
             align-self: flex-end;
         }
 
         .message .receive {
+            display: flex;
+            justify-content:left;
             background-color: #939292;
             color: #ffffff;
             align-self: flex-start;
@@ -368,7 +373,7 @@
                     {% if i.sender != user %}
                         <p class="receive"> <strong>-{{ i.sender }}</strong> {{ i.message }} </p>
                     {% else %}
-                        <p class="send">{{ i.message }}</p>
+                        <p class="send"><strong>You-</strong>{{ i.message }}</p>
                     {% endif %}
                 </div>
             {% endfor %}
