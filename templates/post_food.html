@@ -461,7 +461,7 @@
                             </div>
         
                         </div>
-                        <div id ="food-posts-container" class="cart-profile"></div>
+                        <div id ="food-posts-container" ></div>
 
                         <div class="divider1"></div>
 
@@ -536,51 +536,7 @@
                 document.getElementById("username").textContent = storedUsername;
         }
 
-    document.addEventListener("DOMContentLoaded", function () {
-            let foodPosts = JSON.parse('{{ food_posts|escapejs }}');  // Parse JSON data from Django
-            let container = document.getElementById("food-posts-container");
-
-            function renderPosts(posts) {
-                container.innerHTML = ""; // Clear old posts
-                posts.forEach(post => {
-                    let postDiv = document.createElement("div");
-                    postDiv.innerHTML = `
-                        <h3>${post.name}</h3>
-                        <p><strong>Location:</strong> ${post.location}</p>
-                        <p><strong>Radius:</strong> ${post.radius}</p>
-                        <p><strong>Posted on:</strong> ${new Date(post.created_at).toLocaleString()}</p>
-                        ${post.photo ? `<img src="${post.photo}" width="200">` : ""}
-                        <hr>
-                    `;
-                    container.appendChild(postDiv);
-                });
-            }
-
-            renderPosts(foodPosts);  // Initial render
-
-            // AJAX form submission
-            document.getElementById("foodPostForm").addEventListener("submit", function (e) {
-                e.preventDefault();
-                let formData = new FormData(this);
-
-                fetch("", {  // Submits to the same URL
-                    method: "POST",
-                    body: formData,
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest"
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        location.reload();  // Refresh the page to show the new post
-                    } else {
-                        alert("Form submission failed!");
-                    }
-                })
-                .catch(error => console.error("Error:", error));
-            });
-        });
+    
     // Get user location when page loads
     document.addEventListener("DOMContentLoaded", function () {
         if (navigator.geolocation) {
