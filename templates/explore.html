@@ -512,4 +512,69 @@
                       <div class="emoji emoji-happy">😊</div>
                   </div>
                   <div class="profile-name">healthy hood</div>
-                  <div class=
+                  <div class="location">Bhopal, India</div>
+              </div>
+          </div>
+
+              <!-- Bottom Menu -->
+
+    <section class="nav-bottom">
+
+        <div class="navbar">
+
+                        <div class="nav-item home">
+        <a href="{% url 'post' %}" class="chat">
+        <i class="fa-solid fa-house"></i>
+          
+        </a>
+       </div>
+       <div class="nav-item">
+        <a href="{% url 'explore' %}" class="chat">
+        <i class="fa-solid fa-compass"></i>
+          
+        </a>
+       </div>
+       <div class="nav-item">
+        <a href="{% url 'post_food' %}" class="chat">
+        <i class="fa-solid fa-plus"></i>
+          
+        </a>
+       </div>
+       <div class="nav-item">
+        <a href="{% url 'notification' %}" class="chat">
+        <i class="fa-solid fa-bell"></i>
+          
+        </a>
+       </div>
+       <div class="nav-item">
+        <a href="{% url 'map' %}" class="chat">
+        <i class="fa-solid fa-map"></i>
+          
+        </a>
+       </div> 
+       
+        </div>
+        <div class="chat-button">
+            <a href="{% url 'chat' %}"><i class="fas fa-comments"></i> Chat </a>
+        </div>
+    </section>
+
+
+
+      </body>
+            <script>
+            function toggleMenu() { 
+                var menu = document.getElementById("menu");
+                menu.classList.toggle("show");
+            }
+
+            document.addEventListener("click", function (event) {            
+            var menu = document.getElementById("menu");
+            var profileImg = document.querySelector(".profile img");
+            
+            // Check if the clicked area is NOT inside the menu or the profile image
+            if (!menu.contains(event.target) && event.target !== profileImg) {
+            menu.classList.remove("show");            
+        }});
+        </script>
+    </html>
