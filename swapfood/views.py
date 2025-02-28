@@ -170,9 +170,17 @@ def chat(request):
 # Post Meals Section
 @login_required
 def post(request):
-    foods = FoodPost.objects.all().order_by('-created_at')  # Fetch all posts
+    # Fetch all posts ordered by created_at (latest first)
+    foods = FoodPost.objects.all().order_by('-created_at')
+
+    # If it's an AJAX request, return JSON response
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        food_data = list(foods.values("id", "name", "location", "created_at", "photo"))
+        for post in food_data:
+            post["created_at"] = post["created_at"].isoformat()  # Convert datetime
+        return JsonResponse({"foods": food_data})
+
     return render(request, "profile.html", {"foods": foods})
-    
 
 
     
