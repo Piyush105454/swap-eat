@@ -3,9 +3,540 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post Food</title>
+    <title>Post a Meal</title>
+    <script id="foodData" type="application/json">{{ food_posts|safe }}</script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        /* ===== GENERAL STYLES ===== */
+        body {
+            font-family: Arial, sans-serif;
+            background: yellow;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 80px;
+            color: black;
+            margin-top: 30px;
+        }
+
+        /* ===== CONTAINER LAYOUT ===== */
+        .container {
+            background: #ff6666;
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 180px;
+            padding: 20px;
+            gap: 30px;
+            border-radius: 20px;
+            border: solid white;
+        }
+        
+        .divider {
+            z-index: 1;
+            width: 3px;
+            background-color: black;
+        }
+
+        .box {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            align-items: center;
+            background: #ff6666;
+            color: white;
+        }
+
+        #box1 {
+            gap: 20px;
+        }
+
+        /* ===== FORM ELEMENTS ===== */
+        .box input, 
+        .box select {
+            width: 90%;
+            padding: 8px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .box label {
+            display: flex;
+            margin-left: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            justify-content: space-between;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 15px;
+            padding: 10px;
+            background: linear-gradient(to right, rgb(91, 43, 236), rgb(59, 152, 224));
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            color: black;
+            background: yellow;
+        }
+        
+        /* ===== MEAL CARD STYLES ===== */
+        .meal-card {
+            background: white;
+            color: black;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: left;
+        }
+        
+        .meal-card img {
+            width: 100%;
+            height: 120px;
+            border-radius: 8px;
+        }
+        
+        .meal-card p {
+            margin: 5px 0;
+        }
+
+        .spread-btn {
+            margin: 5px;
+            background: linear-gradient(to right, rgb(91, 43, 236), rgb(59, 152, 224));
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        /* ===== MAP PANEL ===== */
+        #map {
+            z-index: 1;
+            background: white;
+            height: 100%;
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        /* ===== BOTTOM MENU ===== */
+        .bottom-menu {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .icon {
+            width: 40px;
+            height: 40px;
+            background: black;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .chat-icon {
+            background: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 2px solid black;
+            cursor: pointer;
+        }
+
+        /* ===== PROFILE MENU ===== */
+        .profile {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .profile img {
+            cursor: pointer;
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid black;
+        }
+
+        .menu {
+            cursor: pointer;
+            position: absolute;
+            top: 90px;
+            right: 20px;
+            width: 200px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 1000;
+        }
+    
+        .menu.show {
+            z-index: 100;
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+    
+        .menu a {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: black;
+            font-size: 16px;
+            transition: background 0.3s;
+            text-align: left;
+        }
+    
+        .menu a:hover {
+            cursor: pointer;
+            background: lightgray;
+        }
+
+        /* ===== PHOTO INPUT ===== */
+        .photoinput {
+            padding: 10px;
+            font-size: 16px;
+            border: 10px solid #060606;
+            border-radius: 5px;
+        }
+
+        /* ===== MEAL CARD ===== */
+        .card {
+            width: 100%;
+            color: #060606;
+            background-color: #ffebe7;
+            border-radius: 20px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+            border: 3px solid black;
+            position: relative;
+        }
+
+        .cart-profile {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .cart-profile img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid black;
+        }
+
+        .cart-profile h2 {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .time {
+            font-size: 12px;
+            color: rgb(8, 8, 8);
+        }
+
+        .divider2 {
+            width: 100%;
+            height: 3px;
+            background-color: black;
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .divider1 {
+            width: 100%;
+            height: 1px;
+            background-color: black;
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .meal {
+            text-align: left;
+        }
+
+        .meal img {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            border: 2px solid black;
+        }
+
+        .meal h3 {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .meal p {
+            font-size: 12px;
+            color: rgb(14, 14, 14);
+        }
+
+        .spread-btn {
+            margin: 5px;
+            font-size: 30px;
+            border-radius: 500px;
+            background: linear-gradient(to right, rgb(91, 43, 236), rgb(59, 152, 224));
+        }
+        
+        /* ===== BOTTOM NAVIGATION BAR ===== */
+        .nav-bottom {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .navbar {
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            margin: 20px;
+            background: linear-gradient(to right, red, orange);
+            padding: 12px 20px;
+            border-radius: 40px;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+            gap: 20px;
+        }
+
+        .nav-item {
+            z-index: 1;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            background-color: transparent;
+            color: rgb(0, 0, 0);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out, background 0.3s;
+        }
+
+        .nav-item:hover {
+            background-color: lightgreen;
+            transform: scale(1.2);
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: inherit;       
+        }
+
+        .chat-button {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            text-decoration: none;
+            background: white;
+            color: black;
+            padding: 8px 12px;
+            padding-bottom: 15px;
+            padding-top: 15px;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .chat-button a {
+            text-decoration: none;
+            color: inherit;
+        }
+       
+        .chat-button:hover {
+            background: lightgreen;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div>
+        <h1>Post a meal</h1>
+        <div class="profile">
+            <img src="https://static.vecteezy.com/system/resources/previews/011/490/381/original/happy-smiling-young-man-avatar-3d-portrait-of-a-man-cartoon-character-people-illustration-isolated-on-white-background-vector.jpg" alt="User" onclick="toggleMenu()">
+            <div class="menu" id="menu">
+                <a href="#">🔵 Profile</a>
+                <a href="#">⭐ Favorite Peoples</a>
+                <a href="#">💡 Personalization</a>
+                <a href="#">🟡 Swap Eat +</a>
+                <a href="#">🚫 Blocked Users</a>
+                <a href="#">⚙️ Settings</a>
+                <a href="#">🔗 Invite</a>
+                <a href="{% url 'home' %}">↪ Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Left Box (Form) -->
+        <div class="box" id="box1">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                  <!-- Hidden inputs to store latitude and longitude -->
+            <input type="hidden" id="latitude" name="latitude">
+            <input type="hidden" id="longitude" name="longitude">
+        
+            <button class="spread-btn" type="submit" onclick="getLocation()">Spread Taste</button>
+
+            </form>
+        </div>
+        
+        <div class="divider"></div>
+
+    
+
+      <div class="box">
+            <h3>Post your Meal</h3>
+                    <div class="card">
+                        <div class="cart-profile">
+                            <img src="https://static.vecteezy.com/system/resources/previews/011/490/381/original/happy-smiling-young-man-avatar-3d-portrait-of-a-man-cartoon-character-people-illustration-isolated-on-white-background-vector.jpg" alt="User">
+                            <div>
+                                <h2><spam class="scan"id="username">User</spam> </h2>
+                                <p class="time">Shared at </p>
+                            </div>
+                        </div>
+
+                        <div class="divider2"></div>
+
+                        <div class="meal">
+
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+        
+                                <div>
+        
+                                    <p style="color: purple; font-weight: bold;">🟩 prepared <span style="color: gray;">1hr ago</span></p>
+        
+                                    <h3>Sushi(Name:)</h3>
+        
+                                    <p>Discription about the dish</p>
+        
+                                </div>
+        
+                                <img src="https://th.bing.com/th/id/OIP.M4w8D0HqPiqPXcaipDMPawHaE7?rs=1&pid=ImgDetMain" alt="Meal">
+        
+                            </div>
+        
+                        </div>
+                        <div id ="food-posts-container" class="cart-profile"></div>
+
+                        <div class="divider1"></div>
+
+                        <div class="location">
+
+                   
+
+                            <p>📍 Mims cafe, Rgpv Bhopal</p>
+        
+                        </div>
+
+                        <div class="divider1"></div>
+
+                        <p class="radius">Radius: 5 Km</p>
+
+                    </div>
+              
+              
+           
+
+        </div>
+
+
+        
+        <div class="divider"></div>
+
+        <!-- Right Box (Floating Meals) -->
+        <div class="box">
+            <h3>Floating Meals</h3>
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <section class="nav-bottom">
+        <div class="navbar">
+            <div class="nav-item home">
+                <a href="{% url 'post' %}" class="chat">
+                    <i class="fa-solid fa-house"></i>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="{% url 'explore' %}" class="chat">
+                    <i class="fa-solid fa-compass"></i>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="{% url 'post_food' %}" class="chat">
+                    <i class="fa-solid fa-plus"></i>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="{% url 'notification' %}" class="chat">
+                    <i class="fa-solid fa-bell"></i>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="{% url 'map' %}" class="chat">
+                    <i class="fa-solid fa-map"></i>
+                </a>
+            </div> 
+        </div>
+        <div class="chat-button">
+            <a href="{% url 'chat' %}"><i class="fas fa-comments"></i> Chat </a>
+        </div>
+    </section>
+
+    <!-- JavaScript -->
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        let storedUsername = localStorage.getItem("username");
+             if (storedUsername) {
+                document.getElementById("username").textContent = storedUsername;
+        }
+
+    document.addEventListener("DOMContentLoaded", function () {
             let foodPosts = JSON.parse('{{ food_posts|escapejs }}');  // Parse JSON data from Django
             let container = document.getElementById("food-posts-container");
 
@@ -50,22 +581,90 @@
                 .catch(error => console.error("Error:", error));
             });
         });
+    // Get user location when page loads
+    document.addEventListener("DOMContentLoaded", function () {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    document.getElementById("latitude").value = position.coords.latitude;
+                    document.getElementById("longitude").value = position.coords.longitude;
+                },
+                function (error) {
+                    console.error("Error detecting location:", error.message);
+                    alert("Please enable location services to continue.");
+                }
+            );
+        } else {
+            alert("Geolocation is not supported by your browser.");
+        }
+    });
+
+    // Initialize map
+    var map = L.map('map').setView([20.5937, 78.9629], 5); // Default India
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Add markers for food posts
+    var foodPosts = JSON.parse('{{ food_posts|escapejs }}');  // Ensure valid JSON
+
+    foodPosts.forEach(post => {
+        if (post.latitude && post.longitude) {
+            var formattedDate = new Date(post.created_at).toLocaleDateString("en-IN", {
+                year: "numeric",
+                month: "short",
+                day: "numeric"
+            });
+
+            var marker = L.marker([post.latitude, post.longitude]).addTo(map);
+            marker.bindPopup(`
+                <div style="text-align: center; max-width: 200px;">
+                    <img src="/media/${post.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 5px;">
+                    <h4 style="margin: 5px 0; font-size: 16px; color: #333;">${post.name}</h4>
+                    <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Radius:</strong> ${post.radius} km</p>
+                    <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>location:</strong> ${post.location} </p>
+                    <p style="font-size: 14px; color: #777;"><strong>Posted on:</strong> ${formattedDate}</p>
+                </div>
+            `);
+        }
+    });
+        //profile menu toggle
+    function toggleMenu() { 
+                var menu = document.getElementById("menu");
+                menu.classList.toggle("show");
+            }
+
+            document.addEventListener("click", function (event) {            
+            var menu = document.getElementById("menu");
+            var profileImg = document.querySelector(".profile img");
+            
+            // Check if the clicked area is NOT inside the menu or the profile image
+            if (!menu.contains(event.target) && event.target !== profileImg) {
+            menu.classList.remove("show");            
+        }});
+
+    // Photo preview functionality
+    if (document.getElementById("photoInput")) {
+        document.getElementById("photoInput").addEventListener("change", function(event) {
+            var file = event.target.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var img = document.getElementById("photoPreview");
+                    if (img) {
+                        img.src = e.target.result;
+                        img.style.display = "block";
+                    }
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // Spread button click event
+    document.querySelector(".spread-btn").addEventListener("click", function () {
+        alert("Your meal has been posted!");
+    });
     </script>
-</head>
-<body>
-
-    <h2>Post Food</h2>
-
-    <form id="foodPostForm" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Submit</button>
-    </form>
-
-    <hr>
-
-    <h2>Submitted Food Posts</h2>
-    <div id="food-posts-container"></div>
-
 </body>
 </html>
