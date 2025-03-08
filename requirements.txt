@@ -46,3 +46,8 @@ typing_extensions>=4.10
 pillow>=10.3
 setuptools>=69.2
 pip>=24.0
+
+
+osmnx>=2.0.1
+networkx>=3.4.2
+geopy>=2.3.0
