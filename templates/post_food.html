@@ -8,6 +8,8 @@
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">    
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-routing-machine/3.2.12/leaflet-routing-machine.min.js"></script>
     <style>
         /* ===== GENERAL STYLES ===== */
         body {
@@ -536,14 +538,76 @@
                 document.getElementById("username").textContent = storedUsername;
         }
 
-    
-    // Get user location when page loads
+   
     document.addEventListener("DOMContentLoaded", function () {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 function (position) {
-                    document.getElementById("latitude").value = position.coords.latitude;
-                    document.getElementById("longitude").value = position.coords.longitude;
+                    let userLat = position.coords.latitude;
+                    let userLng = position.coords.longitude;
+
+                    document.getElementById("latitude").value = userLat;
+                    document.getElementById("longitude").value = userLng;
+
+                    // Initialize map centered on user location
+                    var map = L.map('map').setView([userLat, userLng], 13);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; OpenStreetMap contributors'
+                    }).addTo(map);
+
+                    // Add user location marker
+                    var userMarker = L.marker([userLat, userLng]).addTo(map)
+                        .bindPopup("<b>Your Location</b>").openPopup();
+
+                    // Fetch food posts
+                    var foodPosts = JSON.parse('{{ food_posts|escapejs }}');
+
+                    let nearestPost = null;
+                    let minDistance = Infinity;
+
+                    foodPosts.forEach(post => {
+                        if (post.latitude && post.longitude) {
+                            var formattedDate = new Date(post.created_at).toLocaleDateString("en-IN", {
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric"
+                            });
+
+                            let foodLat = post.latitude;
+                            let foodLng = post.longitude;
+                            let distance = getDistance(userLat, userLng, foodLat, foodLng).toFixed(2); // Calculate distance
+
+                            // Find the nearest food post
+                            if (distance < minDistance) {
+                                minDistance = distance;
+                                nearestPost = { lat: foodLat, lng: foodLng };
+                            }
+
+                            // Add food post markers
+                            var marker = L.marker([foodLat, foodLng]).addTo(map);
+                            marker.bindPopup(`
+                                <div style="text-align: center; max-width: 200px;">
+                                    <img src="/media/${post.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 5px;">
+                                    <h4 style="margin: 5px 0; font-size: 16px; color: #333;">${post.name}</h4>
+                                    <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Radius:</strong> ${post.radius} km</p>
+                                    <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Location:</strong> ${post.location}</p>
+                                    <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Distance:</strong> ${distance} km</p>
+                                    <p style="font-size: 14px; color: #777;"><strong>Posted on:</strong> ${formattedDate}</p>
+                                </div>
+                            `);
+                        }
+                    });
+
+                    // Draw shortest path to the nearest food post
+                    if (nearestPost) {
+                        L.Routing.control({
+                            waypoints: [
+                                L.latLng(userLat, userLng),
+                                L.latLng(nearestPost.lat, nearestPost.lng)
+                            ],
+                            routeWhileDragging: true
+                        }).addTo(map);
+                    }
                 },
                 function (error) {
                     console.error("Error detecting location:", error.message);
@@ -555,35 +619,21 @@
         }
     });
 
-    // Initialize map
-    var map = L.map('map').setView([20.5937, 78.9629], 5); // Default India
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-
-    // Add markers for food posts
-    var foodPosts = JSON.parse('{{ food_posts|escapejs }}');  // Ensure valid JSON
-
-    foodPosts.forEach(post => {
-        if (post.latitude && post.longitude) {
-            var formattedDate = new Date(post.created_at).toLocaleDateString("en-IN", {
-                year: "numeric",
-                month: "short",
-                day: "numeric"
-            });
-
-            var marker = L.marker([post.latitude, post.longitude]).addTo(map);
-            marker.bindPopup(`
-                <div style="text-align: center; max-width: 200px;">
-                    <img src="/media/${post.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 5px;">
-                    <h4 style="margin: 5px 0; font-size: 16px; color: #333;">${post.name}</h4>
-                    <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Radius:</strong> ${post.radius} km</p>
-                    <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>location:</strong> ${post.location} </p>
-                    <p style="font-size: 14px; color: #777;"><strong>Posted on:</strong> ${formattedDate}</p>
-                </div>
-            `);
-        }
-    });
+    // Function to calculate distance between two coordinates
+    function getDistance(lat1, lon1, lat2, lon2) {
+        function toRad(x) { return x * Math.PI / 180; }
+        var R = 6371; // Radius of Earth in km
+        var dLat = toRad(lat2 - lat1);
+        var dLon = toRad(lon2 - lon1);
+        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c; // Distance in km
+    }
+    
+    
+      
         //profile menu toggle
     function toggleMenu() { 
                 var menu = document.getElementById("menu");
