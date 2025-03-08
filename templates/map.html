@@ -457,7 +457,36 @@
  
 
     <script>
+            function getUserLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                let userLat = position.coords.latitude;
+                let userLon = position.coords.longitude;
 
+                fetch(`/get_shortest_path/?lat=${userLat}&lon=${userLon}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            alert("No nearest post found");
+                            return;
+                        }
+
+                        let pathCoords = data.path.map(coord => [coord[0], coord[1]]);
+                        let destination = data.destination;
+
+                        let polyline = L.polyline(pathCoords, { color: 'blue' }).addTo(map);
+                        map.fitBounds(polyline.getBounds());
+
+                        L.marker([userLat, userLon]).addTo(map).bindPopup("You are here").openPopup();
+                        L.marker(destination).addTo(map).bindPopup("Nearest Post");
+                    });
+            });
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", getUserLocation);
             function toggleMenu() {
                 
                 var menu = document.getElementById("menu");
