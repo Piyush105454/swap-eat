@@ -5,6 +5,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
+    path('get_shortest_path/', views.get_shortest_path, name='get_shortest_path'),
     path("chat/", views.chat, name="chat"),  # Fixed duplicate include issue
     path("chat-api/", views.chat_api, name="chat_api"),
     path('my-form/',views.my_view, name='my_form'), 
