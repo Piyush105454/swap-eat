@@ -22,15 +22,14 @@ import osmnx as ox
 from geopy.distance import geodesic
 
 
+# Function to find the nearest food post
 def find_nearest_post(user_lat, user_lon):
-    food_posts = FoodPost.objects.all()
-    nearest_post = None
     min_distance = float("inf")
+    nearest_post = None
 
-    for post in food_posts:
-        post_location = (post.latitude, post.longitude)
-        user_location = (user_lat, user_lon)
-        distance = geodesic(user_location, post_location).kilometers
+    for post in FoodPost.objects.all():
+        post_coords = (post.latitude, post.longitude)
+        distance = geodesic((user_lat, user_lon), post_coords).km
 
         if distance < min_distance:
             min_distance = distance
@@ -38,23 +37,33 @@ def find_nearest_post(user_lat, user_lon):
 
     return nearest_post
 
+# Function to calculate the shortest path using OSM data
 def get_shortest_path(request):
-    user_lat = float(request.GET.get("lat"))
-    user_lon = float(request.GET.get("lon"))
+    try:
+        user_lat = float(request.GET.get("lat"))
+        user_lon = float(request.GET.get("lon"))
 
-    nearest_post = find_nearest_post(user_lat, user_lon)
-    if not nearest_post:
-        return JsonResponse({"error": "No posts found"}, status=400)
+        nearest_post = find_nearest_post(user_lat, user_lon)
+        if not nearest_post:
+            return JsonResponse({"error": "No nearby posts found"}, status=400)
 
-    G = ox.graph_from_point((user_lat, user_lon), dist=5000, network_type='walk')
+        # Create a street network graph (5km radius)
+        G = ox.graph_from_point((user_lat, user_lon), dist=5000, network_type="walk")
 
-    orig_node = ox.distance.nearest_nodes(G, user_lon, user_lat)
-    dest_node = ox.distance.nearest_nodes(G, nearest_post.longitude, nearest_post.latitude)
+        # Find the nearest nodes in the graph
+        orig_node = ox.distance.nearest_nodes(G, user_lon, user_lat)
+        dest_node = ox.distance.nearest_nodes(G, nearest_post.longitude, nearest_post.latitude)
 
-    shortest_path = nx.shortest_path(G, orig_node, dest_node, weight="length")
-    path_coords = [(G.nodes[node]['y'], G.nodes[node]['x']) for node in shortest_path]
+        # Compute the shortest path
+        shortest_route = nx.shortest_path(G, orig_node, dest_node, weight="length")
 
-    return JsonResponse({"path": path_coords, "destination": [nearest_post.latitude, nearest_post.longitude]})
+        # Convert path nodes to lat-lon coordinates
+        route_coords = [(G.nodes[node]['y'], G.nodes[node]['x']) for node in shortest_route]
+
+        return JsonResponse({"route": route_coords})
+    
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
 
 
 @login_required
