@@ -457,69 +457,22 @@
  
 
     <script>
-            function getUserLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(position => {
-                let userLat = position.coords.latitude;
-                let userLon = position.coords.longitude;
+            document.addEventListener("DOMContentLoaded", function () {
+    initializeMap();
+    getUserLocation();
+    setupProfileMenu();
+    setupToggleButtons();
+});
 
-                fetch(`/get_shortest_path/?lat=${userLat}&lon=${userLon}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.error) {
-                            alert("No nearest post found");
-                            return;
-                        }
-
-                        let pathCoords = data.path.map(coord => [coord[0], coord[1]]);
-                        let destination = data.destination;
-
-                        let polyline = L.polyline(pathCoords, { color: 'blue' }).addTo(map);
-                        map.fitBounds(polyline.getBounds());
-
-                        L.marker([userLat, userLon]).addTo(map).bindPopup("You are here").openPopup();
-                        L.marker(destination).addTo(map).bindPopup("Nearest Post");
-                    });
-            });
-        } else {
-            alert("Geolocation is not supported by this browser.");
-        }
-    }
-
-    document.addEventListener("DOMContentLoaded", getUserLocation);
-            function toggleMenu() {
-                
-                var menu = document.getElementById("menu");
-                
-                menu.classList.toggle("show");
-                
-                }
-                
-                document.addEventListener("click", function (event) {
-                
-                var menu = document.getElementById("menu");
-                
-                var profileImg = document.querySelector(".profile img");
-                
-                
-                
-                // Check if the clicked area is NOT inside the menu or the profile image
-                
-                if (!menu.contains(event.target) && event.target !== profileImg) {
-                
-                menu.classList.remove("show");
-                
-                }
-                
-                });
-
-
-       var map = L.map('map').setView([20.5937, 78.9629], 5); // Default India
+// **Initialize Map**
+function initializeMap() {
+    var map = L.map('map').setView([20.5937, 78.9629], 5); // Default view: India
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    var foodPosts = JSON.parse('{{ food_posts|escapejs }}');  // Ensure valid JSON
+    // **Load food post locations dynamically**
+    var foodPosts = JSON.parse('{{ food_posts|escapejs }}'); // Ensure JSON is valid
 
     foodPosts.forEach(post => {
         if (post.latitude && post.longitude) {
@@ -531,24 +484,76 @@
 
             var marker = L.marker([post.latitude, post.longitude]).addTo(map);
             marker.bindPopup(`
-                <div style="text-align: center; max-width: 200px;">
-                    <img src="/media/${post.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 5px;">
-                    <h4 style="margin: 5px 0; font-size: 16px; color: #333;">${post.name}</h4>
-                    <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Radius:</strong> ${post.radius} km</p>
-                    <p style="font-size: 14px; color: #777;"><strong>Posted on:</strong> ${formattedDate}</p>
+                <div class="popup-content">
+                    <img src="/media/${post.photo}" alt="Food Image">
+                    <h4>${post.name}</h4>
+                    <p><strong>Radius:</strong> ${post.radius} km</p>
+                    <p><strong>Posted on:</strong> ${formattedDate}</p>
                 </div>
             `);
         }
     });
+}
 
-    // Toggle buttons for Scan and Meal
-    document.getElementById("scan-toggle").addEventListener("click", function() {
+// **Fetch User Location & Find Nearest Post**
+function getUserLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+            let userLat = position.coords.latitude;
+            let userLon = position.coords.longitude;
+
+            fetch(`/get_shortest_path/?lat=${userLat}&lon=${userLon}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert("No nearest post found");
+                        return;
+                    }
+
+                    let pathCoords = data.path.map(coord => [coord[0], coord[1]]);
+                    let destination = data.destination;
+
+                    let polyline = L.polyline(pathCoords, { color: 'blue' }).addTo(map);
+                    map.fitBounds(polyline.getBounds());
+
+                    L.marker([userLat, userLon]).addTo(map).bindPopup("You are here").openPopup();
+                    L.marker(destination).addTo(map).bindPopup("Nearest Post");
+                })
+                .catch(error => console.error("Error fetching shortest path:", error));
+        }, error => {
+            alert("Unable to retrieve location.");
+        });
+    } else {
+        alert("Geolocation is not supported by this browser.");
+    }
+}
+
+// **Profile Menu Toggle**
+function setupProfileMenu() {
+    var profileImg = document.querySelector(".profile img");
+    var menu = document.getElementById("menu");
+
+    profileImg.addEventListener("click", function () {
+        menu.classList.toggle("show");
+    });
+
+    document.addEventListener("click", function (event) {
+        if (!menu.contains(event.target) && event.target !== profileImg) {
+            menu.classList.remove("show");
+        }
+    });
+}
+
+// **Toggle Scan and Meal Buttons**
+function setupToggleButtons() {
+    document.getElementById("scan-toggle").addEventListener("click", function () {
         this.classList.toggle("active");
     });
 
-    document.getElementById("meal-toggle").addEventListener("click", function() {
+    document.getElementById("meal-toggle").addEventListener("click", function () {
         this.classList.toggle("active");
     });
+                        }
     </script>
 
 </body>
