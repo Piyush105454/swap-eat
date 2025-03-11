@@ -154,10 +154,10 @@ LOGOUT_REDIRECT_URL = '/login/'  # Redirect after logout
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ALLOWED_HOSTS = ['toxic-ilse-piyush105454-c639ba90.koyeb.app', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['notable-carlina-piyush105454-4bf50dc7.koyeb.app/', 'localhost', '127.0.0.1']
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://toxic-ilse-piyush105454-c639ba90.koyeb.app'
+    'https://notable-carlina-piyush105454-4bf50dc7.koyeb.app/'
 ]
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # Use Gmail or any other email service provider
