@@ -464,62 +464,59 @@
     setupToggleButtons();
 });
 
-// **Initialize Map**
-function initializeMap() {
-    var map = L.map('map').setView([20.5937, 78.9629], 5); // Default view: India
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-
-    // **Load food post locations dynamically**
-    var foodPosts = JSON.parse('{{ food_posts|escapejs }}'); // Ensure JSON is valid
-
-    foodPosts.forEach(post => {
-        if (post.latitude && post.longitude) {
-            var formattedDate = new Date(post.created_at).toLocaleDateString("en-IN", {
-                year: "numeric",
-                month: "short",
-                day: "numeric"
-            });
-
-            var marker = L.marker([post.latitude, post.longitude]).addTo(map);
-            marker.bindPopup(`
-                <div class="popup-content">
-                    <img src="/media/${post.photo}" alt="Food Image">
-                    <h4>${post.name}</h4>
-                    <p><strong>Radius:</strong> ${post.radius} km</p>
-                    <p><strong>Posted on:</strong> ${formattedDate}</p>
-                </div>
-            `);
-        }
-    });
+// Function to calculate distance between two lat-long points using Haversine formula
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Radius of Earth in km
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distance in km
 }
 
-// **Fetch User Location & Find Nearest Post**
 function getUserLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(position => {
             let userLat = position.coords.latitude;
             let userLon = position.coords.longitude;
 
-            fetch(`/get_shortest_path/?lat=${userLat}&lon=${userLon}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        alert("No nearest post found");
-                        return;
+            let nearestPost = null;
+            let minDistance = Infinity;
+
+            let foodPosts = JSON.parse('{{ food_posts|escapejs }}'); // Ensure food posts data is loaded
+
+            foodPosts.forEach(post => {
+                if (post.latitude && post.longitude) {
+                    let distance = calculateDistance(userLat, userLon, post.latitude, post.longitude);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        nearestPost = post;
                     }
+                }
+            });
 
-                    let pathCoords = data.path.map(coord => [coord[0], coord[1]]);
-                    let destination = data.destination;
+            if (nearestPost) {
+                let formattedDate = new Date(nearestPost.created_at).toLocaleDateString("en-IN", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric"
+                });
 
-                    let polyline = L.polyline(pathCoords, { color: 'blue' }).addTo(map);
-                    map.fitBounds(polyline.getBounds());
-
-                    L.marker([userLat, userLon]).addTo(map).bindPopup("You are here").openPopup();
-                    L.marker(destination).addTo(map).bindPopup("Nearest Post");
-                })
-                .catch(error => console.error("Error fetching shortest path:", error));
+                var marker = L.marker([nearestPost.latitude, nearestPost.longitude]).addTo(map);
+                marker.bindPopup(`
+                    <div class="popup-content">
+                        <img src="/media/${nearestPost.photo}" alt="Food Image">
+                        <h4>${nearestPost.name}</h4>
+                        <p><strong>Radius:</strong> ${nearestPost.radius} km</p>
+                        <p><strong>Distance:</strong> ${minDistance.toFixed(2)} km</p>
+                        <p><strong>Posted on:</strong> ${formattedDate}</p>
+                    </div>
+                `).openPopup();
+            }
         }, error => {
             alert("Unable to retrieve location.");
         });
