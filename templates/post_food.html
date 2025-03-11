@@ -550,7 +550,7 @@ button:hover {
             <div class="nav-item">
                 <a href="{% url 'notification' %}" class="chat">
                     <i class="fa-solid fa-bell"></i>
-                </a>
+                </a>document.addEventListener("DOMContentLoaded
             </div>
             <div class="nav-item">
                 <a href="{% url 'map' %}" class="chat">
@@ -565,70 +565,95 @@ button:hover {
 
     <!-- JavaScript -->
     <script>
-       document.addEventListener("DOMContentLoaded", function () {
-    // Retrieve stored username from local storage
+    document.addEventListener("DOMContentLoaded", function () {
     let storedUsername = localStorage.getItem("username");
     if (storedUsername) {
         document.getElementById("username").textContent = storedUsername;
     }
 
-    // Check if the browser supports geolocation
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             function (position) {
                 let userLat = position.coords.latitude;
-                let userLon = position.coords.longitude;
+                let userLng = position.coords.longitude;
 
                 document.getElementById("latitude").value = userLat;
-                document.getElementById("longitude").value = userLon;
+                document.getElementById("longitude").value = userLng;
 
-                // Initialize map centered on user's location
-                var map = L.map('map').setView([userLat, userLon], 14);
+                // Initialize map
+                var map = L.map('map').setView([userLat, userLng], 13);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; OpenStreetMap contributors'
                 }).addTo(map);
 
-                var userMarker, foodMarker, routeLayer;
+                // Remove existing user marker if present
+                if (window.userMarker) map.removeLayer(window.userMarker);
 
-                // Function to fetch the shortest path to the nearest post
-                function getShortestPath() {
-                    fetch(`/get_shortest_path?lat=${userLat}&lon=${userLon}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.error) {
-                                alert(data.error);
-                                return;
-                            }
+                // Add marker for user location
+                window.userMarker = L.marker([userLat, userLng]).addTo(map)
+                    .bindPopup("<b>Your Location</b>").openPopup();
 
-                            // Remove existing markers and route if any
-                            if (userMarker) map.removeLayer(userMarker);
-                            if (foodMarker) map.removeLayer(foodMarker);
-                            if (routeLayer) map.removeLayer(routeLayer);
+                var foodPosts = JSON.parse('{{ food_posts|escapejs }}');
 
-                            // Add user location marker
-                            userMarker = L.marker([userLat, userLon]).addTo(map)
-                                .bindPopup("<b>You are here</b>").openPopup();
+                let nearestPost = null;
+                let minDistance = Infinity;
 
-                            // Add food post marker
-                            let post = data.food_post;
-                            foodMarker = L.marker([post.latitude, post.longitude]).addTo(map)
-                                .bindPopup(`
-                                    <div style="text-align: center; max-width: 200px;">
-                                        <h4 style="margin: 5px 0; font-size: 16px; color: #333;">${post.name}</h4>
-                                        <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Radius:</strong> ${post.radius} km</p>
-                                        <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Location:</strong> ${post.location}</p>
-                                        <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Distance:</strong> ${data.distance.toFixed(2)} km</p>
-                                    </div>
-                                `).openPopup();
+                // Remove existing food markers
+                if (window.foodMarkers) {
+                    window.foodMarkers.forEach(marker => map.removeLayer(marker));
+                }
+                window.foodMarkers = [];
 
-                            // Draw shortest path to nearest food post
-                            routeLayer = L.polyline(data.route, { color: 'blue', weight: 5 }).addTo(map);
-                        })
-                        .catch(error => console.error("Error fetching shortest path:", error));
+                foodPosts.forEach(post => {
+                    if (post.latitude && post.longitude) {
+                        var formattedDate = new Date(post.created_at).toLocaleDateString("en-IN", {
+                            year: "numeric", month: "short", day: "numeric"
+                        });
+
+                        let foodLat = post.latitude;
+                        let foodLng = post.longitude;
+                        let distance = getDistance(userLat, userLng, foodLat, foodLng).toFixed(2);
+
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            nearestPost = post;
+                        }
+
+                        // Add food post markers and store in array
+                        var marker = L.marker([foodLat, foodLng]).addTo(map);
+                        marker.bindPopup(`
+                            <div style="text-align: center; max-width: 200px;">
+                                <img src="/media/${post.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 5px;">
+                                <h4 style="margin: 5px 0; font-size: 16px; color: #333;">${post.name}</h4>
+                                <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Radius:</strong> ${post.radius} km</p>
+                                <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Location:</strong> ${post.location}</p>
+                                <p style="font-size: 14px; color: #d9534f; font-weight: bold; margin: 5px 0;"><strong>Distance:</strong> ${distance} km</p>
+                                <p style="font-size: 14px; color: #777;"><strong>Posted on:</strong> ${formattedDate}</p>
+                            </div>
+                        `);
+                        window.foodMarkers.push(marker);
+                    }
+                });
+
+                // Remove existing route if present
+                if (window.routeControl) {
+                    map.removeControl(window.routeControl);
                 }
 
-                // Call function on page load
-                getShortestPath();
+                // Draw shortest path with custom color
+                if (nearestPost) {
+                    window.routeControl = L.Routing.control({
+                        waypoints: [
+                            L.latLng(userLat, userLng),
+                            L.latLng(nearestPost.latitude, nearestPost.longitude)
+                        ],
+                        routeWhileDragging: true,
+                        lineOptions: {
+                            styles: [{ color: 'red', weight: 6 }]  // 🔥 Change path color here
+                        }
+                    }).addTo(map);
+                    console.log(`Nearest post: ${nearestPost.name}, Distance: ${minDistance} km`);
+                }
             },
             function (error) {
                 console.error("Error detecting location:", error.message);
@@ -640,6 +665,19 @@ button:hover {
     }
 });
 
+// Function to calculate distance using Haversine formula
+function getDistance(lat1, lon1, lat2, lon2) {
+    function toRad(x) { return x * Math.PI / 180; }
+    var R = 6371; 
+    var dLat = toRad(lat2 - lat1);
+    var dLon = toRad(lon2 - lon1);
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+}
+
 // Profile menu toggle function
 function toggleMenu() {
     var menu = document.getElementById("menu");
@@ -650,7 +688,6 @@ document.addEventListener("click", function (event) {
     var menu = document.getElementById("menu");
     var profileImg = document.querySelector(".profile img");
 
-    // Close menu if click happens outside profile image or menu
     if (!menu.contains(event.target) && event.target !== profileImg) {
         menu.classList.remove("show");
     }
@@ -658,17 +695,17 @@ document.addEventListener("click", function (event) {
 
 // Photo preview functionality
 if (document.getElementById("photoInput")) {
-    document.getElementById("photoInput").addEventListener("change", function (event) {
+    document.getElementById("photoInput").addEventListener("change", function(event) {
         var file = event.target.files[0];
         if (file) {
             var reader = new FileReader();
-            reader.onload = function (e) {
+            reader.onload = function(e) {
                 var img = document.getElementById("photoPreview");
                 if (img) {
                     img.src = e.target.result;
                     img.style.display = "block";
                 }
-            };
+            }
             reader.readAsDataURL(file);
         }
     });
@@ -676,9 +713,8 @@ if (document.getElementById("photoInput")) {
 
 // Spread button click event
 document.querySelector(".spread-btn").addEventListener("click", function () {
-    alert("Your action has been recorded!");
+    alert("Your meal has been posted!");
 });
-
     </script>
 </body>
 </html>
