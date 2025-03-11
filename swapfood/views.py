@@ -29,7 +29,7 @@ def find_nearest_post(user_lat, user_lon):
 
     for post in FoodPost.objects.all():
         post_coords = (post.latitude, post.longitude)
-        distance = geodesic((user_lat, user_lon), post_coords).km
+        distance = geodesic((user_lat, user_lon), post_coords).km  # Get exact distance
 
         if distance < min_distance:
             min_distance = distance
@@ -47,12 +47,12 @@ def get_shortest_path(request):
         if not nearest_post:
             return JsonResponse({"error": "No nearby posts found"}, status=400)
 
-        # Create a street network graph (5km radius)
-        G = ox.graph_from_point((user_lat, user_lon), dist=5000, network_type="walk")
+        # Get full city road network (no distance limit)
+        G = ox.graph_from_place("India", network_type="walk")
 
         # Find the nearest nodes in the graph
-        orig_node = ox.distance.nearest_nodes(G, user_lon, user_lat)
-        dest_node = ox.distance.nearest_nodes(G, nearest_post.longitude, nearest_post.latitude)
+        orig_node = ox.distance.nearest_nodes(G, X=user_lon, Y=user_lat)
+        dest_node = ox.distance.nearest_nodes(G, X=nearest_post.longitude, Y=nearest_post.latitude)
 
         # Compute the shortest path
         shortest_route = nx.shortest_path(G, orig_node, dest_node, weight="length")
@@ -60,11 +60,18 @@ def get_shortest_path(request):
         # Convert path nodes to lat-lon coordinates
         route_coords = [(G.nodes[node]['y'], G.nodes[node]['x']) for node in shortest_route]
 
-        return JsonResponse({"route": route_coords})
+        return JsonResponse({
+            "route": route_coords,
+            "food_post": {
+                "name": nearest_post.name,
+                "latitude": nearest_post.latitude,
+                "longitude": nearest_post.longitude,
+                "location": nearest_post.location,
+            }
+        })
     
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
-
 
 @login_required
 def post_food(request):
