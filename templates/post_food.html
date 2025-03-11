@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
-<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
         <style>
      /* ===== GENERAL STYLES ===== */
 body {
@@ -597,7 +597,7 @@ button:hover {
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
                 // Store user's location marker
-                var myLocationMarker = L.marker([userLat, userLng], { color: 'blue' }).addTo(map);
+                var myLocationMarker = L.marker([userLat, userLng], { icon: L.icon({ iconUrl: 'https://cdn-icons-png.flaticon.com/512/447/447031.png', iconSize: [30, 30] }) }).addTo(map);
                 myLocationMarker.bindPopup("Your Location").openPopup();
                 var foodPosts = JSON.parse('{{ food_posts|escapejs }}');
                 
@@ -678,6 +678,11 @@ function getDistance(lat1, lon1, lat2, lon2) {
 // Function to draw route
 var routeControl;
 function drawRoute(userLat, userLng, destLat, destLng) {
+    if (typeof L.Routing === "undefined") {
+        console.error("Leaflet Routing Machine is not loaded.");
+        return;
+    }
+
     // Remove existing route if present
     if (routeControl) {
         map.removeControl(routeControl);
@@ -690,11 +695,13 @@ function drawRoute(userLat, userLng, destLat, destLng) {
             L.latLng(destLat, destLng)
         ],
         routeWhileDragging: true,
+        createMarker: function () { return null; }, // Hide waypoints markers
         lineOptions: {
-            styles: [{ color: 'red', weight: 6 }]  // 🔥 Change path color
+            styles: [{ color: 'blue', weight: 6 }]  // 🔥 Change path color
         }
     }).addTo(map);
 }
+
 
 // Profile menu toggle function
 function toggleMenu() {
