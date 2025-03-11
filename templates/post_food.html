@@ -577,65 +577,90 @@ button:hover {
 
     <!-- JavaScript -->
     <script>
-document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function () {
+    let storedUsername = localStorage.getItem("username");
+    if (storedUsername) {
+        document.getElementById("username").textContent = storedUsername;
+    }
+
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             function (position) {
                 let userLat = position.coords.latitude;
                 let userLng = position.coords.longitude;
 
-                let map = L.map('map').setView([userLat, userLng], 13);
+                document.getElementById("latitude").value = userLat;
+                document.getElementById("longitude").value = userLng;
+
+                // Initialize the map
+                var map = L.map('map').setView([userLat, userLng], 13);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-                var userMarker = L.marker([userLat, userLng], { color: 'blue' }).addTo(map)
-                    .bindPopup("You are here").openPopup();
+                // Store user's location marker
+                var myLocationMarker = L.marker([userLat, userLng], { color: 'blue' }).addTo(map);
+                let routeControl = null;
+                let initialRouteDrawn = false;
 
-                let minDistance = Infinity;
-                let nearestPost = null;
-                var foodPosts = JSON.parse('{{ food_posts|escapejs }}');
-                
+                function drawRoute(destinationLat, destinationLng) {
+                    if (routeControl) {
+                        map.removeControl(routeControl); // Remove previous route if user selects a new post
+                    }
 
-                // Check if foodPosts is defined
-                if (typeof foodPosts !== "undefined" && Array.isArray(foodPosts) && foodPosts.length > 0) {
+                    routeControl = L.Routing.control({
+                        waypoints: [
+                            L.latLng(userLat, userLng),
+                            L.latLng(destinationLat, destinationLng)
+                        ],
+                        routeWhileDragging: true,
+                        lineOptions: { styles: [{ color: 'red', weight: 6 }] },
+                        createMarker: function() { return null; } // Hide default markers
+                    }).addTo(map);
+                }
+
+                function drawShortestRoute() {
+                    let nearestPost = null;
+                    let minDistance = Infinity;
+                    var foodPosts = JSON.parse('{{ food_posts|escapejs }}');
+                    
+
                     foodPosts.forEach(post => {
                         if (post.latitude && post.longitude) {
-                            let foodLat = post.latitude;
-                            let foodLng = post.longitude;
-                            let distance = getDistance(userLat, userLng, foodLat, foodLng).toFixed(2);
+                            let distance = getDistance(userLat, userLng, post.latitude, post.longitude);
 
                             if (distance < minDistance) {
                                 minDistance = distance;
                                 nearestPost = post;
                             }
-
-                            // Add markers for food posts
-                            let marker = L.marker([foodLat, foodLng]).addTo(map)
-                                .bindPopup(`<h4>${post.name}</h4><p>Distance: ${distance} km</p>`);
                         }
                     });
 
-                    // Draw shortest path if nearestPost exists
                     if (nearestPost) {
-                        let control = L.Routing.control({
-                            waypoints: [
-                                L.latLng(userLat, userLng),
-                                L.latLng(nearestPost.latitude, nearestPost.longitude)
-                            ],
-                            routeWhileDragging: true,
-                            lineOptions: { styles: [{ color: 'red', weight: 6 }] },
-                            createMarker: function() { return null; }, // Hide default markers
-                            show: false // Hide default route details on the map
-                        }).addTo(map);
-
-                        
+                        drawRoute(nearestPost.latitude, nearestPost.longitude);
+                        initialRouteDrawn = true;
                     }
-                } else {
-                    console.warn("No food posts available.");
                 }
+
+                // Add click event to post markers
+                foodPosts.forEach(post => {
+                    if (post.latitude && post.longitude) {
+                        let marker = L.marker([post.latitude, post.longitude]).addTo(map);
+
+                        marker.bindPopup(`
+                            <div style="text-align: center;">
+                                <img src="/media/${post.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px;">
+                                <h4>${post.name}</h4>
+                                <p><strong>Distance:</strong> ${getDistance(userLat, userLng, post.latitude, post.longitude)} km</p>
+                                <button onclick="drawRoute(${post.latitude}, ${post.longitude})" style="margin-top: 5px; padding: 5px 10px; background-color: #ff4d4d; color: white; border: none; cursor: pointer; border-radius: 5px;">Navigate</button>
+                            </div>
+                        `);
+                    }
+                });
+
+                setTimeout(drawShortestRoute, 2000);
             },
             function (error) {
                 console.error("Error detecting location:", error.message);
-                alert("Please enable location services.");
+                alert("Please enable location services to continue.");
             }
         );
     } else {
@@ -646,7 +671,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // Function to calculate distance using Haversine formula
 function getDistance(lat1, lon1, lat2, lon2) {
     function toRad(x) { return x * Math.PI / 180; }
-    var R = 6371; 
+    var R = 6371;
     var dLat = toRad(lat2 - lat1);
     var dLon = toRad(lon2 - lon1);
     var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
@@ -655,6 +680,7 @@ function getDistance(lat1, lon1, lat2, lon2) {
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
 }
+
 // Profile menu toggle function
 function toggleMenu() {
     var menu = document.getElementById("menu");
@@ -692,6 +718,7 @@ if (document.getElementById("photoInput")) {
 document.querySelector(".spread-btn").addEventListener("click", function () {
     alert("Your meal has been posted!");
 });
+
     </script>
 </body>
 </html>
