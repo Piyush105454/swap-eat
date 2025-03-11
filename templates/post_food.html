@@ -586,17 +586,15 @@ button:hover {
                 let map = L.map('map').setView([userLat, userLng], 13);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-                var userMarker = L.marker([userLat, userLng], { color: 'blue' }).addTo(map)
+                let userMarker = L.marker([userLat, userLng], { color: 'blue' }).addTo(map)
                     .bindPopup("You are here").openPopup();
-                var foodPosts = JSON.parse('{{ food_posts|escapejs }}');
-                
+
+                let foodPosts = JSON.parse('{{ food_posts|escapejs }}');
                 let minDistance = Infinity;
                 let nearestPost = null;
-  
+                let routeControl = null; // Store the route control globally
 
-                
-                // Check if foodPosts is defined
-                if (typeof foodPosts !== "undefined" && Array.isArray(foodPosts) && foodPosts.length > 0) {
+                if (Array.isArray(foodPosts) && foodPosts.length > 0) {
                     foodPosts.forEach(post => {
                         if (post.latitude && post.longitude) {
                             let foodLat = post.latitude;
@@ -608,44 +606,44 @@ button:hover {
                                 nearestPost = post;
                             }
 
-                            // Add markers for food posts
                             let marker = L.marker([foodLat, foodLng]).addTo(map)
-                                .bindPopup(`  <div style="text-align: center; max-width: 200px;">
-                                <img src="/media/${post.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 5px;">
-                                <h4 style="margin: 5px 0; font-size: 16px; color: #333;">${post.name}</h4>
-                                <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Radius:</strong> ${post.radius} km</p>
-                                <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Location:</strong> ${post.location}</p>
-                                <p style="font-size: 14px; color: #d9534f; font-weight: bold; margin: 5px 0;"><strong>Distance:</strong> ${distance} km</p>
-                                <p style="font-size: 14px; color: #777;"><strong>Posted on:</strong> ${formattedDate}</p>
-                            </div>`);
+                                .bindPopup(`
+                                    <div style="text-align: center; max-width: 200px;">
+                                        <img src="/media/${post.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 5px;">
+                                        <h4 style="margin: 5px 0; font-size: 16px; color: #333;">${post.name}</h4>
+                                        <p style="font-size: 14px; color: #555;"><strong>Distance:</strong> ${distance} km</p>
+                                    </div>
+                                `);
+
+                            marker.on('click', function () {
+                                updateRoute(userLat, userLng, foodLat, foodLng);
+                            });
                         }
                     });
 
-                    // Draw shortest path if nearestPost exists
+                    // Draw the shortest path to the nearest post
                     if (nearestPost) {
-                        let control = L.Routing.control({
-                            waypoints: [
-                                L.latLng(userLat, userLng),
-                                L.latLng(nearestPost.latitude, nearestPost.longitude)
-                            ],
-                            routeWhileDragging: true,
-                            lineOptions: { styles: [{ color: 'red', weight: 6 }] },
-                            createMarker: function() { return null; }, // Hide default markers
-                            show: false // Hide default route details on the map
-                        }).addTo(map);
-
-                        // Display route details in a fixed div
-                        control.on('routesfound', function (e) {
-                            let routes = e.routes[0].instructions;
-                            let steps = "";
-                            routes.forEach(step => {
-                                steps += `<p>${step.text}</p>`;
-                            });
-                            document.getElementById("routeInfo").innerHTML = steps;
-                        });
+                        updateRoute(userLat, userLng, nearestPost.latitude, nearestPost.longitude);
                     }
                 } else {
                     console.warn("No food posts available.");
+                }
+
+                function updateRoute(startLat, startLng, endLat, endLng) {
+                    if (routeControl) {
+                        map.removeControl(routeControl); // Remove previous route
+                    }
+
+                    routeControl = L.Routing.control({
+                        waypoints: [
+                            L.latLng(startLat, startLng),
+                            L.latLng(endLat, endLng)
+                        ],
+                        routeWhileDragging: true,
+                        lineOptions: { styles: [{ color: 'red', weight: 6 }] }, // Set path color
+                        createMarker: function () { return null; }, // Hide default markers
+                        show: false // Hide the default route info panel
+                    }).addTo(map);
                 }
             },
             function (error) {
@@ -669,6 +667,7 @@ function getDistance(lat1, lon1, lat2, lon2) {
             Math.sin(dLon / 2) * Math.sin(dLon / 2);
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
+}
 }
 
 // Profile menu toggle function
