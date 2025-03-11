@@ -592,42 +592,8 @@ button:hover {
                 
                 let minDistance = Infinity;
                 let nearestPost = null;
-                // Store the routing control globally to update it later
-let routeControl = true;
+  
 
-// Function to update the route to the selected post
-function updateRoute(destinationLat, destinationLng) {
-    if (routeControl) {
-        map.removeControl(routeControl); // Remove existing route
-    }
-
-    routeControl = L.Routing.control({
-        waypoints: [
-            L.latLng(userLat, userLng),  // User's current location
-            L.latLng(destinationLat, destinationLng) // Selected post location
-        ],
-        routeWhileDragging: true,
-        lineOptions: { styles: [{ color: 'red', weight: 6 }] },
-        createMarker: function() { return null; } // Hide default markers
-    }).addTo(map);
-}
-
-// Add click event to post markers
-foodPosts.forEach(post => {
-    if (post.latitude && post.longitude) {
-        let marker = L.marker([post.latitude, post.longitude]).addTo(map);
-        
-        // Show popup and set route on click
-        marker.bindPopup(`
-            <div style="text-align: center;">
-                <img src="/media/${post.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px;">
-                <h4>${post.name}</h4>
-                <p><strong>Distance:</strong> ${getDistance(userLat, userLng, post.latitude, post.longitude)} km</p>
-                <button onclick="updateRoute(${post.latitude}, ${post.longitude})" style="margin-top: 5px; padding: 5px 10px; background-color: #ff4d4d; color: white; border: none; cursor: pointer; border-radius: 5px;">Navigate</button>
-            </div>
-        `);
-    }
-});
                 
                 // Check if foodPosts is defined
                 if (typeof foodPosts !== "undefined" && Array.isArray(foodPosts) && foodPosts.length > 0) {
@@ -644,12 +610,14 @@ foodPosts.forEach(post => {
 
                             // Add markers for food posts
                             let marker = L.marker([foodLat, foodLng]).addTo(map)
-                                .bindPopup(`<div style="text-align: center;">
-                <img src="/media/${post.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px;">
-                <h4>${post.name}</h4>
-                <p><strong>Distance:</strong> ${getDistance(userLat, userLng, post.latitude, post.longitude)} km</p>
-                <button onclick="updateRoute(${post.latitude}, ${post.longitude})" style="margin-top: 5px; padding: 5px 10px; background-color: #ff4d4d; color: white; border: none; cursor: pointer; border-radius: 5px;">Navigate</button>
-            </div>`);
+                                .bindPopup(`  <div style="text-align: center; max-width: 200px;">
+                                <img src="/media/${post.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 5px;">
+                                <h4 style="margin: 5px 0; font-size: 16px; color: #333;">${post.name}</h4>
+                                <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Radius:</strong> ${post.radius} km</p>
+                                <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Location:</strong> ${post.location}</p>
+                                <p style="font-size: 14px; color: #d9534f; font-weight: bold; margin: 5px 0;"><strong>Distance:</strong> ${distance} km</p>
+                                <p style="font-size: 14px; color: #777;"><strong>Posted on:</strong> ${formattedDate}</p>
+                            </div>`);
                         }
                     });
 
