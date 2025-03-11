@@ -580,37 +580,75 @@ button:hover {
                 document.getElementById("latitude").value = userLat;
                 document.getElementById("longitude").value = userLng;
 
-                // Initialize map
-                var map = L.map('map').setView([userLat, userLng], 13);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; OpenStreetMap contributors'
-                }).addTo(map);
                 
-                // Remove existing user marker if present
-                if (window.userMarker) map.removeLayer(window.userMarker);
-                // Move the map view to the user's location without adding a marker
-                map.setView([userLat, userLng], 15); // Adjust zoom level as needed
-
-                // Add marker for user location
-                window.userMarker = L.marker([userLat, userLng]).addTo(map)
-                    .bindPopup("<b>Your Location</b>").openPopup();
-
-                var foodPosts = JSON.parse('{{ food_posts|escapejs }}');
-
-                let nearestPost = null;
-                let minDistance = Infinity;
-
-                // Remove existing food markers
-                if (window.foodMarkers) {
-                    window.foodMarkers.forEach(marker => map.removeLayer(marker));
-                }
-                window.foodMarkers = [];
-
                 foodPosts.forEach(post => {
                     if (post.latitude && post.longitude) {
                         var formattedDate = new Date(post.created_at).toLocaleDateString("en-IN", {
                             year: "numeric", month: "short", day: "numeric"
-                        });
+                     // Initialize the map
+var map = L.map('map').setView([yourLatitude, yourLongitude], 13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+// Store user's location marker
+var myLocationMarker = L.marker([yourLatitude, yourLongitude], { color: 'blue' }).addTo(map);
+
+// Predefined post markers (replace with actual coordinates)
+var postMarkers = [
+    L.marker([postLat1, postLng1]).addTo(map),
+    L.marker([postLat2, postLng2]).addTo(map),
+    L.marker([postLat3, postLng3]).addTo(map) // Add as many as needed
+];
+
+// Function to find the nearest post marker
+function findNearestMarker() {
+    var myLocation = myLocationMarker.getLatLng();
+    var nearestMarker = null;
+    var minDistance = Infinity;
+
+    postMarkers.forEach(marker => {
+        let distance = myLocation.distanceTo(marker.getLatLng());
+        if (distance < minDistance) {
+            minDistance = distance;
+            nearestMarker = marker;
+        }
+    });
+
+    return nearestMarker;
+}
+
+// Function to draw the shortest path
+var routeLayer;
+function drawShortestPath() {
+    var nearestMarker = findNearestMarker();
+    if (!nearestMarker) return;
+
+    if (routeLayer) {
+        map.removeLayer(routeLayer); // Remove previous path
+    }
+
+    routeLayer = L.polyline([
+        myLocationMarker.getLatLng(),
+        nearestMarker.getLatLng()
+    ], { color: 'blue' }).addTo(map);
+}
+
+// Update location & redraw path when position changes
+map.on('locationfound', function(e) {
+    myLocationMarker.setLatLng(e.latlng); // Update location
+    drawShortestPath(); // Recalculate shortest path
+});
+
+// Get user location
+map.locate({ setView: true, watch: true, enableHighAccuracy: true });
+
+// Redraw path on zoom change (without adding markers)
+map.on('zoomend', drawShortestPath);
+
+// Ensure only post markers & user location marker exist (no extra markers)
+map.on('zoomend', function() {
+    postMarkers.forEach(marker => marker.addTo(map)); // Re-add post markers if removed
+    myLocationMarker.addTo(map); // Ensure user location marker is there
+});   
 
                         let foodLat = post.latitude;
                         let foodLng = post.longitude;
