@@ -565,144 +565,148 @@ button:hover {
 
     <!-- JavaScript -->
     <script>
-        let storedUsername = localStorage.getItem("username");
-             if (storedUsername) {
-                document.getElementById("username").textContent = storedUsername;
-        }
+        
 
    
     document.addEventListener("DOMContentLoaded", function () {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                function (position) {
-                    let userLat = position.coords.latitude;
-                    let userLng = position.coords.longitude;
+    // Retrieve stored username from local storage
+    let storedUsername = localStorage.getItem("username");
+    if (storedUsername) {
+        document.getElementById("username").textContent = storedUsername;
+    }
 
-                    document.getElementById("latitude").value = userLat;
-                    document.getElementById("longitude").value = userLng;
+    // Check if the browser supports geolocation
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            function (position) {
+                let userLat = position.coords.latitude;
+                let userLng = position.coords.longitude;
 
-                    // Initialize map centered on user location
-                    var map = L.map('map').setView([userLat, userLng], 13);
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: '&copy; OpenStreetMap contributors'
-                    }).addTo(map);
+                document.getElementById("latitude").value = userLat;
+                document.getElementById("longitude").value = userLng;
 
-                    // Add user location marker
-                    var userMarker = L.marker([userLat, userLng]).addTo(map)
-                        .bindPopup("<b>Your Location</b>").openPopup();
+                // Initialize map centered on user's location
+                var map = L.map('map').setView([userLat, userLng], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; OpenStreetMap contributors'
+                }).addTo(map);
 
-                    // Fetch food posts
-                    var foodPosts = JSON.parse('{{ food_posts|escapejs }}');
+                // Add marker for user location
+                var userMarker = L.marker([userLat, userLng]).addTo(map)
+                    .bindPopup("<b>Your Location</b>").openPopup();
 
-                    let nearestPost = null;
-                    let minDistance = Infinity;
+                // Fetch food posts from Django context
+                var foodPosts = JSON.parse('{{ food_posts|escapejs }}');
 
-                    foodPosts.forEach(post => {
-                        if (post.latitude && post.longitude) {
-                            var formattedDate = new Date(post.created_at).toLocaleDateString("en-IN", {
-                                year: "numeric",
-                                month: "short",
-                                day: "numeric"
-                            });
+                let nearestPost = null;
+                let minDistance = Infinity;
 
-                            let foodLat = post.latitude;
-                            let foodLng = post.longitude;
-                            let distance = getDistance(userLat, userLng, foodLat, foodLng).toFixed(2); // Calculate distance
+                // Loop through food posts and find the nearest one
+                foodPosts.forEach(post => {
+                    if (post.latitude && post.longitude) {
+                        var formattedDate = new Date(post.created_at).toLocaleDateString("en-IN", {
+                            year: "numeric", month: "short", day: "numeric"
+                        });
 
-                            // Find the nearest food post
-                            if (distance < minDistance) {
-                                minDistance = distance;
-                                nearestPost = { lat: foodLat, lng: foodLng };
-                            }
+                        let foodLat = post.latitude;
+                        let foodLng = post.longitude;
+                        let distance = getDistance(userLat, userLng, foodLat, foodLng).toFixed(2);
 
-                            // Add food post markers
-                            var marker = L.marker([foodLat, foodLng]).addTo(map);
-                            marker.bindPopup(`
-                                <div style="text-align: center; max-width: 200px;">
-                                    <img src="/media/${post.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 5px;">
-                                    <h4 style="margin: 5px 0; font-size: 16px; color: #333;">${post.name}</h4>
-                                    <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Radius:</strong> ${post.radius} km</p>
-                                    <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Location:</strong> ${post.location}</p>
-                                    <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Distance:</strong> ${distance} km</p>
-                                    <p style="font-size: 14px; color: #777;"><strong>Posted on:</strong> ${formattedDate}</p>
-                                </div>
-                            `);
+                        // Update nearest post if this one is closer
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            nearestPost = post;
                         }
-                    });
 
-                    // Draw shortest path to the nearest food post
-                    if (nearestPost) {
-                        L.Routing.control({
-                            waypoints: [
-                                L.latLng(userLat, userLng),
-                                L.latLng(nearestPost.lat, nearestPost.lng)
-                            ],
-                            routeWhileDragging: true
-                        }).addTo(map);
+                        // Add food post markers on the map
+                        var marker = L.marker([foodLat, foodLng]).addTo(map);
+                        marker.bindPopup(`
+                            <div style="text-align: center; max-width: 200px;">
+                                <img src="/media/${post.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 5px;">
+                                <h4 style="margin: 5px 0; font-size: 16px; color: #333;">${post.name}</h4>
+                                <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Radius:</strong> ${post.radius} km</p>
+                                <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Location:</strong> ${post.location}</p>
+                                <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Distance:</strong> ${distance} km</p>
+                                <p style="font-size: 14px; color: #777;"><strong>Posted on:</strong> ${formattedDate}</p>
+                            </div>
+                        `);
                     }
-                },
-                function (error) {
-                    console.error("Error detecting location:", error.message);
-                    alert("Please enable location services to continue.");
+                });
+
+                // Draw shortest path from user to nearest food post
+                if (nearestPost) {
+                    L.Routing.control({
+                        waypoints: [
+                            L.latLng(userLat, userLng),
+                            L.latLng(nearestPost.latitude, nearestPost.longitude)
+                        ],
+                        routeWhileDragging: true
+                    }).addTo(map);
+                    console.log(`Nearest post: ${nearestPost.name}, Distance: ${minDistance} km`);
                 }
-            );
-        } else {
-            alert("Geolocation is not supported by your browser.");
+            },
+            function (error) {
+                console.error("Error detecting location:", error.message);
+                alert("Please enable location services to continue.");
+            }
+        );
+    } else {
+        alert("Geolocation is not supported by your browser.");
+    }
+});
+
+// Function to calculate distance between two coordinates (Haversine formula)
+function getDistance(lat1, lon1, lat2, lon2) {
+    function toRad(x) { return x * Math.PI / 180; }
+    var R = 6371; // Earth's radius in km
+    var dLat = toRad(lat2 - lat1);
+    var dLon = toRad(lon2 - lon1);
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distance in km
+}
+
+// Profile menu toggle function
+function toggleMenu() {
+    var menu = document.getElementById("menu");
+    menu.classList.toggle("show");
+}
+
+document.addEventListener("click", function (event) {
+    var menu = document.getElementById("menu");
+    var profileImg = document.querySelector(".profile img");
+
+    // Close menu if click happens outside profile image or menu
+    if (!menu.contains(event.target) && event.target !== profileImg) {
+        menu.classList.remove("show");
+    }
+});
+
+// Photo preview functionality
+if (document.getElementById("photoInput")) {
+    document.getElementById("photoInput").addEventListener("change", function(event) {
+        var file = event.target.files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = document.getElementById("photoPreview");
+                if (img) {
+                    img.src = e.target.result;
+                    img.style.display = "block";
+                }
+            }
+            reader.readAsDataURL(file);
         }
     });
+}
 
-    // Function to calculate distance between two coordinates
-    function getDistance(lat1, lon1, lat2, lon2) {
-        function toRad(x) { return x * Math.PI / 180; }
-        var R = 6371; // Radius of Earth in km
-        var dLat = toRad(lat2 - lat1);
-        var dLon = toRad(lon2 - lon1);
-        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-                Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c; // Distance in km
-    }
-    
-    
-      
-        //profile menu toggle
-    function toggleMenu() { 
-                var menu = document.getElementById("menu");
-                menu.classList.toggle("show");
-            }
+// Spread button click event
+document.querySelector(".spread-btn").addEventListener("click", function () {
+    alert("Your meal has been posted!");
+});
 
-            document.addEventListener("click", function (event) {            
-            var menu = document.getElementById("menu");
-            var profileImg = document.querySelector(".profile img");
-            
-            // Check if the clicked area is NOT inside the menu or the profile image
-            if (!menu.contains(event.target) && event.target !== profileImg) {
-            menu.classList.remove("show");            
-        }});
-
-    // Photo preview functionality
-    if (document.getElementById("photoInput")) {
-        document.getElementById("photoInput").addEventListener("change", function(event) {
-            var file = event.target.files[0];
-            if (file) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    var img = document.getElementById("photoPreview");
-                    if (img) {
-                        img.src = e.target.result;
-                        img.style.display = "block";
-                    }
-                }
-                reader.readAsDataURL(file);
-            }
-        });
-    }
-
-    // Spread button click event
-    document.querySelector(".spread-btn").addEventListener("click", function () {
-        alert("Your meal has been posted!");
-    });
     </script>
 </body>
 </html>
