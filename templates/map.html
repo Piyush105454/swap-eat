@@ -8,9 +8,9 @@
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-        
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-routing-machine/3.2.12/leaflet-routing-machine.min.js"></script>
+    
     <style>
        
         body {
@@ -457,14 +457,43 @@
  
 
     <script>
-            document.addEventListener("DOMContentLoaded", function () {
-    initializeMap();
-    getUserLocation();
-    setupProfileMenu();
-    setupToggleButtons();
-});
 
-// Function to calculate distance between two lat-long points using Haversine formula
+    document.addEventListener("DOMContentLoaded", getUserLocation);
+            function toggleMenu() {
+                
+                var menu = document.getElementById("menu");
+                
+                menu.classList.toggle("show");
+                
+                }
+                
+                document.addEventListener("click", function (event) {
+                
+                var menu = document.getElementById("menu");
+                
+                var profileImg = document.querySelector(".profile img");
+                
+                
+                
+                // Check if the clicked area is NOT inside the menu or the profile image
+                
+                if (!menu.contains(event.target) && event.target !== profileImg) {
+                
+                menu.classList.remove("show");
+                
+                }
+                
+                });
+
+
+    var map = L.map('map').setView([20.5937, 78.9629], 5); // Default India
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    var foodPosts = JSON.parse('{{ food_posts|escapejs }}');  // Ensure valid JSON
+
+    // Function to calculate distance using Haversine formula
 function calculateDistance(lat1, lon1, lat2, lon2) {
     const R = 6371; // Radius of Earth in km
     const dLat = (lat2 - lat1) * (Math.PI / 180);
@@ -473,50 +502,85 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
               Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
               Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    
+              
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c; // Distance in km
 }
 
+// Function to display all food posts
+function displayAllPosts(foodPosts) {
+    foodPosts.forEach(post => {
+        if (post.latitude && post.longitude) {
+            let marker = L.marker([post.latitude, post.longitude]).addTo(map);
+            let formattedDate = new Date(post.created_at).toLocaleDateString("en-IN", {
+                year: "numeric",
+                month: "short",
+                day: "numeric"
+            });
+
+            marker.bindPopup(`
+                <div style="text-align: center; max-width: 200px;">
+                    <img src="/media/${post.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 5px;">
+                    <h4 style="margin: 5px 0; font-size: 16px; color: #333;">${post.name}</h4>
+                    <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Radius:</strong> ${post.radius} km</p>
+                    <p style="font-size: 14px; color: #777;"><strong>Posted on:</strong> ${formattedDate}</p>
+                </div>
+            `);
+        }
+    });
+}
+
+// Function to display nearest food post separately
+function displayNearestPost(userLat, userLon, foodPosts) {
+    let nearestPost = null;
+    let minDistance = Infinity;
+
+    foodPosts.forEach(post => {
+        if (post.latitude && post.longitude) {
+            let distance = calculateDistance(userLat, userLon, post.latitude, post.longitude);
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearestPost = post;
+            }
+        }
+    });
+
+    if (nearestPost) {
+        // Show the nearest post in an extra popup
+        let formattedDate = new Date(nearestPost.created_at).toLocaleDateString("en-IN", {
+            year: "numeric",
+            month: "short",
+            day: "numeric"
+        });
+
+        let marker = L.marker([nearestPost.latitude, nearestPost.longitude]).addTo(map);
+        marker.bindPopup(`
+            <div style="text-align: center; max-width: 200px; border: 2px solid red; padding: 5px; border-radius: 10px;">
+                <img src="/media/${nearestPost.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 5px;">
+                <h4 style="margin: 5px 0; font-size: 16px; color: red;">Nearest Post: ${nearestPost.name}</h4>
+                <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Radius:</strong> ${nearestPost.radius} km</p>
+                <p><strong>Nearest Distance:</strong> ${minDistance.toFixed(2)} km</p>
+                <p style="font-size: 14px; color: #777;"><strong>Posted on:</strong> ${formattedDate}</p>
+            </div>
+        `).openPopup();
+    }
+}
+
+// Function to get user location and highlight nearest post
 function getUserLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(position => {
             let userLat = position.coords.latitude;
             let userLon = position.coords.longitude;
 
-            let nearestPost = null;
-            let minDistance = Infinity;
-
-            let foodPosts = JSON.parse('{{ food_posts|escapejs }}'); // Ensure food posts data is loaded
-
-            foodPosts.forEach(post => {
-                if (post.latitude && post.longitude) {
-                    let distance = calculateDistance(userLat, userLon, post.latitude, post.longitude);
-                    if (distance < minDistance) {
-                        minDistance = distance;
-                        nearestPost = post;
-                    }
-                }
-            });
-
-            if (nearestPost) {
-                let formattedDate = new Date(nearestPost.created_at).toLocaleDateString("en-IN", {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric"
-                });
-
-                var marker = L.marker([nearestPost.latitude, nearestPost.longitude]).addTo(map);
-                marker.bindPopup(`
-                    <div class="popup-content">
-                        <img src="/media/${nearestPost.photo}" alt="Food Image">
-                        <h4>${nearestPost.name}</h4>
-                        <p><strong>Radius:</strong> ${nearestPost.radius} km</p>
-                        <p><strong>Distance:</strong> ${minDistance.toFixed(2)} km</p>
-                        <p><strong>Posted on:</strong> ${formattedDate}</p>
-                    </div>
-                `).openPopup();
-            }
+            // Fetch all food posts from backend
+            fetch(`/get_food_posts/`)  // Ensure this API returns food posts with lat/lon
+                .then(response => response.json())
+                .then(foodPosts => {
+                    displayAllPosts(foodPosts);  // Show all food posts first
+                    displayNearestPost(userLat, userLon, foodPosts);  // Highlight nearest post separately
+                })
+                .catch(error => console.error("Error fetching food posts:", error));
         }, error => {
             alert("Unable to retrieve location.");
         });
@@ -525,34 +589,23 @@ function getUserLocation() {
     }
 }
 
-// **Profile Menu Toggle**
-function setupProfileMenu() {
-    var profileImg = document.querySelector(".profile img");
-    var menu = document.getElementById("menu");
+// Initialize map and display food posts
+document.addEventListener("DOMContentLoaded", function () {
+    initializeMap();
+    getUserLocation();
+});
 
-    profileImg.addEventListener("click", function () {
-        menu.classList.toggle("show");
-    });
-
-    document.addEventListener("click", function (event) {
-        if (!menu.contains(event.target) && event.target !== profileImg) {
-            menu.classList.remove("show");
-        }
-    });
-}
-
-// **Toggle Scan and Meal Buttons**
-function setupToggleButtons() {
-    document.getElementById("scan-toggle").addEventListener("click", function () {
+    // Toggle buttons for Scan and Meal
+    document.getElementById("scan-toggle").addEventListener("click", function() {
         this.classList.toggle("active");
     });
 
-    document.getElementById("meal-toggle").addEventListener("click", function () {
+    document.getElementById("meal-toggle").addEventListener("click", function() {
         this.classList.toggle("active");
     });
-                        }
     </script>
 
 </body>
 </html>
 
+    
