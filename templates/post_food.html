@@ -550,7 +550,7 @@ button:hover {
             <div class="nav-item">
                 <a href="{% url 'notification' %}" class="chat">
                     <i class="fa-solid fa-bell"></i>
-                </a>document.addEventListener("DOMContentLoaded
+                </a>
             </div>
             <div class="nav-item">
                 <a href="{% url 'map' %}" class="chat">
@@ -585,9 +585,11 @@ button:hover {
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; OpenStreetMap contributors'
                 }).addTo(map);
-
+                
                 // Remove existing user marker if present
                 if (window.userMarker) map.removeLayer(window.userMarker);
+                // Move the map view to the user's location without adding a marker
+                map.setView([userLat, userLng], 15); // Adjust zoom level as needed
 
                 // Add marker for user location
                 window.userMarker = L.marker([userLat, userLng]).addTo(map)
