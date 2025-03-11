@@ -565,7 +565,7 @@ button:hover {
 
     <!-- JavaScript -->
     <script>
-    document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function () {
     let storedUsername = localStorage.getItem("username");
     if (storedUsername) {
         document.getElementById("username").textContent = storedUsername;
@@ -591,6 +591,8 @@ button:hover {
 
                 let nearestPost = null;
                 let minDistance = Infinity;
+                var foodPosts = JSON.parse('{{ food_posts|escapejs }}');
+                
 
                 if (typeof foodPosts !== "undefined" && foodPosts.length > 0) {
                     foodPosts.forEach(post => {
@@ -599,11 +601,13 @@ button:hover {
                             let foodLng = post.longitude;
                             let distance = getDistance(userLat, userLng, foodLat, foodLng).toFixed(2);
 
+                            // Find the nearest post
                             if (distance < minDistance) {
                                 minDistance = distance;
                                 nearestPost = post;
                             }
 
+                            // Add post markers
                             var marker = L.marker([foodLat, foodLng]).addTo(map);
                             marker.bindPopup(`
                                 <div style="text-align: center;">
@@ -619,10 +623,12 @@ button:hover {
                     });
                 }
 
+                // Remove previous route before drawing new one
                 if (window.routeControl) {
                     map.removeControl(window.routeControl);
                 }
 
+                // Draw the shortest path to the nearest post
                 if (nearestPost) {
                     window.routeControl = L.Routing.control({
                         waypoints: [
@@ -634,6 +640,7 @@ button:hover {
                             styles: [{ color: 'red', weight: 6 }]
                         }
                     }).addTo(map);
+                    console.log(`Nearest post: ${nearestPost.name}, Distance: ${minDistance} km`);
                 }
             },
             function (error) {
@@ -646,10 +653,10 @@ button:hover {
     }
 });
 
-// Function to calculate distance
+// Function to calculate distance (Haversine formula)
 function getDistance(lat1, lon1, lat2, lon2) {
     function toRad(x) { return x * Math.PI / 180; }
-    var R = 6371;
+    var R = 6371; // Earth's radius in km
     var dLat = toRad(lat2 - lat1);
     var dLon = toRad(lon2 - lon1);
     var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
@@ -658,8 +665,7 @@ function getDistance(lat1, lon1, lat2, lon2) {
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
 }
-                
-
+    
 // Profile menu toggle function
 function toggleMenu() {
     var menu = document.getElementById("menu");
