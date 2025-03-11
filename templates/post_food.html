@@ -576,6 +576,30 @@ button:hover {
 
     <!-- JavaScript -->
     <script>
+        // Function to get the user's current location
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                let lat = position.coords.latitude;
+                let lng = position.coords.longitude;
+                document.getElementById("latitude").value = lat;
+                document.getElementById("longitude").value = lng;
+                console.log("Latitude:", lat, "Longitude:", lng);
+
+                // Initialize Map
+                initMap(lat, lng);
+            },
+            (error) => {
+                alert("Geolocation is not enabled. Please enable it in your browser.");
+                console.error("Error Code = " + error.code + " - " + error.message);
+            }
+        );
+    } else {
+        alert("Geolocation is not supported by this browser.");
+    }
+}
+        
      document.addEventListener("DOMContentLoaded", function () {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
