@@ -592,6 +592,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 let minDistance = Infinity;
                 let nearestPost = null;
+                var foodPosts = JSON.parse('{{ food_posts|escapejs }}');
+                
 
                 // Check if foodPosts is defined
                 if (typeof foodPosts !== "undefined" && Array.isArray(foodPosts) && foodPosts.length > 0) {
