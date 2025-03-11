@@ -11,385 +11,417 @@
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-routing-machine/3.2.12/leaflet-routing-machine.min.js"></script>
     <style>
-        /* ===== GENERAL STYLES ===== */
-        body {
-            font-family: Arial, sans-serif;
-            background: yellow;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-        }
-        
-        h1 {
-            font-size: 80px;
-            color: black;
-            margin-top: 30px;
-        }
+     /* ===== GENERAL STYLES ===== */
+body {
+    font-family: Arial, sans-serif;
+    background: yellow;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
 
-        /* ===== CONTAINER LAYOUT ===== */
-        .container {
-            background: #ff6666;
-            display: flex;
-            justify-content: space-between;
-            margin: 30px 180px;
-            padding: 20px;
-            gap: 30px;
-            border-radius: 20px;
-            border: solid white;
-        }
-        
-        .divider {
-            z-index: 1;
-            width: 3px;
-            background-color: black;
-        }
+/* HEADER STYLES */
+h1 {
+    font-size: 5vw; /* Responsive font size */
+    color: black;
+    margin-top: 30px;
+}
 
-        .box {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            text-align: center;
-            align-items: center;
-            background: #ff6666;
-            color: white;
-        }
+/* ===== CONTAINER LAYOUT ===== */
+.container {
+    background: #ff6666;
+    display: flex;
+    justify-content: space-between;
+    margin: 20px;
+    padding: 20px;
+    gap: 20px;
+    border-radius: 20px;
+    border: solid white;
+}
 
-        #box1 {
-            gap: 20px;
-        }
+.divider {
+    z-index: 1;
+    width: 3px;
+    background-color: black;
+    display: none; /* Hide on small screens */
+}
 
-        /* ===== FORM ELEMENTS ===== */
-        .box input, 
-        .box select {
-            width: 90%;
-            padding: 8px;
-            margin: 8px 0;
-            border: none;
-            border-radius: 5px;
-            outline: none;
-        }
+.box {
+    flex: 1 1 calc(33.33% - 20px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    background: #ff6666;
+    color: white;
+    margin: 10px;
+}
 
-        .box label {
-            display: flex;
-            margin-left: 15px;
-            font-size: 20px;
-            font-weight: bold;
-            justify-content: space-between;
-        }
+#box1 {
+    gap: 20px;
+}
 
-        form {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
+/* ===== FORM ELEMENTS ===== */
+.box input,
+.box select {
+    width: 90%;
+    padding: 8px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+}
 
-        button {
-            width: 100%;
-            margin-top: 15px;
-            padding: 10px;
-            background: linear-gradient(to right, rgb(91, 43, 236), rgb(59, 152, 224));
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
+.box label {
+    display: flex;
+    margin-left: 15px;
+    font-size: 1.2em; /* Adjust font size */
+    font-weight: bold;
+    justify-content: space-between;
+}
 
-        button:hover {
-            color: black;
-            background: yellow;
-        }
-        
-        /* ===== MEAL CARD STYLES ===== */
-        .meal-card {
-            background: white;
-            color: black;
-            padding: 10px;
-            border-radius: 10px;
-            text-align: left;
-        }
-        
-        .meal-card img {
-            width: 100%;
-            height: 120px;
-            border-radius: 8px;
-        }
-        
-        .meal-card p {
-            margin: 5px 0;
-        }
+form {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
 
-        .spread-btn {
-            margin: 5px;
-            background: linear-gradient(to right, rgb(91, 43, 236), rgb(59, 152, 224));
-            text-align: center;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
+button {
+    width: 100%;
+    margin-top: 15px;
+    padding: 10px;
+    background: linear-gradient(to right, rgb(91, 43, 236), rgb(59, 152, 224));
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
 
-        /* ===== MAP PANEL ===== */
-        #map {
-            z-index: 1;
-            background: white;
-            height: 100%;
-            width: 100%;
-            border-radius: 10px;
-        }
+button:hover {
+    color: black;
+    background: yellow;
+}
 
-        /* ===== BOTTOM MENU ===== */
-        .bottom-menu {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-        }
+/* ===== MEAL CARD STYLES ===== */
+.meal-card {
+    background: white;
+    color: black;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: left;
+}
 
-        .icon {
-            width: 40px;
-            height: 40px;
-            background: black;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-        
-        .chat-icon {
-            background: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            border: 2px solid black;
-            cursor: pointer;
-        }
+.meal-card img {
+    width: 100%;
+    height: 120px;
+    border-radius: 8px;
+}
 
-        /* ===== PROFILE MENU ===== */
-        .profile {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            text-align: center;
-        }
+.meal-card p {
+    margin: 5px 0;
+}
 
-        .profile img {
-            cursor: pointer;
-            position: absolute;
-            top: 40px;
-            right: 40px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 2px solid black;
-        }
+.spread-btn {
+    margin: 5px;
+    background: linear-gradient(to right, rgb(91, 43, 236), rgb(59, 152, 224));
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
 
-        .menu {
-            cursor: pointer;
-            position: absolute;
-            top: 90px;
-            right: 20px;
-            width: 200px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            z-index: 1000;
-        }
-    
-        .menu.show {
-            z-index: 100;
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-    
-        .menu a {
-            display: block;
-            padding: 10px 15px;
-            text-decoration: none;
-            color: black;
-            font-size: 16px;
-            transition: background 0.3s;
-            text-align: left;
-        }
-    
-        .menu a:hover {
-            cursor: pointer;
-            background: lightgray;
-        }
+/* ===== MAP PANEL ===== */
+#map {
+    z-index: 1;
+    background: white;
+    height: 100%;
+    width: 100%;
+    border-radius: 10px;
+    min-height: 300px; /* Minimum height for map */
+}
 
-        /* ===== PHOTO INPUT ===== */
-        .photoinput {
-            padding: 10px;
-            font-size: 16px;
-            border: 10px solid #060606;
-            border-radius: 5px;
-        }
+/* ===== PROFILE MENU ===== */
+.profile {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
 
-        /* ===== MEAL CARD ===== */
-        .card {
-            width: 100%;
-            color: #060606;
-            background-color: #ffebe7;
-            border-radius: 20px;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            text-align: center;
-            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
-            border: 3px solid black;
-            position: relative;
-        }
+.profile img {
+    cursor: pointer;
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid black;
+}
 
-        .cart-profile {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
+.menu {
+    cursor: pointer;
+    position: absolute;
+    top: 90px;
+    right: 20px;
+    width: 200px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 1000;
+}
 
-        .cart-profile img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: 2px solid black;
-        }
+.menu.show {
+    z-index: 100;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
 
-        .cart-profile h2 {
-            font-size: 20px;
-            font-weight: bold;
-        }
+.menu a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: black;
+    font-size: 16px;
+    transition: background 0.3s;
+    text-align: left;
+}
 
-        .time {
-            font-size: 12px;
-            color: rgb(8, 8, 8);
-        }
+.menu a:hover {
+    cursor: pointer;
+    background: lightgray;
+}
 
-        .divider2 {
-            width: 100%;
-            height: 3px;
-            background-color: black;
-            margin: 10px 0;
-            position: relative;
-        }
+/* ===== PHOTO INPUT ===== */
+.photoinput {
+    padding: 10px;
+    font-size: 16px;
+    border: 10px solid #060606;
+    border-radius: 5px;
+}
 
-        .divider1 {
-            width: 100%;
-            height: 1px;
-            background-color: black;
-            margin: 10px 0;
-            position: relative;
-        }
+/* ===== MEAL CARD ===== */
+.card {
+    width: 100%;
+    color: #060606;
+    background-color: #ffebe7;
+    border-radius: 20px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+    border: 3px solid black;
+    position: relative;
+}
 
-        .meal {
-            text-align: left;
-        }
+.cart-profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
 
-        .meal img {
-            width: 80px;
-            height: 80px;
-            border-radius: 10px;
-            border: 2px solid black;
-        }
+.cart-profile img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid black;
+}
 
-        .meal h3 {
-            font-size: 18px;
-            font-weight: bold;
-        }
+.cart-profile h2 {
+    font-size: 20px;
+    font-weight: bold;
+}
 
-        .meal p {
-            font-size: 12px;
-            color: rgb(14, 14, 14);
-        }
+.time {
+    font-size: 12px;
+    color: rgb(8, 8, 8);
+}
 
-        .spread-btn {
-            margin: 5px;
-            font-size: 30px;
-            border-radius: 500px;
-            background: linear-gradient(to right, rgb(91, 43, 236), rgb(59, 152, 224));
-        }
-        
-        /* ===== BOTTOM NAVIGATION BAR ===== */
-        .nav-bottom {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 20px;
-        }
+.divider2 {
+    width: 100%;
+    height: 3px;
+    background-color: black;
+    margin: 10px 0;
+    position: relative;
+}
 
-        .navbar {
-            z-index: 1;
-            display: flex;
-            align-items: center;
-            margin: 20px;
-            background: linear-gradient(to right, red, orange);
-            padding: 12px 20px;
-            border-radius: 40px;
-            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
-            gap: 20px;
-        }
+.divider1 {
+    width: 100%;
+    height: 1px;
+    background-color: black;
+    margin: 10px 0;
+    position: relative;
+}
 
-        .nav-item {
-            z-index: 1;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            background-color: transparent;
-            color: rgb(0, 0, 0);
-            border-radius: 50%;
-            cursor: pointer;
-            transition: transform 0.3s ease-in-out, background 0.3s;
-        }
+.meal {
+    text-align: left;
+}
 
-        .nav-item:hover {
-            background-color: lightgreen;
-            transform: scale(1.2);
-        }
+.meal img {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    border: 2px solid black;
+}
 
-        .navbar a {
-            text-decoration: none;
-            color: inherit;       
-        }
+.meal h3 {
+    font-size: 18px;
+    font-weight: bold;
+}
 
-        .chat-button {
-            margin-top: 30px;
-            margin-bottom: 30px;
-            text-decoration: none;
-            background: white;
-            color: black;
-            padding: 8px 12px;
-            padding-bottom: 15px;
-            padding-top: 15px;
-            border-radius: 16px;
-            font-size: 18px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: transform 0.3s ease-in-out;
-        }
+.meal p {
+    font-size: 12px;
+    color: rgb(14, 14, 14);
+}
 
-        .chat-button a {
+/* ===== BOTTOM MENU ===== */
+.nav-bottom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.navbar {
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    margin: 20px;
+    background: linear-gradient(to right, red, orange);
+    padding: 12px 20px;
+    border-radius: 40px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+    gap: 20px;
+}
+
+.nav-item {
+    z-index: 1;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    background-color: transparent;
+    color: rgb(0, 0, 0);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out, background 0.3s;
+}
+
+.nav-item:hover {
+    background-color: lightgreen;
+    transform: scale(1.2);
+}
+
+.navbar a {
+    text-decoration: none;
+    color: inherit;
+}
+.chat-button a {
             text-decoration: none;
             color: inherit;
         }
        
-        .chat-button:hover {
-            background: lightgreen;
-            transform: scale(1.1);
-        }
+      
+/* Chat Button */
+.chat-button {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    text-decoration: none;
+    background: white;
+    color: black;
+    padding: 8px 12px;
+    padding-bottom: 15px;
+    padding-top: 15px;
+    border-radius: 16px;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+}
+
+.chat-button:hover {
+    background: lightgreen;
+    transform: scale(1.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Stack containers vertically */
+        margin: 10px;
+    }
+    
+    .box {
+        flex: 1 1 100%; /* Full width for boxes on small screens */
+        margin: 10px 0;
+    }
+
+    .divider {
+        display: block; /* Show divider on smaller screens */
+        margin-top: 20px;
+        width: 100%;
+    }
+
+    #map {
+        height: 300px; /* Adjust map height for small screens */
+    }
+    
+    h1 {
+        font-size: 7vw; /* Adjust title size for smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 9vw; /* Even smaller font size */
+    }
+
+    .card {
+        padding: 10px;
+    }
+
+    .meal img {
+        width: 60px; /* Smaller images on small screens */
+        height: 60px;
+    }
+}
+/* Media Query for Larger Screens (Desktop) */
+@media screen and (min-width: 1024px) {
+    /* Ensure the container is arranged in 3 boxes per row */
+    .container {
+        display: flex;
+       
+        justify-content: space-between;
+    }
+
+    /* Flex settings for each box */
+    .box {
+        flex: 1 1 calc(33.33% - 20px); /* Each box takes up 1/3 of the width */
+    }
+
+    /* Adjust the map size */
+    #map {
+        height: 350px;
+    }
+}
     </style>
 </head>
 <body>
