@@ -608,7 +608,12 @@ button:hover {
 
                             // Add markers for food posts
                             let marker = L.marker([foodLat, foodLng]).addTo(map)
-                                .bindPopup(`<h4>${post.name}</h4><p>Distance: ${distance} km</p>`);
+                                .bindPopup(`<div style="text-align: center;">
+                <img src="/media/${post.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px;">
+                <h4>${post.name}</h4>
+                <p><strong>Distance:</strong> ${getDistance(userLat, userLng, post.latitude, post.longitude)} km</p>
+                <button onclick="updateRoute(${post.latitude}, ${post.longitude})" style="margin-top: 5px; padding: 5px 10px; background-color: #ff4d4d; color: white; border: none; cursor: pointer; border-radius: 5px;">Navigate</button>
+            </div>`);
                         }
                     });
 
@@ -662,7 +667,7 @@ function getDistance(lat1, lon1, lat2, lon2) {
     return R * c;
 }
 // Store the routing control globally to update it later
-let routeControl = null;
+let routeControl = true;
 
 // Function to update the route to the selected post
 function updateRoute(destinationLat, destinationLng) {
