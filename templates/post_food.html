@@ -575,7 +575,8 @@ button:hover {
 
     <!-- JavaScript -->
     <script>
-  // Initialize the map
+
+    // Initialize the map
 var map = L.map('map').setView([20.5937, 78.9629], 5); // Default India
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
@@ -599,6 +600,8 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c; // Distance in km
 }
+
+// Function to get user location
 function getUserLocation(callback) {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -606,14 +609,12 @@ function getUserLocation(callback) {
                 let userLat = position.coords.latitude;
                 let userLng = position.coords.longitude;
 
-                // ✅ Set latitude and longitude input fields
                 document.getElementById("latitude").value = userLat;
                 document.getElementById("longitude").value = userLng;
 
                 var userLocation = [userLat, userLng];
                 map.setView(userLocation, 12); // Focus on user's location
 
-                // ✅ Show user's location on the map
                 L.marker(userLocation).addTo(map)
                     .bindPopup("You are here")
                     .openPopup();
@@ -629,40 +630,19 @@ function getUserLocation(callback) {
     }
 }
 
-// ✅ Call the function on page load
+// Call the function on page load
 window.onload = function() {
     getUserLocation(function(userLocation) {
         console.log("User location set:", userLocation);
     });
 };
- 
-
-// Function to find the nearest food post
-function findNearestPost(userLocation) {
-    let nearestPost = null;
-    let minDistance = Infinity;
-
-    foodPosts.forEach(post => {
-        if (post.latitude && post.longitude) {
-            let distance = haversineDistance(userLocation[0], userLocation[1], post.latitude, post.longitude);
-            if (distance < minDistance) {
-                minDistance = distance;
-                nearestPost = post;
-            }
-        }
-    });
-
-    return { nearestPost, minDistance };
-}
 
 // Function to show shortest route
-function showShortestRoute(start, end, distance, marker) {
-    // Remove previous route if exists
+function showShortestRoute(start, end, distance, marker, post) {
     if (routeControl) {
         map.removeControl(routeControl);
     }
 
-    // Show route on map
     routeControl = L.Routing.control({
         waypoints: [L.latLng(start), L.latLng(end)],
         routeWhileDragging: false,
@@ -672,13 +652,13 @@ function showShortestRoute(start, end, distance, marker) {
         }
     }).addTo(map);
 
-    // Update only the selected marker's popup with the distance
+    // ✅ Correct the nearestPost reference by using the clicked `post`
     marker.setPopupContent(`
         <div style="text-align: center; max-width: 200px;">
-            <img src="/media/${nearestPost.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 5px;">
-            <h4 style="margin: 5px 0; font-size: 16px; color: #333;">${nearestPost.name}</h4>
-            <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Radius:</strong> ${nearestPost.radius} km</p>
-            <p style="font-size: 14px; color: #777;"><strong>Posted on:</strong> ${new Date(nearestPost.created_at).toLocaleDateString("en-IN", {
+            <img src="/media/${post.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 5px;">
+            <h4 style="margin: 5px 0; font-size: 16px; color: #333;">${post.name}</h4>
+            <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Radius:</strong> ${post.radius} km</p>
+            <p style="font-size: 14px; color: #777;"><strong>Posted on:</strong> ${new Date(post.created_at).toLocaleDateString("en-IN", {
                 year: "numeric", month: "short", day: "numeric"
             })}</p>
             <p style="color: green;"><strong>Distance:</strong> ${distance.toFixed(2)} km</p>
@@ -691,7 +671,7 @@ function showShortestRoute(start, end, distance, marker) {
 foodPosts.forEach(post => {
     if (post.latitude && post.longitude) {
         var marker = L.marker([post.latitude, post.longitude]).addTo(map);
-        
+
         marker.bindPopup(`
             <div style="text-align: center; max-width: 200px;">
                 <img src="/media/${post.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 5px;">
@@ -706,26 +686,14 @@ foodPosts.forEach(post => {
         
         markers.push(marker);
 
-        // ✅ Update: Click event for THIS specific marker
+        // ✅ Click event for THIS specific marker
         marker.on('click', function () {
             getUserLocation(function(userLocation) {
                 let postLocation = [post.latitude, post.longitude]; // This specific post's location
                 let distance = haversineDistance(userLocation[0], userLocation[1], postLocation[0], postLocation[1]);
 
                 // ✅ Show route from user location to the clicked post
-                showShortestRoute(userLocation, postLocation, distance, marker);
-            });
-        });
-    }
-});
-
-        // Add click event to find shortest path from user location
-        marker.on('click', function () {
-            getUserLocation(function(userLocation) {
-                let { nearestPost, minDistance } = findNearestPost(userLocation);
-                if (nearestPost) {
-                    showShortestRoute(userLocation, [nearestPost.latitude, nearestPost.longitude], minDistance, marker);
-                }
+                showShortestRoute(userLocation, postLocation, distance, marker, post);
             });
         });
     }
@@ -733,12 +701,26 @@ foodPosts.forEach(post => {
 
 // Automatically get location and find the nearest food post when the page loads
 getUserLocation(function(userLocation) {
-    let { nearestPost, minDistance } = findNearestPost(userLocation);
+    let nearestPost = null;
+    let minDistance = Infinity;
+
+    foodPosts.forEach(post => {
+        if (post.latitude && post.longitude) {
+            let distance = haversineDistance(userLocation[0], userLocation[1], post.latitude, post.longitude);
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearestPost = post;
+            }
+        }
+    });
+
     if (nearestPost) {
-        // Show route to the nearest food post automatically
-        let marker = markers.find(m => m.getLatLng().lat === nearestPost.latitude && m.getLatLng().lng === nearestPost.longitude);
+        let marker = markers.find(m => 
+            m.getLatLng().lat === nearestPost.latitude && 
+            m.getLatLng().lng === nearestPost.longitude
+        );
         if (marker) {
-            showShortestRoute(userLocation, [nearestPost.latitude, nearestPost.longitude], minDistance, marker);
+            showShortestRoute(userLocation, [nearestPost.latitude, nearestPost.longitude], minDistance, marker, nearestPost);
         }
     }
 });
