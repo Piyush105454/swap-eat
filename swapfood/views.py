@@ -80,8 +80,8 @@ def post_food(request):
         if form.is_valid():
             food_post = form.save(commit=False)
             food_post.user = request.user  # Associate the logged-in user
-            food_post.latitude = request.POST.get("latitude")
-            food_post.longitude = request.POST.get("longitude")
+            food_post.latitude = float(request.POST.get("latitude",0))
+            food_post.longitude = float(request.POST.get("longitude",0))
             food_post.save()
 
             # If AJAX request, return JSON response
