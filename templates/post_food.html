@@ -421,7 +421,18 @@ button:hover {
         height: 350px;
     }
 }
-    </style>
+ .leaflet-routing-container {
+    position: absolute !important;
+    top: 10px;  /* Adjust as needed */
+    left: 10px;  /* Adjust as needed */
+    width: 300px; /* Set a fixed width */
+    background: white; /* Ensure visibility */
+    z-index: 1000; /* Make sure it's above other elements */
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+ }
+  </style>
 </head>
 <body>
     <!-- Header Section -->
