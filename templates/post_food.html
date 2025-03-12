@@ -599,8 +599,7 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c; // Distance in km
 }
-
- function getUserLocation(callback) {
+function getUserLocation(callback) {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             function(position) {
@@ -636,10 +635,7 @@ window.onload = function() {
         console.log("User location set:", userLocation);
     });
 };
-    } else {
-        alert("Geolocation is not supported by this browser.");
-    }
-}
+ 
 
 // Function to find the nearest food post
 function findNearestPost(userLocation) {
