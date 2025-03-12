@@ -572,7 +572,22 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 var foodPosts = JSON.parse('{{ food_posts|escapejs }}'); // Ensure valid JSON
 var markers = [];
-var routeControl; // Store route control to remove previous routes
+var routeControl = null; // Store route control to remove previous routes
+
+// Function to calculate distance using Haversine formula
+function haversineDistance(lat1, lon1, lat2, lon2) {
+    function toRad(x) {
+        return x * Math.PI / 180;
+    }
+    var R = 6371; // Earth's radius in km
+    var dLat = toRad(lat2 - lat1);
+    var dLon = toRad(lon2 - lon1);
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distance in km
+}
 
 // Function to get user's current location
 function getUserLocation(callback) {
@@ -590,56 +605,81 @@ function getUserLocation(callback) {
     }
 }
 
-// Function to calculate and display shortest route
-function showShortestRoute(start, end, marker) {
+// Function to find the nearest food post
+function findNearestPost(userLocation) {
+    let nearestPost = null;
+    let minDistance = Infinity;
+
+    foodPosts.forEach(post => {
+        if (post.latitude && post.longitude) {
+            let distance = haversineDistance(userLocation[0], userLocation[1], post.latitude, post.longitude);
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearestPost = post;
+            }
+        }
+    });
+
+    return { nearestPost, minDistance };
+}
+
+// Function to show shortest route
+function showShortestRoute(start, end, distance, marker) {
     // Remove previous route if exists
     if (routeControl) {
         map.removeControl(routeControl);
     }
 
+    // Show route on map
     routeControl = L.Routing.control({
         waypoints: [L.latLng(start), L.latLng(end)],
-        routeWhileDragging: true,
+        routeWhileDragging: false,
         createMarker: function() { return null; }, // Hide route markers
         lineOptions: {
             styles: [{ color: 'blue', weight: 5 }]
         }
     }).addTo(map);
 
-    // Update distance in the marker popup
-    routeControl.on('routesfound', function (e) {
-        var distance = e.routes[0].summary.totalDistance / 1000; // Convert meters to km
-        marker.setPopupContent(marker.getPopup().getContent() + `<p style="color: green;"><strong>Distance:</strong> ${distance.toFixed(2)} km</p>`);
-        marker.openPopup();
-    });
+    // Update only the selected marker's popup with the distance
+    marker.setPopupContent(`
+        <div style="text-align: center; max-width: 200px;">
+            <img src="/media/${nearestPost.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 5px;">
+            <h4 style="margin: 5px 0; font-size: 16px; color: #333;">${nearestPost.name}</h4>
+            <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Radius:</strong> ${nearestPost.radius} km</p>
+            <p style="font-size: 14px; color: #777;"><strong>Posted on:</strong> ${new Date(nearestPost.created_at).toLocaleDateString("en-IN", {
+                year: "numeric", month: "short", day: "numeric"
+            })}</p>
+            <p style="color: green;"><strong>Distance:</strong> ${distance.toFixed(2)} km</p>
+        </div>
+    `);
+    marker.openPopup();
 }
 
 // Add markers for food posts
 foodPosts.forEach(post => {
     if (post.latitude && post.longitude) {
-        var formattedDate = new Date(post.created_at).toLocaleDateString("en-IN", {
-            year: "numeric",
-            month: "short",
-            day: "numeric"
-        });
-
         var marker = L.marker([post.latitude, post.longitude]).addTo(map);
         marker.bindPopup(`
             <div style="text-align: center; max-width: 200px;">
                 <img src="/media/${post.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 5px;">
                 <h4 style="margin: 5px 0; font-size: 16px; color: #333;">${post.name}</h4>
                 <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Radius:</strong> ${post.radius} km</p>
-                <p style="font-size: 14px; color: #777;"><strong>Posted on:</strong> ${formattedDate}</p>
-                <p style="color: green;"><strong>Click to see route</strong></p>
+                <p style="font-size: 14px; color: #777;"><strong>Posted on:</strong> ${new Date(post.created_at).toLocaleDateString("en-IN", {
+                    year: "numeric", month: "short", day: "numeric"
+                })}</p>
+                <p style="color: green;"><strong>Click to find nearest route</strong></p>
             </div>
         `);
         
         markers.push(marker);
 
-        // Add click event to calculate shortest path from user location
+        // Add click event to find shortest path from user location
         marker.on('click', function () {
             getUserLocation(function(userLocation) {
-                showShortestRoute(userLocation, [post.latitude, post.longitude], marker);
+                let { nearestPost, minDistance } = findNearestPost(userLocation);
+                if (nearestPost) {
+                    showShortestRoute(userLocation, [nearestPost.latitude, nearestPost.longitude], minDistance, marker);
+                }
             });
         });
     }
@@ -657,6 +697,21 @@ document.addEventListener("click", function (event) {
 
     if (!menu.contains(event.target) && event.target !== profileImg) {
         menu.classList.remove("show");
+    }
+});
+
+// Move turn-by-turn directions above the map
+document.addEventListener("DOMContentLoaded", function () {
+    let routingContainer = document.querySelector(".leaflet-routing-container");
+    if (routingContainer) {
+        routingContainer.style.position = "absolute";
+        routingContainer.style.top = "10px";
+        routingContainer.style.right = "10px";
+        routingContainer.style.zIndex = "1000";
+        routingContainer.style.background = "white";
+        routingContainer.style.padding = "5px";
+        routingContainer.style.borderRadius = "5px";
+        routingContainer.style.boxShadow = "0 0 5px rgba(0, 0, 0, 0.2)";
     }
 });
 // Profile menu toggle function
