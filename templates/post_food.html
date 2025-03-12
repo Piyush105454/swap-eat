@@ -600,12 +600,15 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
     return R * c; // Distance in km
 }
 
-// Function to get user's current location
+// Function to get user's current location on page load
 function getUserLocation(callback) {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             function(position) {
-                callback([position.coords.latitude, position.coords.longitude]);
+                var userLocation = [position.coords.latitude, position.coords.longitude];
+                map.setView(userLocation, 12); // Focus on user's location
+                L.marker(userLocation).addTo(map).bindPopup("You are here").openPopup();
+                callback(userLocation);
             },
             function() {
                 alert("Unable to retrieve your location.");
@@ -696,33 +699,15 @@ foodPosts.forEach(post => {
     }
 });
 
-// Profile menu toggle function
-function toggleMenu() {
-    var menu = document.getElementById("menu");
-    menu.classList.toggle("show");
-}
-
-document.addEventListener("click", function (event) {
-    var menu = document.getElementById("menu");
-    var profileImg = document.querySelector(".profile img");
-
-    if (!menu.contains(event.target) && event.target !== profileImg) {
-        menu.classList.remove("show");
-    }
-});
-
-// Move turn-by-turn directions above the map
-document.addEventListener("DOMContentLoaded", function () {
-    let routingContainer = document.querySelector(".leaflet-routing-container");
-    if (routingContainer) {
-        routingContainer.style.position = "absolute";
-        routingContainer.style.top = "10px";
-        routingContainer.style.right = "10px";
-        routingContainer.style.zIndex = "1000";
-        routingContainer.style.background = "white";
-        routingContainer.style.padding = "5px";
-        routingContainer.style.borderRadius = "5px";
-        routingContainer.style.boxShadow = "0 0 5px rgba(0, 0, 0, 0.2)";
+// Automatically get location and find the nearest food post when the page loads
+getUserLocation(function(userLocation) {
+    let { nearestPost, minDistance } = findNearestPost(userLocation);
+    if (nearestPost) {
+        // Show route to the nearest food post automatically
+        let marker = markers.find(m => m.getLatLng().lat === nearestPost.latitude && m.getLatLng().lng === nearestPost.longitude);
+        if (marker) {
+            showShortestRoute(userLocation, [nearestPost.latitude, nearestPost.longitude], minDistance, marker);
+        }
     }
 });
 // Profile menu toggle function
