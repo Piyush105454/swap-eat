@@ -691,6 +691,7 @@ function showShortestRoute(start, end, distance, marker) {
 foodPosts.forEach(post => {
     if (post.latitude && post.longitude) {
         var marker = L.marker([post.latitude, post.longitude]).addTo(map);
+        
         marker.bindPopup(`
             <div style="text-align: center; max-width: 200px;">
                 <img src="/media/${post.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 5px;">
@@ -704,6 +705,19 @@ foodPosts.forEach(post => {
         `);
         
         markers.push(marker);
+
+        // ✅ Update: Click event for THIS specific marker
+        marker.on('click', function () {
+            getUserLocation(function(userLocation) {
+                let postLocation = [post.latitude, post.longitude]; // This specific post's location
+                let distance = haversineDistance(userLocation[0], userLocation[1], postLocation[0], postLocation[1]);
+
+                // ✅ Show route from user location to the clicked post
+                showShortestRoute(userLocation, postLocation, distance, marker);
+            });
+        });
+    }
+});
 
         // Add click event to find shortest path from user location
         marker.on('click', function () {
