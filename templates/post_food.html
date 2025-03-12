@@ -8,9 +8,8 @@
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">    
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-routing-machine/3.2.12/leaflet-routing-machine.min.js"></script>
-    <style>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+  <style>
      /* ===== GENERAL STYLES ===== */
 body {
     font-family: Arial, sans-serif;
@@ -137,7 +136,7 @@ button:hover {
 /* ===== MAP PANEL ===== */
 #map {
     z-index: 1;
-    background: white;
+   
     height: 100%;
     width: 100%;
     border-radius: 10px;
@@ -565,159 +564,101 @@ button:hover {
 
     <!-- JavaScript -->
     <script>
-    document.addEventListener("DOMContentLoaded", function () {
-    let storedUsername = localStorage.getItem("username");
-    if (storedUsername) {
-        document.getElementById("username").textContent = storedUsername;
-    }
+  // Initialize the map
+var map = L.map('map').setView([20.5937, 78.9629], 5); // Default India
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
 
+var foodPosts = JSON.parse('{{ food_posts|escapejs }}'); // Ensure valid JSON
+var markers = [];
+var routeControl; // Store route control to remove previous routes
+
+// Function to get user's current location
+function getUserLocation(callback) {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
-            function (position) {
-                let userLat = position.coords.latitude;
-                let userLng = position.coords.longitude;
-
-                document.getElementById("latitude").value = userLat;
-                document.getElementById("longitude").value = userLng;
-
-                
-                foodPosts.forEach(post => {
-                    if (post.latitude && post.longitude) {
-                        var formattedDate = new Date(post.created_at).toLocaleDateString("en-IN", {
-                            year: "numeric", month: "short", day: "numeric"
-                     // Initialize the map
-var map = L.map('map').setView([yourLatitude, yourLongitude], 13);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-
-// Store user's location marker
-var myLocationMarker = L.marker([yourLatitude, yourLongitude], { color: 'blue' }).addTo(map);
-
-// Predefined post markers (replace with actual coordinates)
-var postMarkers = [
-    L.marker([postLat1, postLng1]).addTo(map),
-    L.marker([postLat2, postLng2]).addTo(map),
-    L.marker([postLat3, postLng3]).addTo(map) // Add as many as needed
-];
-
-// Function to find the nearest post marker
-function findNearestMarker() {
-    var myLocation = myLocationMarker.getLatLng();
-    var nearestMarker = null;
-    var minDistance = Infinity;
-
-    postMarkers.forEach(marker => {
-        let distance = myLocation.distanceTo(marker.getLatLng());
-        if (distance < minDistance) {
-            minDistance = distance;
-            nearestMarker = marker;
-        }
-    });
-
-    return nearestMarker;
-}
-
-// Function to draw the shortest path
-var routeLayer;
-function drawShortestPath() {
-    var nearestMarker = findNearestMarker();
-    if (!nearestMarker) return;
-
-    if (routeLayer) {
-        map.removeLayer(routeLayer); // Remove previous path
-    }
-
-    routeLayer = L.polyline([
-        myLocationMarker.getLatLng(),
-        nearestMarker.getLatLng()
-    ], { color: 'blue' }).addTo(map);
-}
-
-// Update location & redraw path when position changes
-map.on('locationfound', function(e) {
-    myLocationMarker.setLatLng(e.latlng); // Update location
-    drawShortestPath(); // Recalculate shortest path
-});
-
-// Get user location
-map.locate({ setView: true, watch: true, enableHighAccuracy: true });
-
-// Redraw path on zoom change (without adding markers)
-map.on('zoomend', drawShortestPath);
-
-// Ensure only post markers & user location marker exist (no extra markers)
-map.on('zoomend', function() {
-    postMarkers.forEach(marker => marker.addTo(map)); // Re-add post markers if removed
-    myLocationMarker.addTo(map); // Ensure user location marker is there
-});   
-
-                        let foodLat = post.latitude;
-                        let foodLng = post.longitude;
-                        let distance = getDistance(userLat, userLng, foodLat, foodLng).toFixed(2);
-
-                        if (distance < minDistance) {
-                            minDistance = distance;
-                            nearestPost = post;
-                        }
-
-                        // Add food post markers and store in array
-                        var marker = L.marker([foodLat, foodLng]).addTo(map);
-                        marker.bindPopup(`
-                            <div style="text-align: center; max-width: 200px;">
-                                <img src="/media/${post.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 5px;">
-                                <h4 style="margin: 5px 0; font-size: 16px; color: #333;">${post.name}</h4>
-                                <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Radius:</strong> ${post.radius} km</p>
-                                <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Location:</strong> ${post.location}</p>
-                                <p style="font-size: 14px; color: #d9534f; font-weight: bold; margin: 5px 0;"><strong>Distance:</strong> ${distance} km</p>
-                                <p style="font-size: 14px; color: #777;"><strong>Posted on:</strong> ${formattedDate}</p>
-                            </div>
-                        `);
-                        window.foodMarkers.push(marker);
-                    }
-                });
-
-                // Remove existing route if present
-                if (window.routeControl) {
-                    map.removeControl(window.routeControl);
-                }
-
-                // Draw shortest path with custom color
-                if (nearestPost) {
-                    window.routeControl = L.Routing.control({
-                        waypoints: [
-                            L.latLng(userLat, userLng),
-                            L.latLng(nearestPost.latitude, nearestPost.longitude)
-                        ],
-                        routeWhileDragging: true,
-                        lineOptions: {
-                            styles: [{ color: 'red', weight: 6 }]  // 🔥 Change path color here
-                        }
-                    }).addTo(map);
-                    console.log(`Nearest post: ${nearestPost.name}, Distance: ${minDistance} km`);
-                }
+            function(position) {
+                callback([position.coords.latitude, position.coords.longitude]);
             },
-            function (error) {
-                console.error("Error detecting location:", error.message);
-                alert("Please enable location services to continue.");
+            function() {
+                alert("Unable to retrieve your location.");
             }
         );
     } else {
-        alert("Geolocation is not supported by your browser.");
+        alert("Geolocation is not supported by this browser.");
+    }
+}
+
+// Function to calculate and display shortest route
+function showShortestRoute(start, end, marker) {
+    // Remove previous route if exists
+    if (routeControl) {
+        map.removeControl(routeControl);
+    }
+
+    routeControl = L.Routing.control({
+        waypoints: [L.latLng(start), L.latLng(end)],
+        routeWhileDragging: true,
+        createMarker: function() { return null; }, // Hide route markers
+        lineOptions: {
+            styles: [{ color: 'blue', weight: 5 }]
+        }
+    }).addTo(map);
+
+    // Update distance in the marker popup
+    routeControl.on('routesfound', function (e) {
+        var distance = e.routes[0].summary.totalDistance / 1000; // Convert meters to km
+        marker.setPopupContent(marker.getPopup().getContent() + `<p style="color: green;"><strong>Distance:</strong> ${distance.toFixed(2)} km</p>`);
+        marker.openPopup();
+    });
+}
+
+// Add markers for food posts
+foodPosts.forEach(post => {
+    if (post.latitude && post.longitude) {
+        var formattedDate = new Date(post.created_at).toLocaleDateString("en-IN", {
+            year: "numeric",
+            month: "short",
+            day: "numeric"
+        });
+
+        var marker = L.marker([post.latitude, post.longitude]).addTo(map);
+        marker.bindPopup(`
+            <div style="text-align: center; max-width: 200px;">
+                <img src="/media/${post.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 5px;">
+                <h4 style="margin: 5px 0; font-size: 16px; color: #333;">${post.name}</h4>
+                <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Radius:</strong> ${post.radius} km</p>
+                <p style="font-size: 14px; color: #777;"><strong>Posted on:</strong> ${formattedDate}</p>
+                <p style="color: green;"><strong>Click to see route</strong></p>
+            </div>
+        `);
+        
+        markers.push(marker);
+
+        // Add click event to calculate shortest path from user location
+        marker.on('click', function () {
+            getUserLocation(function(userLocation) {
+                showShortestRoute(userLocation, [post.latitude, post.longitude], marker);
+            });
+        });
     }
 });
 
-// Function to calculate distance using Haversine formula
-function getDistance(lat1, lon1, lat2, lon2) {
-    function toRad(x) { return x * Math.PI / 180; }
-    var R = 6371; 
-    var dLat = toRad(lat2 - lat1);
-    var dLon = toRad(lon2 - lon1);
-    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
+// Profile menu toggle function
+function toggleMenu() {
+    var menu = document.getElementById("menu");
+    menu.classList.toggle("show");
 }
 
+document.addEventListener("click", function (event) {
+    var menu = document.getElementById("menu");
+    var profileImg = document.querySelector(".profile img");
+
+    if (!menu.contains(event.target) && event.target !== profileImg) {
+        menu.classList.remove("show");
+    }
+});
 // Profile menu toggle function
 function toggleMenu() {
     var menu = document.getElementById("menu");
