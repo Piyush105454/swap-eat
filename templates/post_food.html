@@ -600,20 +600,42 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
     return R * c; // Distance in km
 }
 
-// Function to get user's current location on page load
-function getUserLocation(callback) {
+ function getUserLocation(callback) {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             function(position) {
-                var userLocation = [position.coords.latitude, position.coords.longitude];
+                let userLat = position.coords.latitude;
+                let userLng = position.coords.longitude;
+
+                // ✅ Set latitude and longitude input fields
+                document.getElementById("latitude").value = userLat;
+                document.getElementById("longitude").value = userLng;
+
+                var userLocation = [userLat, userLng];
                 map.setView(userLocation, 12); // Focus on user's location
-                L.marker(userLocation).addTo(map).bindPopup("You are here").openPopup();
+
+                // ✅ Show user's location on the map
+                L.marker(userLocation).addTo(map)
+                    .bindPopup("You are here")
+                    .openPopup();
+
                 callback(userLocation);
             },
             function() {
                 alert("Unable to retrieve your location.");
             }
         );
+    } else {
+        alert("Geolocation is not supported by this browser.");
+    }
+}
+
+// ✅ Call the function on page load
+window.onload = function() {
+    getUserLocation(function(userLocation) {
+        console.log("User location set:", userLocation);
+    });
+};
     } else {
         alert("Geolocation is not supported by this browser.");
     }
