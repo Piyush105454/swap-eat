@@ -517,9 +517,9 @@
 
 
        var map = L.map('map').setView([20.5937, 78.9629], 5); // Default India
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
+       L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+       attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
 
     var foodPosts = JSON.parse('{{ food_posts|escapejs }}');  // Ensure valid JSON
 
