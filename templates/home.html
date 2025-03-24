@@ -17,12 +17,12 @@
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+      It will be replaced with the URL of the public folder during the build.
+      Only files inside the public folder can be referenced from the HTML.
 
       Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
       work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
+      Learn how to configure a non-root public URL by running npm run build.
     -->
     <title>React App</title>
   </head>
@@ -50,7 +50,11 @@
       body {
         font-family: 'Arial', sans-serif;
         line-height: 1.6;
-        color: #faff00;
+        background-image: url('https://media-hosting.imagekit.io//cc19f6987ade48d0/Picsart_25-03-24_20-19-33-246.jpg?Expires=1837435804&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=e8-4~9tjixPv6HMbXSL29hqOydqNa910FAsWANPr9fuUOuAwgQq6DKWd9KLg5oNcV~zLsQtVFrd1Ih-S-49MaB60NJDKKpuoL8WLpPh9fKnZm524nLCxVPSVFtiYRtOpD-Yu5SD7EqOVYwLHI00hxYdz~jxpI6px4Ps8OU6Df3cRlBnFnVY~vYUU1AY-2jd~ZS2DCR7D0SgMCEb45onkPETAoeyDSWpMZt25FVZiotg6dvz58xuGHtJqFtkY~cTdJF1~RnO7aB98PSujWbOdcMxJ-Sy308WVXfWJcYOvKcHW9a4YPKQBDJJbfY2bG~qNIq8Ba5jGnZC~jYE8EPTlog__'); /* Replace with your image path */
+    background-size: cover; /* Covers the entire screen */
+    background-position: center;
+    background-repeat: no-repeat;
+
       }
 
       /* Header */
@@ -59,7 +63,6 @@
         justify-content: space-between;
         align-items: center;
         padding: 1rem 2rem;
-        background: yellow;
       }
 
       .logo {
@@ -92,7 +95,6 @@
         justify-content: center;
         align-items: center;
         padding: 2rem;
-        background: #f9ff00;
         min-height: 80vh;
         position: relative;
       }
@@ -121,8 +123,11 @@
         margin-top: 50px;
         display: inline-block;
         padding: 10px 20px;
-        background: #ff5a5a;
-        color: rgb(26, 18, 18);
+       
+        background: rgba(255, 255, 255, 0.2);
+        color: rgb(255, 255, 255);
+        backdrop-filter: blur(10px);
+        border: none;
         font-weight: bolder;
         font-size: xx-large;
         text-decoration: none;
@@ -130,12 +135,17 @@
         display: block;
       }
 
+      #btn:hover {
+    backdrop-filter: blur(15px); /* Increases blur on hover */
+    border: none;
+}
+
       #free {
         margin-top: 50px;
         text-align: center;
         font-weight: bolder;
         font-size: xx-large;
-        color: rgb(199, 71, 12);
+        color: rgb(255, 255, 255);
       }
 
       /* Testimonials Section */
@@ -154,7 +164,7 @@
         }
 
         .testimonial-card {
-            background-color: #111;
+            background-color: #656161;
             border-radius: 15px;
             padding: 20px;
             width: 270px;
@@ -198,7 +208,7 @@
         .testimonial-text {
             font-size: 14px;
             line-height: 1.6;
-            color: #ccc;
+            color:#EBDBCB;
         }
         .social-icons {
             padding:0px;
@@ -216,23 +226,19 @@
 
         .icon:hover {
             transform: scale(1.2);
+            color:white;
         }
 
-        .twitter:hover {
-            color: #1DA1F2;
-        }
-
-        .instagram:hover {
-            color: #E1306C;
-        }
+        
 
 
    .footer {
-  background: #121321;
-  color: white;
-  padding: 1rem;
+    background: rgba(255, 255, 255, 0.2);
+        color: rgb(26, 18, 18);
+        backdrop-filter: blur(10px);
+     padding: 1rem;
   
-  margin: 0px; /* Center align */
+     margin: 0px; /* Center align */
 }
 
 .footer-row {
@@ -258,7 +264,7 @@
   display: block;
   margin-bottom: 5px;
   text-decoration: none;
-  color: #fff;
+  color: #1e1e1e;
   font-size: 0.9rem;
 }
 
@@ -334,6 +340,7 @@
             font-size: 1.5rem;
             cursor: pointer;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+            z-index: 2;
         }
 
         /* Chat Box */
@@ -429,26 +436,200 @@
           padding: 6px 12px;
         }
       }
+      .haderVidio{
+        height: 100;
+        width: 100;
+        z-index: 100;
+      }
+
+
+      .signup-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+     
+    }
+    
+    .signup-button {
+      padding: 15px 30px;
+      background-color: #ff3333;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+    }
+    
+    
+    .signup-form {
+      width: 400px;
+      background-color: #e8e8e8;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .form-header {
+      text-align: center;
+      margin-bottom: 0px;
+    }
+    
+   
+    .form-title {
+      font-size: 28px;
+      font-weight: bold;
+      color: black;
+    }
+    
+    .form-group {
+      margin-bottom: 5px;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: black;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    
+    .signup-submit {
+      width: 100%;
+      padding: 12px;
+      color: black;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+    
+    .login-link {
+      text-decoration: none;
+      background-color: #e8e8e8;
+
+      text-align: left;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+    
+    .login-link a {
+      background-color: #e8e8e8;
+
+      color: black;
+      text-decoration:none;
+      cursor: pointer;
+    }
+     
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+    
+
+    
+  
+   
+
     </style>
   </head>
+  <divm class="HeroBGI">
 
     <header class="header">
       <div class="logo">
         <img src="https://i.postimg.cc/pL3RBYB0/Picsart-25-01-14-11-24-10-237.png" alt="Swap Eat Logo">
-        <h1>SWAP EAT</h1>
       </div>
       <nav class="nav">
         {% if user.is_authenticated %}
-          <a href="{% url 'logout' %}" class="btn btn-primary">Logout</a>
         {% else %}
-          <a href="{% url 'signup' %}" class="btn btn-primary">Signup</a>
-          <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+        <a href="{% url 'signup' %}" class="btn btn-primary"  id="show-signup" >Signup</a>
+        <a href="{% url 'login' %}" class="btn btn-primary" id="show-login">Login</a>
         {% endif %}
+
+
+
+        <div class="overlay" id="signup-overlay">
+            <div class="signup-form">
+              <div class="form-header">
+                {%csrf token%}
+                <div class="form-title">Signup Here</div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" class="form-input" placeholder="Username">
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">name</label>
+                <input type="text" class="form-input" placeholder="name">
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-input" placeholder="Email">
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-input" placeholder="Password">
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Confirm Password</label>
+                <input type="password" class="form-input" placeholder="Confirm Password">
+              </div>
+              
+              <button type="submit" class="signup-submit">Signup</button>
+              
+              <div class="login-link">
+                <a href="#" id="login-instead">I have already account</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="overlay" id="login-overlay">
+            <div class="background">
+            </div>
+            <form method="post">
+              <h3>Login Here</h3>
+                {% csrf_token %}
+              <label for="username">Username</label>
+              <input type="text" placeholder="Enter Username" id="username" name="username">
+              <label for="password">Password</label>
+              <input type="password" placeholder="Password" id="password" name="pass">
+              <button type="submit">Log In</button>
+              <a href="#" id="signup-link">Create an account</a>
+            </form>
+          </div>
+  
       </nav>
     </header>
 
     <!-- Hero Section -->
     <section class="hero">
+          
       <div class="hero-content">
         <h2> <span style="color: #000;">POST</span> • 
             <span style="color: #ff4848;">SWAP</span> • 
@@ -456,6 +637,7 @@
         <a href="{% url 'post' %}" class="btn btn-primary" id="btn">Get Started</a>
         <h1 id="free">For Free</h1>
       </div>
+    </div>
 
       <!-- Help Button and Animation -->
       
@@ -490,9 +672,7 @@
         </button>
       </div>
 
-      <!-- Fixed Images in Hero Section -->
-      <img src="https://i.postimg.cc/XqnCY0Gy/left.png" alt="Food Left" class="left">
-      <img src="https://i.postimg.cc/PJcTFWjr/right.png" alt="Food Right" class="right">
+     
     </section>
     
     <footer class="footer">
@@ -500,7 +680,7 @@
       <div class="testimonial">
         <div class="testimonial-card">
           <div class="profile">
-            <img src="https://media-hosting.imagekit.io//389c600ba6964f56/WhatsApp%20Image%202025-02-20%20at%205.05.51%20PM.jpeg?Expires=1834659468&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=mMr0h81fLwthEofg18w~onpMfRhhCsgy5mlTA-g3jRX0kuPpvtNb~D7zCqplLNNhCvzHpReNcq9XFIcEalP3lZMjSqMrQ6YAAuEVQo9kDIJpt9pEg1U~Kxbttysdv~NrOpjAY19wWWN49VC1hAY0BO-y6IzZxo4VPUuHseUyzVvJE7wFkkRTCauY5AK4AjHeu67ApHEcEZSy2EPPNXll10oU2gCdsCipbddcKMzvi36wjti~E3X4BpV~BPCP~RK5bWmSMU~s2KurWmFbnmxay9vDjMPWfhq6QoVemYCO6Rh06z0bZfoJ3hCv6hlWzxR4sJFPlADZL-cS4M1zWNxA~A__" alt="Naved">
+            <img src="https://media-hosting.imagekit.io//ef54200279bf408e/WhatsApp%20Image%202025-02-25%20at%2010.06.17%20AM.jpeg?Expires=1835102931&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=XV6p3amvVqdD9cs2kNqlQpP2E5REe6KMva0jzVknzjJLkoIw2X0D3JFsHnC6IZ1DVXM0xaa506GFYvNBA~pn9lNzOuLW3no5tmqabEU0kUdA0VFu7LVrfqiLVRalsryWILiu53ZZBlqtNJHRxwGR2BpZwR1lw60vmSOCrfo5ug4dsCUrfl-W~0k4w2YQTuIoM57v9YDR9CqWHMrNaehi7A0OM2-pV0D~nDbGUeLdvsxHpnvIrFVNPUTq7XMoGeMjesqNSU5YbhKqtN69OO4HUhK1wuTBUlpbuOV9d~NXLmFnOAgy1WOB4I22Hs0ZvgOiX6YOU376Grdh~kl9Ex1krw__" alt="Naved">
             <h3>Naved</h3>
           </div>
           <p class="testimonial-text">
@@ -530,8 +710,8 @@
         </div>
         <div class="testimonial-card">
       <div class="profile">
-          <img src="https://i.postimg.cc/XJsNz1Bb/Whats-App-Image-2025-02-20-at-4-59-45-PM.jpg" alt="Vijaya">
-          <h3>Vijaya</h3>
+          <img src="https://media-hosting.imagekit.io//02cada89d43c4b72/WhatsApp%20Image%202025-02-27%20at%2010.44.19%20AM.jpeg?Expires=1835241717&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=Xh5BGFNfncOPQMTdk-TuZZ7UyfyBMSdNPAsKsmbwnkScaw47sYzPLeJ-ZUz2inqy-O936T67PM2vgweMR9OyEDU38PRfhyaYtYc2iEgIM6IbsvR~R9LOQnXYuAEE5Admhfv5P3A-IjCQ7Vro9ZF2B-8DSZ~mq5YeHdFXCTpPutfMHivsdU2mYQRQngctcw7w7CLiSdsugpuphaH56C0mjT-vFqSDmNO7tpJGKUoThD6ukWPNn-ltI2nC1s1TomACheqEN6G2jsAyQGwP5dFKOSWC-2v5JvzsYq-ZJMto9uKW~DJ-gA-LUww0qDR4wXrUJ0De4nhzgRf5ekSTZ6SWKw__" alt="Vijaya">
+          <h3>Kratika</h3>
       </div>
       <p class="testimonial-text">
           As a student in Bhopal, SwapEat has helped me connect with my neighbors while sharing food. 
@@ -591,7 +771,7 @@
             if (!userInput) return;
 
             const chatBody = document.getElementById('chatBody');
-            chatBody.innerHTML += `<p><strong>You:</strong> ${userInput}</p>`;
+            chatBody.innerHTML += <p><strong>You:</strong> ${userInput}</p>;
 
             // Make API request to Django backend
             fetch('/chat-api/', {
@@ -603,11 +783,11 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    chatBody.innerHTML += `<p><strong>Gemini:</strong> ${data.answer}</p>`;
+                    chatBody.innerHTML += <p><strong>Gemini:</strong> ${data.answer}</p>;
                     chatBody.scrollTop = chatBody.scrollHeight; // Scroll to bottom
                 })
                 .catch(err => {
-                    chatBody.innerHTML += `<p><strong>Gemini:</strong> Sorry, something went wrong.</p>`;
+                    chatBody.innerHTML += <p><strong>Gemini:</strong> Sorry, something went wrong.</p>;
                 });
 
             document.getElementById('userInput').value = ''; // Clear input field
@@ -615,11 +795,43 @@
       document.getElementById('searchBtn').addEventListener('click', function () {
         const location = document.getElementById('location').value.trim();
         if (location) {
-          window.location.href = `{% url 'home' %}?location=${encodeURIComponent(location)}`;
+          window.location.href = {% url 'home' %}?location=${encodeURIComponent(location)};
         } else {
           alert('Please enter a location.');
         }
       });
+
+
+
+
+
+         <!-- for singup code-->
+
+         document.addEventListener('DOMContentLoaded', function() {
+      const signupButton = document.getElementById('show-signup');
+      const overlay = document.getElementById('signup-overlay');
+      const loginLink = document.getElementById('login-instead');
+      
+      // Show signup form when button is clicked
+      signupButton.addEventListener('click', function() {
+        overlay.style.display = 'flex';
+      });
+      
+      // Hide form when clicking outside the form
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) {
+          overlay.style.display = 'none';
+        }
+      });
+      
+      // Handle login link click (just hide the form for this demo)
+      loginLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        overlay.style.display = 'none';
+        alert('Would redirect to login page');
+      });
+    });
+
     </script>
   </body>
 </html>
