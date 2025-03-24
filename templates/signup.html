@@ -1,781 +1,158 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Sliding Food Cards</title>
-
-    <!-- Corrected FontAwesome Link -->
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" crossorigin="anonymous"></script>
-
-
-
-    <style>
-
-        * {
-
-            margin: 0;
-
-            padding: 0;
-
-            box-sizing: border-box;
-
-        }
-
-
-
-        body {
-
-            font-family: Arial, sans-serif;
-
-background: url('https://media-hosting.imagekit.io//cc19f6987ade48d0/Picsart_25-03-24_20-19-33-246.jpg?Expires=1837435804&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=e8-4~9tjixPv6HMbXSL29hqOydqNa910FAsWANPr9fuUOuAwgQq6DKWd9KLg5oNcV~zLsQtVFrd1Ih-S-49MaB60NJDKKpuoL8WLpPh9fKnZm524nLCxVPSVFtiYRtOpD-Yu5SD7EqOVYwLHI00hxYdz~jxpI6px4Ps8OU6Df3cRlBnFnVY~vYUU1AY-2jd~ZS2DCR7D0SgMCEb45onkPETAoeyDSWpMZt25FVZiotg6dvz58xuGHtJqFtkY~cTdJF1~RnO7aB98PSujWbOdcMxJ-Sy308WVXfWJcYOvKcHW9a4YPKQBDJJbfY2bG~qNIq8Ba5jGnZC~jYE8EPTlog__');
-            display: flex;
-
-            flex-direction: column;
-
-            align-items: center;
-
-            justify-content: center;
-            width: 100%;
-
-
-            overflow: hidden;
-            background-repeat: no-repeat;
-            background-size: cover;
-            
-
-        }
-
-        body h1{
-
-            margin: 20px;
-
-        }
-
-        
-
-        .hungry{
-
-
-            color:red;
-
-            font-family: Arial, sans-serif;
-
-        }
-
-        .container {
-
-            width: 600px;
-
-            height: 400px;
-
-            position: relative;
-
-            overflow: hidden;
-
-            border-radius: 20px;
-
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 1);
-
-            background: white;
-
-
-        }
-
-
-
-        .card {
-
-            width: 100%;
-
-            height: 100%;
-
-            position: absolute;
-
-            left: 100%;
-
-            transition: left 0.5s ease-in-out;
-
-            display: flex;
-
-            flex-direction: column;
-
-            align-items: center;
-
-            justify-content: center;
-
-            text-align: center;
-
-            background: whitesmoke;
-
-            border-radius: 20px;
-
-            padding: 15px;
-
-            overflow: hidden;
-
-            gap: 15px;
-
-        }
-
-
-
-        .card img {
-
-            width: 100%;
-
-            height: 250px;
-
-            border-radius: 15px;
-
-            object-fit: cover;
-
-            display: block;
-
-        }
-        .card h2{
-            font-size: 40px;
-        }
-        
-        .card p{
-            font-size:30px;
-        }
-
-
-        .card.active {
-
-            left: 0;
-
-        }
-
-
-
-        .card.prev {
-
-            left: -100%;
-
-        }
-
-
-
-        .message {
-
-            display: none;
-
-            font-size: 18px;
-
-            color: red;
-
-            margin-top: 15px;
-
-        }
-
-
-
-        .buttons {
-
-            margin-top: 15px;
-
-        }
-
-
-
-        .btn {
-
-            padding: 10px 15px;
-
-            margin: 5px;
-
-            border: none;
-
-            background:whitesmoke;
-
-            color:brown;
-
-            font-size: 16px;
-
-            cursor: pointer;
-
-            border-radius: 5px;
-
-            transition: background 0.3s, transform 0.2s;
-
-            width:250px;
-            height: 60px;
-
-        }
-
-
-
-        .btn:hover {
-
-            background:rgb(144,238,144);
-
-            transform: scale(1.1);
-
-        }
-
-        .profile{
-
-            display: flex;
-
-            flex-direction: column;
-
-            justify-content: center;
-
-            text-align:center;
-
-        }
-
-        .profile img {
-
-            cursor: pointer;
-
-            position: absolute;
-
-            top: 40px;
-
-            right: 40px;
-
-            width: 60px;
-
-            height: 60px;
-
-            border-radius: 50%;
-
-            overflow: hidden;
-
-            border: 2px solid black;
-
-        }
-
-        .menu {
-
-            cursor: pointer;
-
-            position: absolute;
-
-            top: 90px;
-
-            right: 20px;
-
-            width: 200px;
-
-            background: white;
-
-            border-radius: 10px;
-
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-
-            opacity: 0;
-
-            visibility: hidden;
-
-            transform: translateY(-10px);
-
-            transition: opacity 0.3s ease, transform 0.3s ease;
-
-            z-index: 1;
-
-        }
-
+  <!-- Design by foolishdeveloper.com -->
+    <title>Signup Page</title>
+ 
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <!--Stylesheet-->
+    <style media="screen">
+      *,
+*:before,
+*:after{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body{
+    background: url('https://media-hosting.imagekit.io//cc19f6987ade48d0/Picsart_25-03-24_20-19-33-246.jpg?Expires=1837435804&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=e8-4~9tjixPv6HMbXSL29hqOydqNa910FAsWANPr9fuUOuAwgQq6DKWd9KLg5oNcV~zLsQtVFrd1Ih-S-49MaB60NJDKKpuoL8WLpPh9fKnZm524nLCxVPSVFtiYRtOpD-Yu5SD7EqOVYwLHI00hxYdz~jxpI6px4Ps8OU6Df3cRlBnFnVY~vYUU1AY-2jd~ZS2DCR7D0SgMCEb45onkPETAoeyDSWpMZt25FVZiotg6dvz58xuGHtJqFtkY~cTdJF1~RnO7aB98PSujWbOdcMxJ-Sy308WVXfWJcYOvKcHW9a4YPKQBDJJbfY2bG~qNIq8Ba5jGnZC~jYE8EPTlog__');
+    background-size:cover;
+}
+.background{
+    width: 430px;
+    height: 520px;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    left: 50%;
+    top: 50%;
+    filter: blur(5px);
+}
+
+form{
+    height: 700px;
+    width: 450px;
+    background-color:whitesmoke;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 40px rgba(8,7,16,0.6);
+    padding: 50px 35px;
+}
+form *{
+    font-family: 'Poppins',sans-serif;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    outline: none;
+    border: none;
+}
+form h3{
+    color:black;
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 42px;
+    text-align: center;
+}
+
+label{
     
-
-        .menu.show {
-
-            opacity: 1;
-
-            visibility: visible;
-
-            transform: translateY(0);
-
-        }
-
-    
-
-        .menu a {
-
-            display: block;
-
-            padding: 10px 15px;
-
-            text-decoration: none;
-
-            color: black;
-
-            font-size: 16px;
-
-            transition: background 0.3s;
-
-            text-align: left;
-
-    
-
-        }
-
-    
-
-        .menu a:hover {
-
-            cursor: pointer;
-
-            background: lightgray;
-
-        }
-
-        
-
-        /* Bottom Navigation Bar */
-
-        .nav-bottom {
-
-            display: flex;
-
-            justify-content: center;
-
-            align-items: center;
-
-            margin-top: 20px;
-
-        }
-
-
-
-        .navbar {
-
-            display: flex;
-
-            align-items: center;
-
-            margin:20px;
-
-            background: whitesmoke;
-
-            padding: 12px 20px;
-
-            border-radius: 40px;
-
-            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
-
-            gap: 20px;
-
-        }
-
-
-
-        .nav-item {
-
-            width: 50px;
-
-            height: 50px;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            font-size: 22px;
-
-            background-color: transparent;
-
-            color: rgb(0, 0, 0);
-
-            border-radius: 50%;
-
-            cursor: pointer;
-
-            transition: transform 0.3s ease-in-out, background 0.3s;
-
-        }
-
-
-
-        .nav-item:hover {
-
-            background-color: lightgreen;
-
-            transform: scale(1.2);
-
-        }
-
-        .navbar a {
-
-          text-decoration: none;
-
-          color: inherit;       
-
-        }
-
-        .chat-button {
-
-            margin-top:30px;
-
-            margin-bottom: 30px;
-
-            text-decoration: none;
-
-            background: white;
-
-            color: black;
-
-            padding: 8px 12px;
-
-            padding-bottom: 15px;
-
-            padding-top:15px ;
-
-            border-radius: 16px;
-
-            font-size: 18px;
-
-            font-weight: bold;
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 8px;
-
-            cursor: pointer;
-
-            transition: transform 0.3s ease-in-out;
-
-        
-
-        }
-
-        .chat-button a {
-
-            text-decoration: none;
-
-            color: inherit;
-
-        }
-
-       
-
-        .chat-button:hover {
-
-            background: lightgreen;
-
-            transform: scale(1.1);
-
-        }
-
-        
-
-
+    color:black;
+    display: block;
+    margin-top: 30px;
+    font-size: 16px;
+    font-weight: 500;
+}
+input{
+    color:black;
+    display: block;
+    height: 40px;
+    width: 100%;
+    background-color: #ffffffff;
+    border-radius: 3px;
+    padding: 0 10px;
+    margin-top: 2px;
+    font-size: 14px;
+    font-weight: 300;
+}
+::placeholder{
+    color: black;
+}
+button{
+    margin-top: 14px;
+    width: 100%;
+    background-color: #ffffff;
+    color: #080710;
+    padding: 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.social{
+  margin-top: 30px;
+  display: flex;
+}
+.social div{
+  background: red;
+  width: 150px;
+  border-radius: 3px;
+  padding: 5px 10px 10px 5px;
+  background-color: rgba(255,255,255,0.27);
+  color: #eaf0fb;
+  text-align: center;
+}
+.social div:hover{
+  background-color: rgba(255,255,255,0.47);
+}
+.social .fb{
+  margin-left: 25px;
+}
+.social i{
+  margin-right: 4px;
+}
+a{
+    color:black;
+}
 
     </style>
-
 </head>
-
 <body>
+  
+    <form action="" method="post">
+        {% csrf_token %} 
+        <h3>Signup Here</h3>
 
-    <div class="profile">
-
-    <h1 class="scan">🍕 <spam class="scan"id="username">User</spam> feeling<samp class="hungry"> Hungry</samp> 🍔</h1>
-
-            <img src="https://static.vecteezy.com/system/resources/previews/011/490/381/original/happy-smiling-young-man-avatar-3d-portrait-of-a-man-cartoon-character-people-illustration-isolated-on-white-background-vector.jpg" alt="User" onclick="toggleMenu()">
-
-            <div class="menu" id="menu">
-
-                <a href="#">🔵 Profile</a>
-
-                <a href="#">⭐ Favorite Peoples</a>
-
-                <a href="#">💡 Personalization</a>
-
-                <a href="#">🟡 Swap Eat +</a>
-
-                <a href="#">🚫 Blocked Users</a>
-
-                <a href="#">⚙️ Settings</a>
-
-                <a href="#">🔗 Invite</a>
-
-                <a href="{% url 'home' %}">↪ Logout</a>
-
-            </div>
-
-    </div>
-
-    
-
-    <div class="container">
-
-        <!-- Food Cards -->
-
-        <div class="card active">
-
-            <img src="https://th.bing.com/th/id/R.e8e18f31bf927b67138fa204ce2e6767?rik=nF%2bHajEIvHn3HA&pid=ImgRaw&r=0" alt="Food 1" class="imgfit">
-
-            <h2>Delicious Pizza</h2>
-
-            <p>Hot & cheesy pizza loaded with toppings.</p>
-
-        </div>
+        <label for="username">Username</label>
+        <input type="text" placeholder="Username" name="username" id="username">
+        <label for="name">name</label>
+        <input type="text" placeholder="name" name="name" id="name">
+      
+        <label for="email">Email</label>
+        <input type="email" placeholder="Email " name="email" id="email">
+        
+        
+        
+        <label for="password1">Password</label>
+        <input type="password" placeholder="Password" id="password1" name="password1">
 
 
-
-        <div class="card">
-
-            <img src="https://th.bing.com/th/id/R.a651ee1fe850e54917f02fc58b98fcc8?rik=Gs63TudWrkxDzA&pid=ImgRaw&r=0" alt="Food 2" class="imgfit">
-
-            <h2>Juicy Burger</h2>
-
-            <p>A tasty beef burger with fresh veggies.</p>
-
-        </div>
-
-
-
-        <div class="card">
-
-            <img src="https://th.bing.com/th/id/OIP.M4w8D0HqPiqPXcaipDMPawHaE7?rs=1&pid=ImgDetMain" alt="Food 3" class="imgfit">
-
-            <h2>Fresh Sushi</h2>
-
-            <p>Enjoy a plate of delicious Japanese sushi.</p>
-
-        </div>
-
-
-
-        <div class="card">
-
-            <img src="https://th.bing.com/th/id/OIP.r7YEptgn6-u0ZHxVEncBXQHaHa?rs=1&pid=ImgDetMain" alt="Food 4" class="imgfit">
-
-            <h2>Sweet Dessert</h2>
-
-            <p>A yummy chocolate dessert to sweeten your day.</p>
-
-        </div>
-        <div id ="food-posts-container"class="card" ></div>
-
-    </div>
-
-
-
-    <p class="message">Oops! No more cards left. 😢</p>
-
-
-
-    <!-- Navigation Buttons -->
-
-    <div class="buttons"></h2>
-
-        <button class="btn" onclick="prevCard()"><h2>⬅️ Previous</h2></button>
-
-        <button class="btn" onclick="nextCard()"><h2>Next ➡️</h2></button>
-
-    </div>
-
-
-
-    <!-- Bottom Navigation Bar -->
-
-    <section class="nav-bottom">
-
-                    <div class="navbar">
-            
-                                    <div class="nav-item home">
-                    <a href="{% url 'post' %}" class="chat">
-                    <i class="fa-solid fa-house"></i>
-                      
-                    </a>
-                   </div>
-                   <div class="nav-item">
-                    <a href="{% url 'explore' %}" class="chat">
-                    <i class="fa-solid fa-compass"></i>
-                      
-                    </a>
-                   </div>
-                   <div class="nav-item">
-                    <a href="{% url 'post_food' %}" class="chat">
-                    <i class="fa-solid fa-plus"></i>
-                      
-                    </a>
-                   </div>
-                   <div class="nav-item">
-                    <a href="{% url 'notification' %}" class="chat">
-                    <i class="fa-solid fa-bell"></i>
-                      
-                    </a>
-                   </div>
-                   <div class="nav-item">
-                    <a href="{% url 'map' %}" class="chat">
-                    <i class="fa-solid fa-map"></i>
-                      
-                    </a>
-                   </div> 
-                   
-                    </div>
-                    <div class="chat-button">
-                        <a href="{% url 'chat' %}"><i class="fas fa-comments"></i> Chat </a>
-                    </div>
-                </section>
-            
-
-
-
+        <label for="password2">Confirm Password</label>
+        <input type="password" placeholder="Confirm Password" id="password2" name="password2">
+        <button type="submit"onclick="saveUsername()">Signup</button>
+        
+        <a href="{% url 'login' %}" >i have already account</a>
+    </form>
     <script>
-        let storedUsername = localStorage.getItem("username");
-             if (storedUsername) {
-                document.getElementById("username").textContent = storedUsername;
+        function saveUsername() {
+            let username = document.getElementById("username").value;
+            localStorage.setItem("username", username);
+            
         }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            let foodPosts = JSON.parse('{{ food_posts|escapejs }}');  // Parse JSON data from Django
-            let container = document.getElementById("food-posts-container");
-
-            function renderPosts(posts) {
-                container.innerHTML = ""; // Clear old posts
-                posts.forEach(post => {
-                    let postDiv = document.createElement("div");
-                    postDiv.innerHTML = `
-                   
-                      <h3>${post.name}</h3>
-                        <p><strong>Location:</strong> ${post.location}</p>
-                        <p><strong>Radius:</strong> ${post.radius}</p>
-                        <p><strong>Posted on:</strong> ${new Date(post.created_at).toLocaleString()}</p>
-                        ${post.photo ? `<img src="${post.photo}" width="200">` : ""} <hr>
-                    `;
-                    container.appendChild(postDiv);
-                });
-            }
-
-            renderPosts(foodPosts);  // Initial render
-
-            // AJAX form submission
-            document.getElementById("foodPostForm").addEventListener("submit", function (e) {
-                e.preventDefault();
-                let formData = new FormData(this);
-
-                fetch("", {  // Submits to the same URL
-                    method: "POST",
-                    body: formData,
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest"
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        location.reload();  // Refresh the page to show the new post
-                    } else {
-                        alert("Form submission failed!");
-                    }
-                })
-                .catch(error => console.error("Error:", error));
-            });
-        });
-
-        function toggleMenu() {
-
-            var menu = document.getElementById("menu");
-
-            menu.classList.toggle("show");
-
-        }
-
-        document.addEventListener("click", function (event) {
-
-    var menu = document.getElementById("menu");
-
-    var profileImg = document.querySelector(".profile img");
-
-
-
-    // Check if the clicked area is NOT inside the menu or the profile image
-
-    if (!menu.contains(event.target) && event.target !== profileImg) {
-
-        menu.classList.remove("show");
-
-    }
-
-});
-
-
-
-        let currentIndex = 0;
-
-        const cards = document.querySelectorAll('.card');
-
-        const message = document.querySelector('.message');
-
-
-
-        function updateCards() {
-
-            cards.forEach((card, index) => {
-
-                card.classList.remove('active', 'prev');
-
-                if (index === currentIndex) {
-
-                    card.classList.add('active');
-
-                } else if (index < currentIndex) {
-
-                    card.classList.add('prev');
-
-                }
-
-            });
-
-
-
-            // Show message if no more cards
-
-            message.style.display = currentIndex >= cards.length ? 'block' : 'none';
-
-        }
-
-
-
-        function nextCard() {
-
-            if (currentIndex < cards.length - 1) {
-
-                currentIndex++;
-
-                updateCards();
-
-            } else {
-
-                message.style.display = 'block';
-
-            }
-
-        }
-
-
-
-        function prevCard() {
-
-            if (currentIndex > 0) {
-
-                currentIndex--;
-
-                updateCards();
-
-            }
-
-        }
-
     </script>
-
-
-
 </body>
-
 </html>
