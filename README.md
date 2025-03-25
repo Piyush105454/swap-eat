@@ -33,8 +33,8 @@ Database: SQLite/MySQL
 Map Integration: Leaflet.js
 
 Real-time Chat: Django Channels & WebSockets for live messaging
-
-![Home page](https://i.postimg.cc/BQfTb9bD/IMG-20250325-WA0000.jpg)
+Home page
+[![IMG-20250325-WA0000.jpg](https://i.postimg.cc/BQfTb9bD/IMG-20250325-WA0000.jpg)](https://postimg.cc/rzg0ZHSF)
 
 
 
