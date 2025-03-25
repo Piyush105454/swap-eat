@@ -24,6 +24,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),  # Keep this at the bottom
     path('chat/', include('swapfood.urls')), 
     path("upload/", views.upload_food_image, name="upload"),
+    path("profile/", views.pf, name="profile"),
     
     
 ]
