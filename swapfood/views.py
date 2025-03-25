@@ -247,6 +247,11 @@ def LogoutPage(request):
 def HomePage(request):
     return render(request, 'home.html')
 
+def pf(request):
+    return render(request, 'pf.html')
+    
+
+
 # Explore Section
 @login_required
 def explore(request):
