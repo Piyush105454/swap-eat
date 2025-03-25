@@ -20,6 +20,41 @@ import json
 import networkx as nx
 import osmnx as ox
 from geopy.distance import geodesic
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser, FormParser
+from django.core.files.storage import default_storage
+from .serializers import FoodImageSerializer
+from .spoonacular_api import analyze_food_image  
+from django.shortcuts import render
+from django.core.files.storage import default_storage
+from .forms import FoodImageForm
+import base64
+from .models import FoodImage
+
+
+
+
+def upload_food_image(request):
+    form = FoodImageForm()
+    image_url = None
+    analysis_result = None
+
+    if request.method == 'POST':
+        form = FoodImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            uploaded_image = form.save()
+            image_url = uploaded_image.image.url
+            image_path = uploaded_image.image.path
+
+            # Analyze the image using Spoonacular API
+            analysis_result = analyze_food_image(image_path)
+
+    return render(request, 'upload.html', {
+        'form': form,
+        'image_url': image_url,
+        'analysis_result': analysis_result
+    })
 
 
 # Function to find the nearest food post
