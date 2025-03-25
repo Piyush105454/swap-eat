@@ -168,5 +168,11 @@ EMAIL_HOST_PASSWORD = 'anbr opdy syfm alud'  # Replace with your app password
 DEFAULT_FROM_EMAIL = 'your_email@gmail.com'
 
 
+import environ
 
+# Load environment variables
+env = environ.Env()
+environ.Env.read_env(os.path.join(os.path.dirname(__file__), '../.env'))
 
+# Spoonacular API Key
+SPOONACULAR_API_KEY = env("SPOONACULAR_API_KEY", default="")  # Avoid crash if key is missing
