@@ -94,14 +94,15 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',  # Use MySQL as the database engine
         'NAME': 'defaultdb',  # Database name
         'USER': 'avnadmin',  # Database user
-        'PASSWORD': 'AVNS_BSG5mEedU-2YkT-3tAq',  # Replace with actual password
-        'HOST': 'mysql-36fe0488-swapeat.f.aivencloud.com',  # MySQL host
-        'PORT': '28836',  # MySQL port
+        'PASSWORD': 'AVNS_8Ma5TTmGNtshZwbeeEE',  # New password
+        'HOST': 'mysql-38c42030-somdixit120-356a.k.aivencloud.com',  # MySQL host
+        'PORT': '24796',  # MySQL port
         'OPTIONS': {
             'ssl': {'ssl-mode': 'REQUIRED'},  # Enforce SSL connection
         },
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
