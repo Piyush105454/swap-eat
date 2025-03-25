@@ -2,7 +2,7 @@
 ⚡ Swap Eat - Smart Food Swapping
 
 ## 🌍 Live Website  
-[SwapEat - Live Now](https://toxic-ilse-piyush105454-c639ba90.koyeb.app/)
+[SwapEat - Live Now](https://notable-carlina-piyush105454-4bf50dc7.koyeb.app/)
 
 About Swap Eat
 
