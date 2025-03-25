@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'swapfood',
     'channels',
+    'rest_framework',  # Django REST Framework for API
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
