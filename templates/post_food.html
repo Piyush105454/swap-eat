@@ -18,10 +18,11 @@
      /* ===== GENERAL STYLES ===== */
 body {
     font-family: Arial, sans-serif;
-    background: yellow;
+    background:url('https://media-hosting.imagekit.io//cc19f6987ade48d0/Picsart_25-03-24_20-19-33-246.jpg?Expires=1837435804&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=e8-4~9tjixPv6HMbXSL29hqOydqNa910FAsWANPr9fuUOuAwgQq6DKWd9KLg5oNcV~zLsQtVFrd1Ih-S-49MaB60NJDKKpuoL8WLpPh9fKnZm524nLCxVPSVFtiYRtOpD-Yu5SD7EqOVYwLHI00hxYdz~jxpI6px4Ps8OU6Df3cRlBnFnVY~vYUU1AY-2jd~ZS2DCR7D0SgMCEb45onkPETAoeyDSWpMZt25FVZiotg6dvz58xuGHtJqFtkY~cTdJF1~RnO7aB98PSujWbOdcMxJ-Sy308WVXfWJcYOvKcHW9a4YPKQBDJJbfY2bG~qNIq8Ba5jGnZC~jYE8EPTlog__');
     margin: 0;
     padding: 0;
     text-align: center;
+    background-size: cover;
 }
 
 /* HEADER STYLES */
@@ -33,7 +34,7 @@ h1 {
 
 /* ===== CONTAINER LAYOUT ===== */
 .container {
-    background: #ff6666;
+    background: #ffffff;
     display: flex;
     justify-content: space-between;
     margin: 20px;
@@ -46,7 +47,7 @@ h1 {
 .divider {
     z-index: 1;
     width: 3px;
-    background-color: black;
+    background-color: rgb(91, 89, 89);
     display: none; /* Hide on small screens */
 }
 
@@ -57,9 +58,13 @@ h1 {
     justify-content: center;
     text-align: center;
     align-items: center;
-    background: #ff6666;
-    color: white;
+    background: #ffffff;
+    color: rgb(236, 236, 236);
     margin: 10px;
+}
+
+.box h3{
+    color: black;
 }
 
 #box1 {
@@ -90,13 +95,19 @@ form {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
 }
+form input{
+    background-color: rgb(214, 199, 199);
+}
+form label{
+    color: black;
+}
 
 button {
     width: 100%;
     margin-top: 15px;
     padding: 10px;
     background: linear-gradient(to right, rgb(91, 43, 236), rgb(59, 152, 224));
-    color: white;
+    color: rgb(0, 0, 0);
     border: none;
     border-radius: 6px;
     font-size: 16px;
@@ -106,7 +117,7 @@ button {
 
 button:hover {
     color: black;
-    background: yellow;
+    background: rgb(217, 169, 87);
 }
 
 /* ===== MEAL CARD STYLES ===== */
@@ -304,7 +315,7 @@ button:hover {
     display: flex;
     align-items: center;
     margin: 20px;
-    background: linear-gradient(to right, red, orange);
+    background:whitesmoke;
     padding: 12px 20px;
     border-radius: 40px;
     box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
