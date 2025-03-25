@@ -457,7 +457,7 @@ button:hover {
         <div class="profile">
             <img src="https://static.vecteezy.com/system/resources/previews/011/490/381/original/happy-smiling-young-man-avatar-3d-portrait-of-a-man-cartoon-character-people-illustration-isolated-on-white-background-vector.jpg" alt="User" onclick="toggleMenu()">
             <div class="menu" id="menu">
-                <a href="#">🔵 Profile</a>
+                <a href="{% url 'post' %}">🔵 Profile</a>
                 <a href="#">⭐ Favorite Peoples</a>
                 <a href="#">💡 Personalization</a>
                 <a href="#">🟡 Swap Eat +</a>
@@ -481,6 +481,7 @@ button:hover {
             <input type="hidden" id="longitude" name="longitude">
         
             <button class="spread-btn" type="submit" onclick="getLocation()">Spread Taste</button>
+           
 
             </form>
         </div>
@@ -536,7 +537,7 @@ button:hover {
                         <div class="divider1"></div>
 
                         <p class="radius">Radius: 5 Km</p>
-
+                        <button class="spread-btn" ><a href="{% url 'upload' %}">Ai scan</a></button>
                     </div>
               
               
