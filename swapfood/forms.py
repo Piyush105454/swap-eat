@@ -1,10 +1,17 @@
 from django import forms
 from .models import FoodPost
 from .models import Invitation
+from .models import FoodImage
+
+class FoodImageForm(forms.ModelForm):
+    class Meta:
+        model = FoodImage
+        fields = ['image']
 class FoodPostForm(forms.ModelForm):
     class Meta:
         model = FoodPost
         fields = ['name', 'description','radius','photo','location']
+        labels = {'location': 'Pincode'}
 # Invitation form
 class InvitationForm(forms.ModelForm):
     class Meta:
