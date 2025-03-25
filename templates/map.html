@@ -18,7 +18,8 @@
        
         body {
                   margin: 0;
-                  background-color: yellow;
+                  background:url('https://media-hosting.imagekit.io//cc19f6987ade48d0/Picsart_25-03-24_20-19-33-246.jpg?Expires=1837435804&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=e8-4~9tjixPv6HMbXSL29hqOydqNa910FAsWANPr9fuUOuAwgQq6DKWd9KLg5oNcV~zLsQtVFrd1Ih-S-49MaB60NJDKKpuoL8WLpPh9fKnZm524nLCxVPSVFtiYRtOpD-Yu5SD7EqOVYwLHI00hxYdz~jxpI6px4Ps8OU6Df3cRlBnFnVY~vYUU1AY-2jd~ZS2DCR7D0SgMCEb45onkPETAoeyDSWpMZt25FVZiotg6dvz58xuGHtJqFtkY~cTdJF1~RnO7aB98PSujWbOdcMxJ-Sy308WVXfWJcYOvKcHW9a4YPKQBDJJbfY2bG~qNIq8Ba5jGnZC~jYE8EPTlog__');
+                  background-size: cover;
                   display: flex;
                   flex-direction: column;
                   align-items: center;
@@ -32,6 +33,7 @@
         .popup-content {
             text-align: center;
             max-width: 200px;
+
         }
         .popup-content img {
             max-width: 100%;
@@ -52,10 +54,12 @@
         .container{
             display: flex;
             margin-right: 0px;
+
         }
 
         .main-box {
-            background: #ff6f61;
+            background:whitesmoke;
+           
             padding: 20px;
             border: solid 2px black;
             border-radius: 20px;
@@ -63,6 +67,7 @@
             display: flex;
             flex-direction: row;
             align-items: center;
+          
         }
         .search-box {
             width: 50%;
@@ -100,20 +105,24 @@
             background: url('https://maps.googleapis.com/maps/api/staticmap?center=Bhopal&zoom=12&size=600x300') no-repeat center center/cover;
             border-radius: 10px;
             margin: 15px;
+            padding: 10px;
+            border-color: black;
         }
          .buttons {
                 margin-top: 80px;
                 margin-bottom: 80px;
-                margin-right: auto; 
+                margin-right: 0px;
                 margin-left: 50px;
                 display: flex;
                 border-start-start-radius: 40px;
                 border-end-start-radius: 40px;
                 flex-direction: column;
                 justify-content: center;
-                background-color: #7d40ff;
+                background-color:rgb(240, 76, 76);
                 padding: 20px;  
                 gap: 20px;
+                
+                
             }
 
         .switch {
@@ -283,7 +292,7 @@
             display: flex;
             align-items: center;
             margin:20px;
-            background: linear-gradient(to right, red, orange);
+            background: whitesmoke;
             padding: 12px 20px;
             border-radius: 40px;
             box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
@@ -416,8 +425,8 @@
 
            <div id="map" ></div>
 
-        </div>
-    </div>
+       
+   
     <div class="buttons">
         <div class="switch">
             <div class="toggle-btn" id="scan-toggle" style=" font-size: larger;"></div>
@@ -429,6 +438,8 @@
             
         </div>
     </div>
+</div>
+</div>
         </section>
 
           <!-- Bottom Nav Bar -->
@@ -534,11 +545,21 @@
 
             var marker = L.marker([post.latitude, post.longitude]).addTo(map);
             marker.bindPopup(`
-                <div style="text-align: center; max-width: 200px;">
+                <div style="text-align: center; max-width: 200px; ">
                     <img src="/media/${post.photo}" alt="Food Image" style="max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 5px;">
-                    <h4 style="margin: 5px 0; font-size: 16px; color: #333;">${post.name}</h4>
-                    <p style="font-size: 14px; color: #555; margin: 5px 0;"><strong>Radius:</strong> ${post.radius} km</p>
-                    <p style="font-size: 14px; color: #777;"><strong>Posted on:</strong> ${formattedDate}</p>
+                     <a href="/upload/" 
+                       style="display: inline-block; padding: 3px 6px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">
+                       Ai scan
+                    </a>
+                    <h4 style="margin: 5px 0; font-size: 13px; color: #333;">${post.name}</h4>
+                     <p style="font-size: 12px; color: #555; margin: 5px 0;"><strong>Radius:</strong> ${post.radius} km</p>
+                     <p style="font-size: 12px; color: #555; margin: 5px 0;"><strong>pincode:</strong> ${post.location} </p>
+                    
+                     <a href="/chat/" 
+                       style="display: inline-block; padding: 3px 6px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">
+                       Go to Chat
+                    </a>
+                     <p style="font-size: 12px; color: #777;"><strong>Posted on:</strong> ${formattedDate}</p>
                 </div>
             `);
         }
@@ -556,4 +577,3 @@
 
 </body>
 </html>
-
