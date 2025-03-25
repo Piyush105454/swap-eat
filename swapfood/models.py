@@ -53,7 +53,12 @@ class Message(models.Model):
     def __str__(self):
         return f"Room: {self.room.room_name}, Sender: {self.sender}, Message: {self.message[:20]}"
 
+class FoodImage(models.Model):
+    image = models.ImageField(upload_to='food_images/',null=True, blank=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"Image {self.id}"
 class FoodPost(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # Links to the user
     photo = models.ImageField(upload_to="food_photos/")
