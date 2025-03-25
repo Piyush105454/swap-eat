@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Let's Party - Food App</title>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>       
+ body {
+            font-family: Arial, sans-serif;
+            background: url('https://media-hosting.imagekit.io//cc19f6987ade48d0/Picsart_25-03-24_20-19-33-246.jpg?Expires=1837435804&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=e8-4~9tjixPv6HMbXSL29hqOydqNa910FAsWANPr9fuUOuAwgQq6DKWd9KLg5oNcV~zLsQtVFrd1Ih-S-49MaB60NJDKKpuoL8WLpPh9fKnZm524nLCxVPSVFtiYRtOpD-Yu5SD7EqOVYwLHI00hxYdz~jxpI6px4Ps8OU6Df3cRlBnFnVY~vYUU1AY-2jd~ZS2DCR7D0SgMCEb45onkPETAoeyDSWpMZt25FVZiotg6dvz58xuGHtJqFtkY~cTdJF1~RnO7aB98PSujWbOdcMxJ-Sy308WVXfWJcYOvKcHW9a4YPKQBDJJbfY2bG~qNIq8Ba5jGnZC~jYE8EPTlog__');
+            overflow: hidden;
+            background-repeat: no-repeat;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+            
+     
+
+        /* Profile and menu */
+        .profile {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .profile img {
+            cursor: pointer;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid black;
+        }
+
+        .menu {
+            cursor: pointer;
+            position: absolute;
+            top: 80px;
+            right: 20px;
+            width: 200px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .menu.show {
+            z-index: 100;
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .menu a {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: black;
+            font-size: 16px;
+            transition: background 0.3s;
+            text-align: left;
+        }
+
+        .menu a:hover {
+            cursor: pointer;
+            background: lightgray;
+        }
+
+           /* Bottom Navigation Bar */
+
+           .nav-bottom {
+        display: flex;              
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+        }
+        
+        .navbar {z-index: 1;
+        display: flex;
+        align-items: center;
+        margin:20px;
+        background:whitesmoke;
+        padding: 12px 20px;
+        border-radius: 40px;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+        gap: 20px;
+        }
+        
+        .nav-item {
+        z-index: 1;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        background-color: transparent;
+        color: rgb(0, 0, 0);
+        border-radius: 50%;
+        cursor: pointer;
+        transition: transform 0.3s ease-in-out, background 0.3s;
+        }
+        
+        .nav-item:hover {
+        background-color: lightgreen;
+        transform: scale(1.2);
+        }
+        
+        .navbar a {
+        text-decoration: none;
+        color: inherit;       
+        }
+    
+    .chat-button {
+        margin-top:30px;        
+        margin-bottom: 30px;
+        text-decoration: none;
+        background: white;
+        color: black;
+        padding: 8px 12px;
+        padding-bottom: 15px;
+        padding-top:15px ;
+        border-radius: 16px;
+        font-size: 18px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        transition: transform 0.3s ease-in-out;
+        }
+        
+        .chat-button a {
+        text-decoration: none;
+        color: inherit;
+        }
+        
+        .chat-button:hover {
+        background: lightgreen;
+        transform: scale(1.1);
+        }
+
+ 
+
+        /* Main content container */
+      /*  .container {
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 15px;
+            margin: 20px auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 90%;
+            max-width: 1200px;
+        }
+        */
+
+           
+        
+        @media (max-width: 400px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .profile img {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .small-photo {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .user-icon {
+                width: 25px;
+                height: 25px;
+            }
+            
+           
+            .chat-button {
+                font-size: 16px;
+                padding: 8px 12px;
+            }
+        }
+        .container {
+    width: 80%;
+    max-width: 600px; /* Restricts max width for better readability */
+    margin: 20px auto; /* Centers the container */
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.2); /* Slight transparency for a modern look */
+    backdrop-filter: blur(10px); /* Adds blur effect */
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.container div {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.container h1 {
+    font-size: 18px;
+    color: #333;
+    font-weight: bold;
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .container {
+        width: 95%;
+    }
+    .container div {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+
+.selection-btn {
+        margin-top: 10px;
+        padding: 10px;
+        font-size: 16px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }        
+
+       #userType{
+        text-decoration: none;
+        border: none;
+        margin-left: 30px;
+       }
+
+    
+    </style>
+</head>
+<body>
+    <div>
+
+        <h1>Profile</h1>
+
+        <div class="profile">
+
+                    <img src="https://static.vecteezy.com/system/resources/previews/011/490/381/original/happy-smiling-young-man-avatar-3d-portrait-of-a-man-cartoon-character-people-illustration-isolated-on-white-background-vector.jpg" alt="User" onclick="toggleProfileMenu()">
+
+                    <div class="menu" id="menu">
+
+                        <a href="#">🔵 Profile</a>
+
+                        <a href="#">⭐ Favorite Peoples</a>
+
+                        <a href="#">💡 Personalization</a>
+
+                        <a href="#">🟡 Swap Eat +</a>
+
+                        <a href="#">🚫 Blocked Users</a>
+
+                        <a href="#">⚙️ Settings</a>
+
+                        <a href="#">🔗 Invite</a>
+
+                        <a href="{% url 'home' %}">↪ Logout</a>
+
+                    </div>
+
+            </div>
+  </div>
+            <!-- main section -->
+
+            <div class="container">
+           <div>
+            <h1>Name:</h1><h3>printname</h3>
+        </div>
+        <div>
+            <h1>UserName:</h1>
+            <h3>print user name</h3>
+        </div>
+         <div>
+            <h1>Email:</h1><h3>print email</h3>
+        </div>
+        <div>
+            <h1>Select User Type:</h1>
+            <select id="userType">
+                <option value="public">Public User</option>
+                <option value="restaurant">Restaurant User</option>
+                <option value="ngo">NGO User</option>
+            </select>
+        </div>
+        
+        
+        </div>
+
+              <!-- Bottom Menu -->
+
+    <section class="nav-bottom">
+
+        <div class="navbar">
+
+                        <div class="nav-item home">
+        <a href="{% url 'post' %}" class="chat">
+        <i class="fa-solid fa-house"></i>
+          
+        </a>
+       </div>
+       <div class="nav-item">
+        <a href="{% url 'explore' %}" class="chat">
+        <i class="fa-solid fa-compass"></i>
+          
+        </a>
+       </div>
+       <div class="nav-item">
+        <a href="{% url 'post_food' %}" class="chat">
+        <i class="fa-solid fa-plus"></i>
+          
+        </a>
+       </div>
+       <div class="nav-item">
+        <a href="{% url 'notification' %}" class="chat">
+        <i class="fa-solid fa-bell"></i>
+          
+        </a>
+       </div>
+       <div class="nav-item">
+        <a href="{% url 'map' %}" class="chat">
+        <i class="fa-solid fa-map"></i>
+          
+        </a>
+       </div> 
+       
+        </div>
+        <div class="chat-button">
+            <a href="{% url 'chat' %}"><i class="fas fa-comments"></i> Chat </a>
+        </div>
+    </section>
+
+
+
+      </body>
+            <script>
+        // Toggle Profile Menu
+function toggleProfileMenu() { 
+    var profileMenu = document.getElementById("menu");
+    profileMenu.classList.toggle("show");
+}
+
+// Close Profile Menu when clicking outside
+document.addEventListener("click", function (event) {            
+    var profileMenu = document.getElementById("menu");
+    var profileImg = document.querySelector(".profile img");
+    
+    if (!profileMenu.contains(event.target) && event.target !== profileImg) {
+        profileMenu.classList.remove("show");            
+    }
+});
+
+function selectUserType(userType) {
+        document.getElementById("selectedUserType").innerText = "Selected: " + userType;
+        document.getElementById("userList").style.display = "none"; // Hide menu after selection
+    }
+
+        </script>
+  </html>
