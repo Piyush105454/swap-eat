@@ -91,15 +91,8 @@ CHANNEL_LAYERS = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',  # Use MySQL as the database engine
-        'NAME': 'defaultdb',  # Database name
-        'USER': 'avnadmin',  # Database user
-        'PASSWORD': 'AVNS_8Ma5TTmGNtshZwbeeEE',  # New password
-        'HOST': 'mysql-38c42030-somdixit120-356a.k.aivencloud.com',  # MySQL host
-        'PORT': '24796',  # MySQL port
-        'OPTIONS': {
-            'ssl': {'ssl-mode': 'REQUIRED'},  # Enforce SSL connection
-        },
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
