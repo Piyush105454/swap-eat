@@ -89,10 +89,19 @@ CHANNEL_LAYERS = {
 # settings.py
 
 
+import os
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'defaultdb',
+        'USER': 'avnadmin',
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': 'mysql-226c60a-swapeat.g.aivencloud.com',
+        'PORT': '28836',
+        'OPTIONS': {
+              'ssl': {'ssl-mode': 'REQUIRED'},  # Enforce SSL connection
+        }
     }
 }
 
@@ -160,7 +169,7 @@ EMAIL_HOST = 'smtp.gmail.com'  # Use Gmail or any other email service provider
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'swapeatmail@gmail.com'  # Replace with your email
-EMAIL_HOST_PASSWORD = 'anbr opdy syfm alud'  # Replace with your app password
+EMAIL_HOST_PASSWORD = 'dpda qhlt aefi eany'  # Replace with your app password
 DEFAULT_FROM_EMAIL = 'your_email@gmail.com'
 
 
