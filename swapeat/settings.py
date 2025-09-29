@@ -91,19 +91,26 @@ CHANNEL_LAYERS = {
 
 import os
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'defaultdb',
+#         'USER': 'avnadmin',
+#         'PASSWORD': 'AVNS_zSfhfNqgG4pKdlS4h6P',
+#         'HOST': 'mysql-226c60a-swapeat.g.aivencloud.com',
+#         'PORT': '28836',
+#         'OPTIONS': {
+#               'ssl': {'ssl-mode': 'REQUIRED'},  # Enforce SSL connection
+#         }
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'defaultdb',
-        'USER': 'avnadmin',
-        'PASSWORD': 'AVNS_zSfhfNqgG4pKdlS4h6P',
-        'HOST': 'mysql-226c60a-swapeat.g.aivencloud.com',
-        'PORT': '28836',
-        'OPTIONS': {
-              'ssl': {'ssl-mode': 'REQUIRED'},  # Enforce SSL connection
-        }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / "db.sqlite3",
     }
 }
+
 
 
 # Password validation
